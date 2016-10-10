@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_FILE"
+              value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}/@artifactId@.json}"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="com.rbkmoney.log.appender.NoopRollingPolicy"/>
+        <triggeringPolicy class="com.rbkmoney.log.appender.RotationBasedTriggeringPolicy">
+            <checkCachePeriod>5000</checkCachePeriod>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <threadName/>
+                <message/>
+                <version/>
+                <loggerName/>
+                <context/>
+                <pattern>
+                    <pattern>
+                        {
+                        "@timestamp": "%date{yyy-MM-dd'T'HH:mm:ss.SSSXXX, UTC}",
+                        "@severity": "%level",
+                        "application": "@artifactId@",
+                        "application_version": "@version@"
+                        }
+                    </pattern>
+                </pattern>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <shortenedClassNameLength>20</shortenedClassNameLength>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <logger name="com.rbkmoney" level="ALL"/>
+
+    <jmxConfigurator/>
+</configuration>
