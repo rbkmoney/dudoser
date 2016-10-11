@@ -1,13 +1,10 @@
-package com.rbkmoney.dudoser.model;
-
-import org.springframework.stereotype.Component;
+package com.rbkmoney.dudoser.dao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
-public class PaymentPaid {
+public class PaymentPayer {
 
     private BigDecimal amount;
     private String currency;

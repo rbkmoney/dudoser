@@ -1,6 +1,6 @@
 package com.rbkmoney.dudoser.utils.mail;
 
-import com.rbkmoney.dudoser.model.PaymentPaid;
+import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,22 +25,22 @@ public class SendMailTest {
 
     @Test
     public void testMe() throws MessagingException {
-        PaymentPaid paymentPaid = new PaymentPaid();
-        paymentPaid.setCardType("visa");
-        paymentPaid.setCardMaskPan("2222*****5555");
-        paymentPaid.setCurrency("RUB");
-        paymentPaid.setAmount(Converter.longToBigDecimal(111L));
-        paymentPaid.setInvoiceId("de3dddQscG135Hgf");
-        paymentPaid.setDate("2016-03-22T00:12:00Z");
-        paymentPaid.setTo("a.cherkasov@rbkmoney.com");
+        PaymentPayer paymentPayer = new PaymentPayer();
+        paymentPayer.setCardType("visa");
+        paymentPayer.setCardMaskPan("2222*****5555");
+        paymentPayer.setCurrency("RUB");
+        paymentPayer.setAmount(Converter.longToBigDecimal(111L));
+        paymentPayer.setInvoiceId("de3dddQscG135Hgf");
+        paymentPayer.setDate("2016-03-22T00:12:00Z");
+        paymentPayer.setTo("a.cherkasov@rbkmoney.com");
 
         Map<String, Object> model = new HashMap<>();
-        model.put("paymentPaid", paymentPaid);
+        model.put("paymentPaid", paymentPayer);
 
         String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
-                paymentPaid.getInvoiceId(),
-                paymentPaid.getDate(),
-                paymentPaid.getAmountWithCurrency()
+                paymentPayer.getInvoiceId(),
+                paymentPayer.getDate(),
+                paymentPayer.getAmountWithCurrency()
         );
 
         boolean result = mailSenderUtils.setFileNameTemplate("payment_paid.ftl")

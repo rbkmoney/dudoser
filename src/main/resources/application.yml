@@ -13,12 +13,12 @@ endpoints:
     sensitive: false
 ---
 server:
-  port: 8022
+  port: 8021
 ---
 # bm poller
 bm:
   pooling:
-    url: http://127.0.0.1:8081/repo
+    url: http://127.0.0.1:8022/repo
     maxPoolSize: 1
     delay: 5000
 
