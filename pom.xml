@@ -23,7 +23,7 @@
     </properties>
 
     <dependencies>
-        <!--Thrirdparty libs-->
+        <!--Thirdparty libs-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.86-f3f72ad</version>
+            <version>1.88-1698e33</version>
         </dependency>
         <!--Test libs-->
         <dependency>

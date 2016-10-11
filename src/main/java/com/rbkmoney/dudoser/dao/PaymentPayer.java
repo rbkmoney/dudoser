@@ -1,8 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class PaymentPayer {
 
@@ -63,7 +61,7 @@ public class PaymentPayer {
     }
 
     public void setDate(String dateTime) {
-        this.date = LocalDateTime.parse(dateTime, DateTimeFormatter.ISO_DATE_TIME).toLocalDate().toString();
+        this.date = dateTime;
     }
 
     public String getTo() {

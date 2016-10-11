@@ -45,7 +45,7 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
 
     public InvoiceStatusChangedPaidHandler() {
         filter = new PathConditionFilter(
-                new PathConditionRule(path, new CompareCondition("paid", Relation.EQ).and())
+                new PathConditionRule(path, new CompareCondition("paid", Relation.EQ))
         );
     }
 
@@ -54,6 +54,8 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
 
         Event event = value.getSourceEvent().getProcessingEvent();
         String invoiceId = event.getSource().getInvoice();
+
+        log.info("InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
 
         Optional<PaymentPayer> paymentPayer = inMemoryPaymentPayerDao.getById(invoiceId);
 
@@ -74,10 +76,13 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
 
             if (mailSenderUtils.send(from, payment.getTo(), subject)) {
                 log.info("Mail send {}", payment.getTo());
-                inMemoryPaymentPayerDao.delete(invoiceId);
             } else {
                 log.error("Mail not send {}", payment.getTo());
             }
+
+            inMemoryPaymentPayerDao.delete(invoiceId);
+        } else {
+            log.error("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }
 
 

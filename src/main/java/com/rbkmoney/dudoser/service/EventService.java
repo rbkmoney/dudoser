@@ -25,7 +25,7 @@ public class EventService {
             FileHelper.pathToFolder = pathToFolder;
             lastEventId = Converter.stringToLong(FileHelper.getLastEventId());
         } catch (IOException ex) {
-            throw new StorageException("Failed to get last event id from file");
+            throw new StorageException("Failed to get last event id from file. Reason: " + ex.getMessage());
         }
         return lastEventId;
     }

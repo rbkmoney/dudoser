@@ -21,9 +21,8 @@ public class Converter {
         return new BigDecimal(currencyFormat.format(roubles));
     }
 
-    public static Long stringToLong(String str) {
-        String digits = str.replaceAll("[^\\d+]", "");
-        return Long.parseLong((digits.isEmpty()) ? "0" : digits);
+    public static Long stringToLong(String str) throws NumberFormatException {
+        return (str.isEmpty()) ? null : Long.parseLong(str);
     }
 
 }

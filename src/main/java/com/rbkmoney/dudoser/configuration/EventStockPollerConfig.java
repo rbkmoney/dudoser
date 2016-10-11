@@ -13,8 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.List;
+
+import static com.sun.jmx.snmp.EnumRowStatus.destroy;
 
 @Configuration
 public class EventStockPollerConfig {
@@ -34,7 +37,7 @@ public class EventStockPollerConfig {
     @Autowired
     EventService eventService;
 
-    @Bean
+    @Bean(destroyMethod="destroy")
     public EventPublisher eventPublisher() throws IOException {
         return new PollingEventPublisherBuilder()
                 .withURI(bmUri.getURI())
@@ -54,9 +57,15 @@ public class EventStockPollerConfig {
         EventConstraint.EventIDRange eventIDRange = new EventConstraint.EventIDRange();
         Long lastEventId = eventService.getLastEventId();
         if (lastEventId != null) {
-            eventIDRange.setFromExclusive(lastEventId);
+            eventIDRange.setFromInclusive(lastEventId);
+        } else {
+            eventIDRange.setFromNow();
         }
         return new EventFlowFilter(new EventConstraint(eventIDRange));
+    }
+
+    public void destroy() throws IOException {
+        eventPublisher().destroy();
     }
 
 }

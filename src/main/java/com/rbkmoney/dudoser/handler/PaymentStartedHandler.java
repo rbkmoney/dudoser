@@ -45,6 +45,8 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
 
         Payer payer = invoicePayment.getPayer();
 
+        log.info("PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+
         if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
 
             PaymentPayer paymentPayer = new PaymentPayer();
@@ -58,7 +60,9 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
             paymentPayer.setTo(payer.getContactInfo().getEmail());
 
             if(!inMemoryPaymentPayerDao.add(paymentPayer)) {
-                log.error("Not save Payment Payer");
+                log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
+            } else {
+                log.info("PaymentStartedHandler: save Payment Payer, invoiceId {}", invoiceId);
             }
 
         }
@@ -68,7 +72,7 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
             String fileName = FileHelper.getFile(FileHelper.FILENAME_LAST_EVENT_ID).getAbsolutePath();
             FileHelper.writeFile(fileName, String.valueOf(eventId));
         } catch (IOException e) {
-            log.error("Exception: not save Last id");
+            log.error("Exception: not save Last id. Reason: " + e.getMessage());
         }
     }
 

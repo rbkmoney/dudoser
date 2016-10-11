@@ -86,16 +86,16 @@ public class InvoiceStatusChangedPaidHandlerTest {
     public InvoicePayment getInvoicePayment() {
         InvoicePayment invoicePayment = new InvoicePayment();
         invoicePayment.setPayer(getPayer());
-        invoicePayment.setCost(getFunds());
+        invoicePayment.setCost(getCash());
         invoicePayment.setCreatedAt("2016-12-12T12:12:12Z");
         return invoicePayment;
     }
 
-    public Funds getFunds() {
-        Funds funds = new Funds();
-        funds.setAmount(1000L);
-        funds.setCurrency(getCurrency());
-        return funds;
+    public Cash getCash() {
+        Cash cash = new Cash();
+        cash.setAmount(1000L);
+        cash.setCurrency(getCurrency());
+        return cash;
     }
 
     public Currency getCurrency() {

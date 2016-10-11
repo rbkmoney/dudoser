@@ -18,8 +18,12 @@ public class ConverterTest {
 
     @Test
     public void stringToLong() {
-        assertEquals(new Long(0), Converter.stringToLong(""));
+        assertEquals(null, Converter.stringToLong(""));
         assertEquals(new Long(12), Converter.stringToLong("12"));
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void stringToLongException() {
         assertEquals(new Long(0), Converter.stringToLong("dfsf"));
         assertEquals(new Long(123), Converter.stringToLong("df123sf"));
         assertEquals(new Long(13), Converter.stringToLong("df<!13s?>./f"));
