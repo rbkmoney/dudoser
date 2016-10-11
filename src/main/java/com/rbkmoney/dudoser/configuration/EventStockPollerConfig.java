@@ -64,8 +64,4 @@ public class EventStockPollerConfig {
         return new EventFlowFilter(new EventConstraint(eventIDRange));
     }
 
-    public void destroy() throws IOException {
-        eventPublisher().destroy();
-    }
-
 }
