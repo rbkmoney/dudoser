@@ -11,6 +11,8 @@ info:
 endpoints:
   health:
     sensitive: false
+logging:
+  file: /tmp/@artifactId@.json
 ---
 server:
   port: 8021
