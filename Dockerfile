@@ -9,7 +9,7 @@ CMD ["-jar","/opt/@artifactId@/@artifactId@.jar"]
 
 EXPOSE @server.port@
 
-LABEL com.rbkmoney.@artifactId@.parent=service_java \
+LABEL com.rbkmoney.@artifactId@.parent=service-java \
     com.rbkmoney.@artifactId@.parent_tag=@dockerfile.base.service.tag@ \
     com.rbkmoney.@artifactId@.build_img=build \
     com.rbkmoney.@artifactId@.build_img_tag=@dockerfile.build.container.tag@ \
