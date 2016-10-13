@@ -1,0 +1,13 @@
+{
+  "consul": "{{ .CONSUL_ADDR }}",
+  "services": [
+    {
+      "name": "{{ .SERVICE_NAME }}",
+      "port": "@server.port@",
+      "health": "/usr/bin/curl --silent --fail --show-error --output /dev/null localhost:@server.port@/health",
+      "poll": 1,
+      "ttl":  2,
+      "interfaces": ["inte6", "inet"]
+    }
+  ]
+}
