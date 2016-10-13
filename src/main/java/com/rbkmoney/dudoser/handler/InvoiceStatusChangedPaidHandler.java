@@ -64,7 +64,7 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
             PaymentPayer payment = paymentPayer.get();
 
             Map<String, Object> model = new HashMap<>();
-            model.put("paymentPaid", paymentPayer);
+            model.put("paymentPayer", payment);
 
             String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
                     payment.getInvoiceId(),

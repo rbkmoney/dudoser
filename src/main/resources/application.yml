@@ -11,16 +11,16 @@ info:
 endpoints:
   health:
     sensitive: false
-logging:
-  file: /tmp/@artifactId@.json
+#logging:
+#  file: /tmp/@artifactId@.json
 ---
 server:
-  port: 8021
+  port: 8018
 ---
 # bm poller
 bm:
   pooling:
-    url: http://127.0.0.1:8022/repo
+    url: http://127.0.0.1:8081/repo
     maxPoolSize: 1
     delay: 5000
 

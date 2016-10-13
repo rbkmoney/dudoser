@@ -35,7 +35,7 @@ public class SendMailTest {
         paymentPayer.setTo("a.cherkasov@rbkmoney.com");
 
         Map<String, Object> model = new HashMap<>();
-        model.put("paymentPaid", paymentPayer);
+        model.put("paymentPayer", paymentPayer);
 
         String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
                 paymentPayer.getInvoiceId(),

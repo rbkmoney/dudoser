@@ -12,6 +12,10 @@ public class PaymentPayer {
     private String date;
     private String to;
 
+    public String getAmountWithCurrency() {
+        return String.format("%.2f %s", amount, currency);
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
@@ -26,10 +30,6 @@ public class PaymentPayer {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public String getAmountWithCurrency() {
-        return String.format("%.2f %s", amount, currency);
     }
 
     public String getCardType() {
@@ -60,8 +60,8 @@ public class PaymentPayer {
         return date;
     }
 
-    public void setDate(String dateTime) {
-        this.date = dateTime;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getTo() {
@@ -71,5 +71,4 @@ public class PaymentPayer {
     public void setTo(String to) {
         this.to = to;
     }
-
 }

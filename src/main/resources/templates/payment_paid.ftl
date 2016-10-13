@@ -59,8 +59,8 @@
                                             <td style="border-bottom:1px dashed #e4e4e4;" colspan="2" width="540"
                                                 valign="middle">
                                                 <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
-                                                    Вы осуществили платеж на сумму  ${paymentPaid.amountWithCurrency} <br>
-                                                    по счету № ${paymentPaid.invoiceId} от ${paymentPaid.date}
+                                                    Вы осуществили платеж на сумму  ${paymentPayer.amountWithCurrency} <br>
+                                                    по счету № ${paymentPayer.invoiceId} от ${paymentPayer.date}
                                                 </p>
                                             </td>
                                         </tr>
@@ -77,7 +77,7 @@
                                                     </td>
                                                     <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
                                                         <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
-                                                        ${paymentPaid.cardType}
+                                                        ${paymentPayer.cardType}
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -97,7 +97,7 @@
                                                         </td>
                                                         <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
-                                                            ${paymentPaid.cardMaskPan}
+                                                            ${paymentPayer.cardMaskPan}
                                                             </p>
                                                         </td>
                                                     </tr>
@@ -117,7 +117,7 @@
                                                         </td>
                                                         <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
-                                                            ${paymentPaid.to}
+                                                            ${paymentPayer.to}
                                                             </p>
                                                         </td>
                                                     </tr>
