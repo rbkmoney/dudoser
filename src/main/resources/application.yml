@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: @name@
+    description: @description@
+---
+info:
+  version: @version@
+  responsible: Anatoly Cherkasov
+  stage: dev
+---
+endpoints:
+  health:
+    sensitive: false
+#logging:
+#  file: /tmp/@artifactId@.json
+---
+server:
+  port: 8018
+---
+# bm poller
+bm:
+  pooling:
+    url: http://127.0.0.1:8081/repo
+    maxPoolSize: 1
+    delay: 5000
+
+file:
+  pathToFolder: /tmp/
+
+mail:
+  host: smtp.emailsrvr.com
+  port: 25
+  username: test.cherkasov@rbkmoney.com
+  password: ieY)eivai8
+  from: test.cherkasov@rbkmoney.com
+  protocol: smtp
+  smtps:
+    auth: true
+    starttls:
+      enable: true
+
+notification:
+  payment:
+    paid:
+      from: test.cherkasov@rbkmoney.com
+      fileNameTemplate: payment_paid.ftl
