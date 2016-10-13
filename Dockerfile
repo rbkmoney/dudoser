@@ -1,10 +1,13 @@
 FROM dr.rbkmoney.com/rbkmoney/service-java:@dockerfile.base.service.tag@
 MAINTAINER Anatoly Cherkasov <a.cherkasov@rbkmoney.com>
 
-COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@-@version@.jar
-CMD ["java", "-jar","/opt/@artifactId@/@artifactId@-@version@.jar"]
+COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@.jar
+COPY containerpilot.json /etc/containerpilot.json
 
-EXPOSE 8022
+ENTRYPOINT ["/bin/containerpilot", "-config", "file:///etc/containerpilot.json",  "java"]
+CMD ["-jar","/opt/@artifactId@/@artifactId@.jar"]
+
+EXPOSE @server.port@
 
 LABEL com.rbkmoney.@artifactId@.parent=service_java \
     com.rbkmoney.@artifactId@.parent_tag=@dockerfile.base.service.tag@ \

@@ -15,7 +15,7 @@ endpoints:
 #  file: /tmp/@artifactId@.json
 ---
 server:
-  port: 8018
+  port: @server.port@
 ---
 # bm poller
 bm:
