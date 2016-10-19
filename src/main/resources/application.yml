@@ -28,11 +28,11 @@ file:
   pathToFolder: /tmp/
 
 mail:
-  host: smtp.emailsrvr.com
-  port: 25
-  username: test.cherkasov@rbkmoney.com
-  password: ieY)eivai8
-  from: test.cherkasov@rbkmoney.com
+  host: secure.emailsrvr.com
+  port: 587
+  username: no-reply@rbkmoney.com
+  password: EIPe6wGYOC9StdFP
+  from: no-reply@rbkmoney.com
   protocol: smtp
   smtps:
     auth: true
@@ -42,5 +42,5 @@ mail:
 notification:
   payment:
     paid:
-      from: test.cherkasov@rbkmoney.com
+      from: no-reply@rbkmoney.com
       fileNameTemplate: payment_paid.ftl
