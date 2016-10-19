@@ -1,6 +1,6 @@
 # Dudoser
 
-[![Build Status](http://ci.rbkmoney.com/buildStatus/icon?job=rbkmoney_private/dodoser/master)](http://ci.rbkmoney.com/job/rbkmoney_private/job/dodoser/job/master/)
+[![Build Status](http://ci.rbkmoney.com/buildStatus/icon?job=rbkmoney_private/dudoser/master)](http://ci.rbkmoney.com/job/rbkmoney_private/job/dudoser/job/master/)
 
 Сервис уведомляющий плательщика об успешном платеже
 
