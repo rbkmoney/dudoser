@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.88-1698e33</version>
+            <version>1.99-557f549</version>
         </dependency>
         <!--Test libs-->
         <dependency>
