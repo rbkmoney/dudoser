@@ -44,3 +44,9 @@ notification:
     paid:
       from: no-reply@rbkmoney.com
       fileNameTemplate: payment_paid.ftl
+
+spring:
+  freemarker:
+    template-loader-path: classpath:templates/
+    prefer-file-system-access: true
+    charset: UTF-8

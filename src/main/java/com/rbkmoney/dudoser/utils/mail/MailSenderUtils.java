@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -44,12 +45,7 @@ public class MailSenderUtils {
 
             helper.setText(text, true);
 
-            File logo = new File(
-                    getClass()
-                            .getClassLoader()
-                            .getResource("images/logo.png")
-                            .getFile()
-            );
+            File logo = new File(new ClassPathResource("images/logo.png").getURI());
             FileSystemResource res = new FileSystemResource(logo);
             helper.addInline("identifierLogo", res);
 

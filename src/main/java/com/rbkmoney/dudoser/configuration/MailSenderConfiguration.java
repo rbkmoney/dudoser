@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.util.Properties;
 
@@ -47,15 +46,6 @@ public class MailSenderConfiguration {
         mailSender.setPassword(password);
         mailSender.setJavaMailProperties(mailProperties);
         return mailSender;
-    }
-
-    @Bean
-    public FreeMarkerConfigurer freeMarkerConfigurer() {
-        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("classpath:templates/");
-        configurer.setPreferFileSystemAccess(false);
-        configurer.setDefaultEncoding("UTF-8");
-        return configurer;
     }
 
 }
