@@ -44,7 +44,12 @@ public class MailSenderUtils {
 
             helper.setText(text, true);
 
-            File logo = new File(ClassLoader.getSystemResource("images/logo.png").getFile());
+            File logo = new File(
+                    getClass()
+                            .getClassLoader()
+                            .getResource("images/logo.png")
+                            .getFile()
+            );
             FileSystemResource res = new FileSystemResource(logo);
             helper.addInline("identifierLogo", res);
 
