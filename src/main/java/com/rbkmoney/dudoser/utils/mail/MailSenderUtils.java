@@ -4,14 +4,13 @@ import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
-import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.util.Map;
 
@@ -44,9 +43,7 @@ public class MailSenderUtils {
 
             helper.setText(text, true);
 
-            File logo = new File(ClassLoader.getSystemResource("images/logo.png").getFile());
-            FileSystemResource res = new FileSystemResource(logo);
-            helper.addInline("identifierLogo", res);
+            helper.addInline("identifierLogo", new ClassPathResource("images/logo.png"));
 
             mailSender.send(message);
             isSuccess = true;
