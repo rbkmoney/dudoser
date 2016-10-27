@@ -1,6 +1,9 @@
 package com.rbkmoney.dudoser.dao;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PaymentPayer {
 
@@ -41,7 +44,7 @@ public class PaymentPayer {
     }
 
     public String getCardMaskPan() {
-        return cardMaskPan;
+        return "**** **** **** " + cardMaskPan;
     }
 
     public void setCardMaskPan(String cardMaskPan) {
@@ -61,7 +64,20 @@ public class PaymentPayer {
     }
 
     public void setDate(String date) {
-        this.date = date;
+        String formattedDate;
+        if(date.isEmpty()) {
+            formattedDate = date;
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date dateStr = formatter.parse(date);
+                formattedDate = formatter.format(dateStr);
+            } catch (ParseException e) {
+                formattedDate = date;
+            }
+        }
+
+        this.date = formattedDate;
     }
 
     public String getTo() {

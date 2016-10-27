@@ -29,7 +29,7 @@
                                                 <a style="text-decoration:none;display:block;"
                                                    href="http://www.rbkmoney.ru/" target="_blank">
                                                     <img border="0" alt="logo" width="99" height="42"
-                                                         src="cid:identifierLogo">
+                                                         src="http://rbkmoney.com/sites/default/files/logo_0_0.jpg">
                                                 </a>
                                             </td>
                                             <td align="left" width="400" height="95" valign="middle">
