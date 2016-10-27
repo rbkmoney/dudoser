@@ -27,11 +27,11 @@ public class SendMailTest {
     public void testMe() throws MessagingException {
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
-        paymentPayer.setCardMaskPan("2222*****5555");
+        paymentPayer.setCardMaskPan("5555");
         paymentPayer.setCurrency("RUB");
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId("de3dddQscG135Hgf");
-        paymentPayer.setDate("2016-03-22T00:12:00Z");
+        paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setTo("a.cherkasov@rbkmoney.com");
 
         Map<String, Object> model = new HashMap<>();

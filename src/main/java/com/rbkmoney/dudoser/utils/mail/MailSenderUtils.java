@@ -4,7 +4,6 @@ import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -33,7 +32,7 @@ public class MailSenderUtils {
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
             helper.setFrom(from);
             helper.setTo(to);
             helper.setSubject(subject);
@@ -42,8 +41,6 @@ public class MailSenderUtils {
             log.info("Template content: {}", text);
 
             helper.setText(text, true);
-
-            helper.addInline("identifierLogo", new ClassPathResource("images/logo.png"));
 
             mailSender.send(message);
             isSuccess = true;
