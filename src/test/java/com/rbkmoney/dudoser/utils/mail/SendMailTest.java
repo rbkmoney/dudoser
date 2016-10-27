@@ -25,6 +25,9 @@ public class SendMailTest {
 
     @Test
     public void testMe() throws MessagingException {
+        String from = "a.cherkasov@rbkmoney.com";
+        String to = "a.cherkasov@rbkmoney.com";
+
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
@@ -32,20 +35,30 @@ public class SendMailTest {
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId("de3dddQscG135Hgf");
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
-        paymentPayer.setTo("a.cherkasov@rbkmoney.com");
+        paymentPayer.setTo(to);
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
 
-        String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
+        String subject = String.format(MailSubject.FORMED_THROUGH.pattern,
                 paymentPayer.getInvoiceId(),
                 paymentPayer.getDate(),
                 paymentPayer.getAmountWithCurrency()
         );
 
-        boolean result = mailSenderUtils.setFileNameTemplate("payment_paid.ftl")
+        String template = "payment_paid.ftl";
+
+        boolean result = mailSenderUtils.setFileNameTemplate(template)
                 .setModel(model)
-                .send("a.cherkasov@rbkmoney.com", "a.cherkasov@rbkmoney.com", subject);
+                .send(from, to, subject);
+
+        assertTrue(result);
+
+        template = "create_invoice.ftl";
+
+        result = mailSenderUtils.setFileNameTemplate(template)
+                .setModel(model)
+                .send(from, to, subject);
 
         assertTrue(result);
     }
