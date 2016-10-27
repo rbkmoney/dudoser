@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Сформирован счет № 1103753952 от 01.10.2016 на сумму 500,00 руб., http://www.vosnet.ru/</title>
+    <title>Простые и безопасные платежи в Интернете</title>
 </head>
 
 <body>
