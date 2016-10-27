@@ -44,6 +44,10 @@ notification:
     paid:
       from: no-reply@rbkmoney.com
       fileNameTemplate: payment_paid.ftl
+  create:
+    invoice:
+      from: no-reply@rbkmoney.com
+      fileNameTemplate: create_invoice.ftl
 
 spring:
   freemarker:

@@ -8,6 +8,8 @@ import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.FileHelper;
+import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
+import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.thrift.filter.Filter;
 import com.rbkmoney.thrift.filter.PathConditionFilter;
 import com.rbkmoney.thrift.filter.rule.PathConditionRule;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class PaymentStartedHandler implements Handler<StockEvent> {
@@ -29,6 +33,15 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
 
     @Autowired
     InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
+
+    @Value("${notification.create.invoice.from}")
+    private String from;
+
+    @Value("${notification.create.invoice.fileNameTemplate}")
+    private String fileNameTemplate;
+
+    @Autowired
+    MailSenderUtils mailSenderUtils;
 
     private Filter filter;
 
@@ -60,6 +73,23 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
             paymentPayer.setInvoiceId(event.getSource().getInvoice());
             paymentPayer.setDate(invoicePayment.getCreatedAt());
             paymentPayer.setTo(payer.getContactInfo().getEmail());
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("paymentPayer", paymentPayer);
+
+            String subject = String.format(MailSubject.FORMED_THROUGH.pattern,
+                    paymentPayer.getInvoiceId(),
+                    paymentPayer.getDate(),
+                    paymentPayer.getAmountWithCurrency()
+            );
+
+            mailSenderUtils.setFileNameTemplate(fileNameTemplate).setModel(model);
+
+            if (mailSenderUtils.send(from, paymentPayer.getTo(), subject)) {
+                log.info("Mail send {}", paymentPayer.getTo());
+            } else {
+                log.error("Mail not send {}", paymentPayer.getTo());
+            }
 
             if(!inMemoryPaymentPayerDao.add(paymentPayer)) {
                 log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
