@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,7 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class InvoiceStatusChangedPaidHandlerTest {
 
     private final static long EVENT_ID = 1L;
-    private final static String E_MAIL = "i.arsanukaev@rbkmoney.com";
+    @Value("${test.mail.to}")
+    private String E_MAIL;
     private final static String PHONE = "1234567890";
 
     @Autowired

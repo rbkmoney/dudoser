@@ -2,6 +2,11 @@ package com.rbkmoney.dudoser.utils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +15,17 @@ import static com.rbkmoney.dudoser.utils.FileHelper.FILENAME_LAST_EVENT_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Component
 public class FileHelperTest {
+
+    @Value("${file.pathToFolder}")
+    private String folderName;
 
     @Before
     public void setUp() {
-        FileHelper.pathToFolder = "c:\\work\\";
+        FileHelper.pathToFolder = folderName;
     }
 
     @Test
