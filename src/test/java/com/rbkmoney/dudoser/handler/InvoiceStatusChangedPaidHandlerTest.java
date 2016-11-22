@@ -14,11 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Ignore("Integration test")
+//@Ignore("Integration test")
 public class InvoiceStatusChangedPaidHandlerTest {
 
-    private final static long EVENT_ID = 3L;
-    private final static String E_MAIL = "a.cherkasov@rbkmoney.com";
+    private final static long EVENT_ID = 1L;
+    private final static String E_MAIL = "i.arsanukaev@rbkmoney.com";
     private final static String PHONE = "1234567890";
 
     @Autowired

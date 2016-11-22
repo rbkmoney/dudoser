@@ -4,13 +4,18 @@ import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.ByteArrayInputStream;
 import java.nio.file.NoSuchFileException;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -18,26 +23,23 @@ public class MailSenderUtils {
 
     private static Logger log = LoggerFactory.getLogger(MailSenderUtils.class);
 
-    private String fileNameTemplate;
-    private Map<String, Object> model;
-
     @Autowired
     JavaMailSender mailSender;
 
-    @Autowired
-    Configuration freemarkerConfiguration;
-
-    public boolean send(String from, String to, String subject) {
+    public boolean send(String from, String to, String subject, String text, List<Pair> listAttach) {
         boolean isSuccess = false;
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(from);
             helper.setTo(to);
             helper.setSubject(subject);
-
-            String text = getFreeMarkerTemplateContent();
+            if (listAttach != null) {
+                for (Pair pair : listAttach) {
+                    helper.addAttachment(pair.getName(), new ByteArrayResource(pair.getData()));
+                }
+            }
             log.info("Template content: {}", text);
 
             helper.setText(text, true);
@@ -51,34 +53,23 @@ public class MailSenderUtils {
         return isSuccess;
     }
 
-    private String getFreeMarkerTemplateContent() throws NoSuchFileException {
-        try {
-            return FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate(getFileNameTemplate()),
-                    getModel()
-            );
-        } catch (Exception e) {
-            log.error("Exception occured while processing " + getFileNameTemplate(), e);
-            throw new NoSuchFileException(getFileNameTemplate() + e.getMessage());
+
+
+    public static class Pair{
+        private String name;
+        private byte[] data;
+
+        public Pair(String name, byte[] data) {
+            this.name = name;
+            this.data = data;
         }
-    }
 
-    public String getFileNameTemplate() {
-        return fileNameTemplate;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public MailSenderUtils setFileNameTemplate(String fileNameTemplate) {
-        this.fileNameTemplate = fileNameTemplate;
-        return this;
-    }
+        public byte[] getData() {
+            return data;
+        }
+    }}
 
-    public Map<String, Object> getModel() {
-        return model;
-    }
-
-    public MailSenderUtils setModel(Map<String, Object> model) {
-        this.model = model;
-        return this;
-    }
-
-}

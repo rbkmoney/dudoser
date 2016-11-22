@@ -10,6 +10,7 @@ import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.FileHelper;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
+import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
 import com.rbkmoney.thrift.filter.PathConditionFilter;
 import com.rbkmoney.thrift.filter.rule.PathConditionRule;
@@ -41,7 +42,7 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
     private String fileNameTemplate;
 
     @Autowired
-    MailSenderUtils mailSenderUtils;
+    TemplateMailSenderUtils mailSenderUtils;
 
     private Filter filter;
 

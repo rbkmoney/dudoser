@@ -14,7 +14,7 @@ public class FileHelperTest {
 
     @Before
     public void setUp() {
-        FileHelper.pathToFolder = "/tmp/";
+        FileHelper.pathToFolder = "c:\\work\\";
     }
 
     @Test

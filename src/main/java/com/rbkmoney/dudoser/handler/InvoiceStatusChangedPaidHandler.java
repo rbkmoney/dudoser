@@ -7,6 +7,7 @@ import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
+import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
 import com.rbkmoney.thrift.filter.PathConditionFilter;
 import com.rbkmoney.thrift.filter.condition.CompareCondition;
@@ -41,7 +42,7 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
     InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
 
     @Autowired
-    MailSenderUtils mailSenderUtils;
+    TemplateMailSenderUtils mailSenderUtils;
 
     public InvoiceStatusChangedPaidHandler() {
         filter = new PathConditionFilter(

@@ -20,12 +20,12 @@ server:
 # bm poller
 bm:
   pooling:
-    url: http://127.0.0.1:8081/repo
-    maxPoolSize: 1
-    delay: 5000
+    url: @bm.polling.url@
+    maxPoolSize: @bm.polling.maxPoolSize@
+    delay: @bm.polling.delay@
 
 file:
-  pathToFolder: /tmp/
+  pathToFolder: @file.pathToFolder@
 
 mail:
   host: secure.emailsrvr.com
@@ -38,6 +38,12 @@ mail:
     auth: true
     starttls:
       enable: true
+
+test:
+  mail:
+    to: @test.mail.to@
+  server:
+    port:7778
 
 notification:
   payment:
