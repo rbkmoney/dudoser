@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -13,6 +14,7 @@ public class FileHelper {
 
     public final static String FILENAME_LAST_EVENT_ID = "last_event_id.txt";
 
+    @Value("${file.pathToFolder}")
     public static String pathToFolder;
 
     public static String getLastEventId() throws IOException {
