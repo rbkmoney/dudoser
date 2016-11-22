@@ -28,7 +28,7 @@
                 <bm.polling.url>http://127.0.0.1:8081/repo</bm.polling.url>
                 <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
                 <bm.polling.delay>5000</bm.polling.delay>
-                <file.pathToFolder>c:\\work\\</file.pathToFolder>
+                <file.pathToFolder>/tmp/</file.pathToFolder>
                 <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
             </properties>
         </profile>
