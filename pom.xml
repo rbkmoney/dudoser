@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <name>dudoser</name>
-    <description>Сервис уведомляющий плательщика об успешном платеже</description>
+    <description>Message notification service</description>
 
     <profiles>
         <profile>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2</version>
         </dependency>
 
         <dependency>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.106-65aa80f</version>
+            <version>1.107-1006c96</version>
         </dependency>
         <!--Test libs-->
         <dependency>

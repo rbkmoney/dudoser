@@ -13,7 +13,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 
-@WebServlet("/dudo")
+@WebServlet("/dudos")
 public class DudoserServlet extends GenericServlet {
 
     Logger log = LoggerFactory.getLogger(this.getClass());

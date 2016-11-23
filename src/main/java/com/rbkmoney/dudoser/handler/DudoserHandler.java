@@ -28,9 +28,6 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
 
     @Override
     public void send(Message message) throws InvalidRequest, TException {
-
-        log.info("mailSenderUtils == " + mailSenderUtils);
-
         MessageMail mail = message.getMessageMail();
         List<MailSenderUtils.Pair> listAttach = null;
         if (mail.getAttachments() != null) {
