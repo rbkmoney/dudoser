@@ -1,22 +1,15 @@
 package com.rbkmoney.dudoser.utils.mail;
 
-import freemarker.template.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-import java.io.ByteArrayInputStream;
-import java.nio.file.NoSuchFileException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class MailSenderUtils {
@@ -41,9 +34,7 @@ public class MailSenderUtils {
                 }
             }
             log.info("Template content: {}", text);
-
             helper.setText(text, true);
-
             mailSender.send(message);
             isSuccess = true;
         } catch (Exception e) {
@@ -53,9 +44,7 @@ public class MailSenderUtils {
         return isSuccess;
     }
 
-
-
-    public static class Pair{
+    public static class Pair {
         private String name;
         private byte[] data;
 
@@ -67,9 +56,9 @@ public class MailSenderUtils {
         public String getName() {
             return name;
         }
-
         public byte[] getData() {
             return data;
         }
-    }}
+    }
+}
 

@@ -24,7 +24,7 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
     private String fileNameTemplate;
     private Map<String, Object> model;
 
-        public boolean send(String from, String to, String subject) {
+    public boolean send(String from, String to, String subject) {
         try {
             return super.send(from, to, subject, getFreeMarkerTemplateContent(), null);
         } catch (NoSuchFileException e) {

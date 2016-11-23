@@ -34,7 +34,7 @@ public class EventStockPollerConfig {
     @Autowired
     EventService eventService;
 
-    @Bean(destroyMethod="destroy")
+    @Bean(destroyMethod = "destroy")
     public EventPublisher eventPublisher() throws IOException {
         return new PollingEventPublisherBuilder()
                 .withURI(bmUri.getURI())

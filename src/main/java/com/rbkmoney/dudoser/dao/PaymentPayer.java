@@ -65,7 +65,7 @@ public class PaymentPayer {
 
     public void setDate(String date) {
         String formattedDate;
-        if(date.isEmpty()) {
+        if (date.isEmpty()) {
             formattedDate = date;
         } else {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

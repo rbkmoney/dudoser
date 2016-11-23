@@ -8,7 +8,6 @@ import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.FileHelper;
-import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
@@ -58,13 +57,10 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoice();
         InvoicePayment invoicePayment = event.getPayload().getInvoiceEvent().getInvoicePaymentEvent().getInvoicePaymentStarted().getPayment();
-
         Payer payer = invoicePayment.getPayer();
-
         log.info("PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
 
         if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
-
             PaymentPayer paymentPayer = new PaymentPayer();
             paymentPayer.setInvoiceId(invoiceId);
             paymentPayer.setAmount(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()));
@@ -92,12 +88,11 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
                 log.error("Mail not send {}", paymentPayer.getTo());
             }
 
-            if(!inMemoryPaymentPayerDao.add(paymentPayer)) {
+            if (!inMemoryPaymentPayerDao.add(paymentPayer)) {
                 log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
             } else {
                 log.info("PaymentStartedHandler: save Payment Payer, invoiceId {}", invoiceId);
             }
-
         }
 
         try {

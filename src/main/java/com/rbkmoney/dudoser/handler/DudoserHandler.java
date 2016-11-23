@@ -5,7 +5,6 @@ import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
 import com.rbkmoney.damsel.message_sender.MessageSenderSrv;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
-import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
                             .stream()
                             .map(x -> new MailSenderUtils.Pair(x.getName(), x.getData()))
                             .collect(Collectors.toList());
-
         }
         for (String to : mail.getToEmails()) {
             if (mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach)) {

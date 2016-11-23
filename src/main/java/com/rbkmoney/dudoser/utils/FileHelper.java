@@ -24,7 +24,7 @@ public class FileHelper {
     public static File getFile(String filename) throws IOException {
         File file = new File(FileHelper.pathToFolder + filename);
         if (!file.exists()) {
-            if(!Optional.ofNullable(file.getParentFile()).isPresent()){
+            if (!Optional.ofNullable(file.getParentFile()).isPresent()) {
                 file.getParentFile().mkdirs();
             }
             file.createNewFile();

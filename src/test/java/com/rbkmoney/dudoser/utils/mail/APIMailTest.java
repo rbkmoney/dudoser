@@ -1,9 +1,7 @@
 package com.rbkmoney.dudoser.utils.mail;
 
 import com.rbkmoney.damsel.message_sender.*;
-import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.DudoserHandler;
-import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.woody.api.event.ClientEventListener;
 import com.rbkmoney.woody.api.event.CompositeClientEventListener;
 import com.rbkmoney.woody.api.generator.IdGenerator;
@@ -21,7 +19,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +26,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.mail.MessagingException;
 import javax.servlet.Servlet;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -49,10 +41,9 @@ public class APIMailTest {
     @Autowired
     MailSenderUtils mailSenderUtils;
 
-
     private HandlerCollection handlerCollection;
     protected Server server;
-    @Value ("${test.server.port:7778}")
+    @Value("${test.server.port:7778}")
     protected int serverPort;
     @Value("${mail.username}")
     private String from;
@@ -102,7 +93,6 @@ public class APIMailTest {
     protected String getUrlString(String contextPath) {
         return getUrlString() + contextPath;
     }
-
 
 
     protected static <T> T createThriftRPCClient(Class<T> iface, IdGenerator idGenerator, ClientEventListener eventListener, String url) {

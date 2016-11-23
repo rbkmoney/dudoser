@@ -1,30 +1,7 @@
 package com.rbkmoney.dudoser.utils.mail;
 
-import com.rbkmoney.damsel.message_sender.MailBody;
-import com.rbkmoney.damsel.message_sender.Message;
-import com.rbkmoney.damsel.message_sender.MessageMail;
-import com.rbkmoney.damsel.message_sender.MessageSenderSrv;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
-import com.rbkmoney.dudoser.handler.DudoserHandler;
 import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.woody.api.event.ClientEventListener;
-import com.rbkmoney.woody.api.event.CompositeClientEventListener;
-import com.rbkmoney.woody.api.generator.IdGenerator;
-import com.rbkmoney.woody.thrift.impl.http.THClientBuilder;
-import com.rbkmoney.woody.thrift.impl.http.THServiceBuilder;
-import com.rbkmoney.woody.thrift.impl.http.event.ClientEventLogListener;
-import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
-import com.rbkmoney.woody.thrift.impl.http.generator.TimestampIdGenerator;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.thrift.TException;
-import org.apache.thrift.TProcessor;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
-import javax.servlet.Servlet;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
