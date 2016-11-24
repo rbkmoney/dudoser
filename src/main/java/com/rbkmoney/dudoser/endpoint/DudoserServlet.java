@@ -25,7 +25,6 @@ public class DudoserServlet extends GenericServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        log.info("DudoserServlet init");
         super.init(config);
         thriftServlet = new THServiceBuilder()
                 .withEventListener(

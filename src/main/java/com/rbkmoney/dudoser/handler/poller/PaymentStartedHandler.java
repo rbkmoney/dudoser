@@ -1,4 +1,4 @@
-package com.rbkmoney.dudoser.handler;
+package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class PaymentStartedHandler implements Handler<StockEvent> {
+public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -83,9 +83,9 @@ public class PaymentStartedHandler implements Handler<StockEvent> {
             mailSenderUtils.setFileNameTemplate(fileNameTemplate).setModel(model);
 
             if (mailSenderUtils.send(from, paymentPayer.getTo(), subject)) {
-                log.info("Mail send {}", paymentPayer.getTo());
+                log.info("Mail send from {} to {}", from, paymentPayer.getTo());
             } else {
-                log.error("Mail not send {}", paymentPayer.getTo());
+                log.error("Mail not send from {} to {}", from,  paymentPayer.getTo());
             }
 
             if (!inMemoryPaymentPayerDao.add(paymentPayer)) {

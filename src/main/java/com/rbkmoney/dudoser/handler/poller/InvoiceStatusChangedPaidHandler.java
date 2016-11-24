@@ -1,4 +1,4 @@
-package com.rbkmoney.dudoser.handler;
+package com.rbkmoney.dudoser.handler.poller;
 
 
 import com.rbkmoney.damsel.event_stock.StockEvent;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
+public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<StockEvent> {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -67,9 +67,9 @@ public class InvoiceStatusChangedPaidHandler implements Handler<StockEvent> {
 
             mailSenderUtils.setFileNameTemplate(fileNameTemplate).setModel(model);
             if (mailSenderUtils.send(from, payment.getTo(), subject)) {
-                log.info("Mail send {}", payment.getTo());
+                log.info("Mail send from {} to {}", from, payment.getTo());
             } else {
-                log.error("Mail not send {}", payment.getTo());
+                log.error("Mail not send from {} to {}", from, payment.getTo());
             }
 
             inMemoryPaymentPayerDao.delete(invoiceId);

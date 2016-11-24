@@ -1,8 +1,8 @@
 package com.rbkmoney.dudoser.configuration;
 
-import com.rbkmoney.dudoser.handler.Handler;
 import com.rbkmoney.dudoser.handler.poller.EventStockErrorHandler;
 import com.rbkmoney.dudoser.handler.poller.EventStockHandler;
+import com.rbkmoney.dudoser.handler.poller.PollingEventHandler;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.eventstock.client.*;
 import com.rbkmoney.eventstock.client.poll.EventFlowFilter;
@@ -29,7 +29,7 @@ public class EventStockPollerConfig {
     int maxPoolSize;
 
     @Autowired
-    List<Handler> handlers;
+    List<PollingEventHandler> pollingEventHandlers;
 
     @Autowired
     EventService eventService;
@@ -38,7 +38,7 @@ public class EventStockPollerConfig {
     public EventPublisher eventPublisher() throws IOException {
         return new PollingEventPublisherBuilder()
                 .withURI(bmUri.getURI())
-                .withEventHandler(new EventStockHandler(handlers))
+                .withEventHandler(new EventStockHandler(pollingEventHandlers))
                 .withErrorHandler(new EventStockErrorHandler())
                 .withMaxPoolSize(maxPoolSize)
                 .withPollDelay(pollDelay)

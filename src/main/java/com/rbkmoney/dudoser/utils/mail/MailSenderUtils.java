@@ -33,7 +33,7 @@ public class MailSenderUtils {
                     helper.addAttachment(pair.getName(), new ByteArrayResource(pair.getData()));
                 }
             }
-            log.info("Template content: {}", text);
+            log.debug("Template content: {}", text);
             helper.setText(text, true);
             mailSender.send(message);
             isSuccess = true;
@@ -56,6 +56,7 @@ public class MailSenderUtils {
         public String getName() {
             return name;
         }
+
         public byte[] getData() {
             return data;
         }
