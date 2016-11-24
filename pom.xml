@@ -31,7 +31,7 @@
                 <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
                 <dudos.datasource.username>postgres</dudos.datasource.username>
-                <dudos.datasource.password>postgres</dudos.datasource.password>
+                <dudos.datasource.password>admin</dudos.datasource.password>
 
             </properties>
         </profile>

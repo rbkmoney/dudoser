@@ -12,7 +12,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.thrift.TException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
@@ -23,8 +25,12 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Component
 //@Ignore("integration test")
 public class APIMailTest {
+
+    @Value("${server.port}")
+    private String serverPort;
 
     protected static <T> T createThriftRPCClient(Class<T> iface, IdGenerator idGenerator, ClientEventListener eventListener, String url) {
         try {
@@ -43,17 +49,17 @@ public class APIMailTest {
     public void testAPI() throws TException {
         sendMail();
     }
-
+/*
     public static void main(String[] args) throws TException {
         sendMail();
-    }
+    }*/
 
-    private static void sendMail() throws TException {
+    private void sendMail() throws TException {
         ClientEventListener clientEventLogListener = new CompositeClientEventListener(
                 new ClientEventLogListener(),
                 new HttpClientEventLogListener()
         );
-        MessageSenderSrv.Iface c = createThriftRPCClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener, "http://localhost:8022/dudos");
+        MessageSenderSrv.Iface c = createThriftRPCClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener, "http://localhost:"+serverPort+"/dudos");
         List<String> listTo = new ArrayList<String>();
         listTo.add("i.arsanukaev@rbkmoney.com");
         Message m = new Message();
