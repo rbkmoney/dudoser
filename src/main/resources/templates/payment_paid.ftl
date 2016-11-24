@@ -59,7 +59,8 @@
                                             <td style="border-bottom:1px dashed #e4e4e4;" colspan="2" width="540"
                                                 valign="middle">
                                                 <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
-                                                    Вы осуществили платеж на сумму  ${paymentPayer.amountWithCurrency} <br>
+                                                    Вы осуществили платеж на сумму  ${paymentPayer.amountWithCurrency}
+                                                    <br>
                                                     по счету № ${paymentPayer.invoiceId} от ${paymentPayer.date}
                                                 </p>
                                             </td>
@@ -68,20 +69,22 @@
                                         <tr>
                                             <td style="border-bottom:1px dashed #e4e4e4;" width="10">&nbsp;</td>
                                             <td style="border-bottom:1px dashed #e4e4e4;" width="540" valign="middle">
-                                            <table border="0" cellspacing="0" cellpadding="0" width="540">
-                                                <tr>
-                                                    <td style="border-bottom:1px dashed #e4e4e4;" width="170" valign="middle">
-                                                        <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
-                                                            Тип карты:
-                                                        </p>
-                                                    </td>
-                                                    <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
-                                                        <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
-                                                        ${paymentPayer.cardType}
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                                <table border="0" cellspacing="0" cellpadding="0" width="540">
+                                                    <tr>
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="170"
+                                                            valign="middle">
+                                                            <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
+                                                                Тип карты:
+                                                            </p>
+                                                        </td>
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="370"
+                                                            valign="middle">
+                                                            <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
+                                                            ${paymentPayer.cardType}
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
 
@@ -90,12 +93,14 @@
                                             <td style="border-bottom:1px dashed #e4e4e4;" width="540" valign="middle">
                                                 <table border="0" cellspacing="0" cellpadding="0" width="540">
                                                     <tr>
-                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="170" valign="middle">
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="170"
+                                                            valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
                                                                 Маскированная карта:
                                                             </p>
                                                         </td>
-                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="370"
+                                                            valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
                                                             ${paymentPayer.cardMaskPan}
                                                             </p>
@@ -110,12 +115,14 @@
                                             <td style="border-bottom:1px dashed #e4e4e4;" width="540" valign="middle">
                                                 <table border="0" cellspacing="0" cellpadding="0" width="540">
                                                     <tr>
-                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="170" valign="middle">
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="170"
+                                                            valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#494848;margin-top:15px;margin-bottom:15px;">
                                                                 E-mail:
                                                             </p>
                                                         </td>
-                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="370" valign="middle">
+                                                        <td style="border-bottom:1px dashed #e4e4e4;" width="370"
+                                                            valign="middle">
                                                             <p style="margin:0;padding:0;font-family:arial,verdana,sans-serif;font-size:14px;color:#010101;margin-top:15px;margin-bottom:15px;">
                                                             ${paymentPayer.to}
                                                             </p>

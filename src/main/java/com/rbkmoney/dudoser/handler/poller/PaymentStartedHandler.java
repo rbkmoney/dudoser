@@ -6,8 +6,8 @@ import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.dudoser.utils.FileHelper;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,8 +27,8 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${file.pathToFolder}")
-    private String pathToFolder;
+    @Autowired
+    EventService eventService;
 
     @Autowired
     InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
@@ -85,7 +84,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             if (mailSenderUtils.send(from, paymentPayer.getTo(), subject)) {
                 log.info("Mail send from {} to {}", from, paymentPayer.getTo());
             } else {
-                log.error("Mail not send from {} to {}", from,  paymentPayer.getTo());
+                log.error("Mail not send from {} to {}", from, paymentPayer.getTo());
             }
 
             if (!inMemoryPaymentPayerDao.add(paymentPayer)) {
@@ -96,10 +95,8 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
         }
 
         try {
-            FileHelper.pathToFolder = pathToFolder;
-            String fileName = FileHelper.getFile(FileHelper.FILENAME_LAST_EVENT_ID).getAbsolutePath();
-            FileHelper.writeFile(fileName, String.valueOf(eventId));
-        } catch (IOException e) {
+            eventService.setLastEventId(eventId);
+        } catch (Exception e) {
             log.error("Exception: not save Last id. Reason: " + e.getMessage());
         }
     }

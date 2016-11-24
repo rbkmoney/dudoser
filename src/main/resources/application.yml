@@ -24,9 +24,6 @@ bm:
     maxPoolSize: @bm.polling.maxPoolSize@
     delay: @bm.polling.delay@
 
-file:
-  pathToFolder: @file.pathToFolder@
-
 mail:
   host: secure.emailsrvr.com
   port: 587
@@ -60,3 +57,13 @@ spring:
     template-loader-path: classpath:templates/
     prefer-file-system-access: true
     charset: UTF-8
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: @dudos.datasource.url@
+    username: @dudos.datasource.username@
+    password: @dudos.datasource.password@
+    hikari:
+      maximum-pool-size: 3
+      idle-timeout: 30000
