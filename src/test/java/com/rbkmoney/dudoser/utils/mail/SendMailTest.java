@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.utils.mail;
 
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +24,8 @@ public class SendMailTest {
 
     @Autowired
     TemplateMailSenderUtils mailSenderUtils;
-
+    @Autowired
+    TemplateDao templateDao;
     @Value("${mail.username}")
     private String from;
     @Value("${test.mail.to}")
@@ -50,19 +52,21 @@ public class SendMailTest {
                 paymentPayer.getAmountWithCurrency()
         );
 
-        String template = "payment_paid.ftl";
+//        String template = "payment_paid.ftl";
 
-        boolean result = mailSenderUtils.setFileNameTemplate(template)
-                .setModel(model)
-                .send(from, to, subject);
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("PAYMENT.STARTED");
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+        mailSenderUtils.setModel(model);
+        boolean result = mailSenderUtils.send(from, to, subject);
 
         assertTrue(result);
 
-        template = "create_invoice.ftl";
+//        template = "create_invoice.ftl";
 
-        result = mailSenderUtils.setFileNameTemplate(template)
-                .setModel(model)
-                .send(from, to, subject);
+        freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("INVOICE.STATUS.CHANGED");
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+        mailSenderUtils.setModel(model);
+        result = mailSenderUtils.send(from, to, subject);
 
         assertTrue(result);
     }

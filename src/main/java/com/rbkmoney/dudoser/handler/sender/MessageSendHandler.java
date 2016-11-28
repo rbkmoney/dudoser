@@ -1,7 +1,6 @@
 package com.rbkmoney.dudoser.handler.sender;
 
 import com.rbkmoney.damsel.message_sender.Message;
-import com.rbkmoney.eventstock.client.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

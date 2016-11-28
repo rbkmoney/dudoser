@@ -7,5 +7,6 @@ public interface PollingEventHandler<T> extends Handler<T> {
     default boolean accept(T value) {
         return getFilter().match(value);
     }
+
     Filter getFilter();
 }

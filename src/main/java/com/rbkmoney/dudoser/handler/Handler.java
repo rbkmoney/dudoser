@@ -1,7 +1,5 @@
 package com.rbkmoney.dudoser.handler;
 
-import com.rbkmoney.thrift.filter.Filter;
-
 /**
  * Created by inal on 24.11.2016.
  */

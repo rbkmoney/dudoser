@@ -5,6 +5,7 @@ import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
@@ -33,8 +34,8 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     @Value("${notification.payment.paid.from}")
     private String from;
 
-    @Value("${notification.payment.paid.fileNameTemplate}")
-    private String fileNameTemplate;
+    @Autowired
+    TemplateDao templateDao;
 
     @Autowired
     InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
@@ -65,7 +66,10 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
                     payment.getAmountWithCurrency()
             );
 
-            mailSenderUtils.setFileNameTemplate(fileNameTemplate).setModel(model);
+            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("INVOICE.STATUS.CHANGED");
+            mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+            mailSenderUtils.setModel(model);
+
             if (mailSenderUtils.send(from, payment.getTo(), subject)) {
                 log.info("Mail send from {} to {}", from, payment.getTo());
             } else {

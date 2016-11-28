@@ -60,7 +60,7 @@ public class APIMailTest {
                 new ClientEventLogListener(),
                 new HttpClientEventLogListener()
         );
-        MessageSenderSrv.Iface c = createThriftRPCClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener, "http://localhost:"+serverPort+"/dudos");
+        MessageSenderSrv.Iface c = createThriftRPCClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener, "http://localhost:" + serverPort + "/dudos");
         List<String> listTo = new ArrayList<String>();
         listTo.add("i.arsanukaev@rbkmoney.com");
         Message m = new Message();

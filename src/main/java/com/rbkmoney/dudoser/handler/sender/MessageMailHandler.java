@@ -3,7 +3,6 @@ package com.rbkmoney.dudoser.handler.sender;
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
-import com.rbkmoney.thrift.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
