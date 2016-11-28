@@ -23,7 +23,11 @@ public class EventServiceTest {
 
     @Test
     public void getLastEventId() throws Exception {
-        assertEquals(eventService.getLastEventId(), eventService.getLastEventId());
+
+        Long lastEventId = eventService.getLastEventId();
+        if (lastEventId != null) {
+            assertEquals(lastEventId, eventService.getLastEventId());
+        }
     }
 
 }

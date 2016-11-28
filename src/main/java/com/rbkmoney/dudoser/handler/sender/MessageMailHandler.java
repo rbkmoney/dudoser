@@ -20,14 +20,13 @@ public class MessageMailHandler implements MessageHandler<Message> {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private Filter filter;
-
-    public MessageMailHandler() {
-        this.filter = o -> ((Message) o).isSetMessageMail();
-    }
-
     @Autowired
     MailSenderUtils mailSenderUtils;
+
+    @Override
+    public boolean accept(Message value) {
+        return value.isSetMessageMail();
+    }
 
     @Override
     public void handle(Message message) {
@@ -51,6 +50,6 @@ public class MessageMailHandler implements MessageHandler<Message> {
 
     @Override
     public Filter getFilter() {
-        return filter;
+        return null;
     }
 }
