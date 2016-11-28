@@ -13,24 +13,18 @@ import java.util.List;
  * Created by inal on 24.11.2016.
  */
 @Component
-public class MessageSendHandler implements EventHandler<Message> {
+public class MessageSendHandler {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private List<MessageHandler> messageHandlers;
 
-    @Override
-    public void handleEvent(Message message, String s) {
+    public void handleEvent(Message message) {
         for (MessageHandler messageHandler : messageHandlers) {
             if (messageHandler.accept(message)) {
                 messageHandler.handle(message);
                 break;
             }
         }
-    }
-
-    @Override
-    public void handleNoMoreElements(String s) {
-        log.info("HandleNoMoreElements with subsKey {}", s);
     }
 }
