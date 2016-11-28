@@ -10,6 +10,7 @@ import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
 import com.rbkmoney.woody.thrift.impl.http.generator.TimestampIdGenerator;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.thrift.TException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Component
-//@Ignore("integration test")
+@Ignore("integration test")
 public class APIMailTest {
 
     @Value("${server.port}")

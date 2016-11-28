@@ -6,6 +6,7 @@ import com.rbkmoney.damsel.event_stock.SourceEvent;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.*;
 import com.rbkmoney.dudoser.handler.poller.InvoiceStatusChangedPaidHandler;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@Ignore("Integration test")
+@Ignore("Integration test")
 public class InvoiceStatusChangedPaidHandlerTest {
 
     private final static long EVENT_ID = 1L;
