@@ -6,6 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -21,12 +22,15 @@ import static org.junit.Assert.assertTrue;
 public class SendMailTest {
 
     @Autowired
-    MailSenderUtils mailSenderUtils;
+    TemplateMailSenderUtils mailSenderUtils;
+
+    @Value("${mail.username}")
+    private String from;
+    @Value("${test.mail.to}")
+    private String to;
 
     @Test
     public void testMe() throws MessagingException {
-        String from = "a.cherkasov@rbkmoney.com";
-        String to = "a.cherkasov@rbkmoney.com";
 
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");

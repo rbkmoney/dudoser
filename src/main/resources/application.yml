@@ -20,12 +20,9 @@ server:
 # bm poller
 bm:
   pooling:
-    url: http://127.0.0.1:8081/repo
-    maxPoolSize: 1
-    delay: 5000
-
-file:
-  pathToFolder: /tmp/
+    url: @bm.polling.url@
+    maxPoolSize: @bm.polling.maxPoolSize@
+    delay: @bm.polling.delay@
 
 mail:
   host: secure.emailsrvr.com
@@ -38,6 +35,12 @@ mail:
     auth: true
     starttls:
       enable: true
+
+test:
+  mail:
+    to: @test.mail.to@
+  server:
+    port:7778
 
 notification:
   payment:
@@ -54,3 +57,13 @@ spring:
     template-loader-path: classpath:templates/
     prefer-file-system-access: true
     charset: UTF-8
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: @dudos.datasource.url@
+    username: @dudos.datasource.username@
+    password: @dudos.datasource.password@
+    hikari:
+      maximum-pool-size: 3
+      idle-timeout: 30000
