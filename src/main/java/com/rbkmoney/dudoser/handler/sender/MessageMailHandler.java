@@ -47,9 +47,4 @@ public class MessageMailHandler implements MessageHandler<Message> {
             }
         }
     }
-
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
 }

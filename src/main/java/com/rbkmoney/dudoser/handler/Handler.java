@@ -7,11 +7,7 @@ import com.rbkmoney.thrift.filter.Filter;
  */
 public interface Handler<T> {
 
-    default boolean accept(T value) {
-        return getFilter().match(value);
-    }
+    boolean accept(T value);
 
     void handle(T value);
-
-    Filter getFilter();
 }
