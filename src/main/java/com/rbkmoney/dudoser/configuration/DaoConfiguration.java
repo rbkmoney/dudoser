@@ -22,7 +22,7 @@ public class DaoConfiguration {
     }
 
     @Bean
-    @DependsOn
+    @DependsOn("dbInitializer")
     public TemplateDao templateDao(DataSource dataSource) {
         return new TemplateDaoImpl(dataSource);
     }

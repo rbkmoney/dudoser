@@ -9,8 +9,6 @@ create table dudos.last_event_id
 
 -- Table: dudos.merchant_shop_template_types
 
--- DROP TABLE dudos.merchant_shop_template_types;
-
 CREATE TABLE dudos.merchant_shop_template_types
 (
     id smallint NOT NULL,
@@ -26,8 +24,6 @@ COMMENT ON TABLE dudos.merchant_shop_template_types
 
 -- Table: dudos.templates
 
--- DROP TABLE dudos.templates;
-
 CREATE TABLE dudos.templates
 (
     id bigint NOT NULL,
@@ -36,20 +32,16 @@ CREATE TABLE dudos.templates
     CONSTRAINT pk_templates PRIMARY KEY (id)
 );
 
-ALTER TABLE dudos.templates
-    OWNER to postgres;
 COMMENT ON TABLE dudos.templates
     IS 'Table with templates for messages';
 
 -- Table: dudos.merchant_shop_bind
 
--- DROP TABLE dudos.merchant_shop_bind;
-
 CREATE TABLE dudos.merchant_shop_bind
 (
     id bigint NOT NULL,
-    merch_id bigint,
-    shop_id bigint,
+    merch_id character varying(50),
+    shop_id character varying(50),
     template_id bigint NOT NULL,
     type smallint NOT NULL,
     CONSTRAINT pk_merch_shop_bind PRIMARY KEY (id),
@@ -63,11 +55,8 @@ CREATE TABLE dudos.merchant_shop_bind
         ON DELETE NO ACTION
 );
 
-ALTER TABLE dudos.merchant_shop_bind
-    OWNER to postgres;
 COMMENT ON TABLE dudos.merchant_shop_bind
     IS 'Binding merchant shops with templates';
-
 COMMENT ON CONSTRAINT fk_merch_templates ON dudos.merchant_shop_bind
     IS 'Binding merch_shop.template_id to templates.id';
 COMMENT ON CONSTRAINT fk_merch_types ON dudos.merchant_shop_bind

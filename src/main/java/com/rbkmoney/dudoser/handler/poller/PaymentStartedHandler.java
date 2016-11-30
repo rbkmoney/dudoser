@@ -4,10 +4,10 @@ import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
+import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.TemplateDao;
-import com.rbkmoney.dudoser.dao.TemplateDaoImpl;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
@@ -81,7 +81,8 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
                     paymentPayer.getAmountWithCurrency()
             );
 
-            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("PAYMENT.STARTED");
+            //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
+            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STARTED);
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 

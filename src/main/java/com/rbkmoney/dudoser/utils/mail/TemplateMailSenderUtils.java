@@ -7,13 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.file.NoSuchFileException;
 import java.util.Map;
 
 /**
@@ -40,7 +38,6 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
     }
 
     public String getFilledFreeMarkerTemplateContent() {
-
         Template t = null;
         try {
             t = new Template("templateName", new StringReader(getFreeMarkerTemplateContent()), freemarkerConfiguration);

@@ -1,9 +1,9 @@
 package com.rbkmoney.dudoser.utils.mail;
 
+import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.Converter;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Ignore("integration test")
+//@Ignore("integration test")
 public class SendMailTest {
 
     @Autowired
@@ -54,7 +54,7 @@ public class SendMailTest {
 
 //        String template = "payment_paid.ftl";
 
-        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("PAYMENT.STARTED");
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STARTED, "1", "1");
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         mailSenderUtils.setModel(model);
         boolean result = mailSenderUtils.send(from, to, subject);
@@ -63,7 +63,7 @@ public class SendMailTest {
 
 //        template = "create_invoice.ftl";
 
-        freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("INVOICE.STATUS.CHANGED");
+        freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.INVOICE_STATUS_CHANGED, "1", "1");
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         mailSenderUtils.setModel(model);
         result = mailSenderUtils.send(from, to, subject);

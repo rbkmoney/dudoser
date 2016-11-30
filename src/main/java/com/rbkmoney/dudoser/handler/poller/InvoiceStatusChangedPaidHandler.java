@@ -3,6 +3,7 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
+import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.TemplateDao;
@@ -65,8 +66,8 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
                     payment.getDate(),
                     payment.getAmountWithCurrency()
             );
-
-            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode("INVOICE.STATUS.CHANGED");
+            //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
+            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.INVOICE_STATUS_CHANGED);
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 
