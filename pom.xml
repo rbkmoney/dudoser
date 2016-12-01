@@ -32,9 +32,23 @@
                 <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
                 <dudos.datasource.username>postgres</dudos.datasource.username>
                 <dudos.datasource.password>admin</dudos.datasource.password>
-
             </properties>
         </profile>
+        <profile>
+            <id>ci</id>
+            <properties>
+                <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
+                <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
+                <bm.polling.delay>5000</bm.polling.delay>
+                <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
+                <db.url.host.name>dudoser_db</db.url.host.name>
+                <db.url.host.port>5432</db.url.host.port>
+                <dudos.datasource.url>jdbc:postgresql://${db.url.host.name}:${db.url.host.port}/${db.url.name}</dudos.datasource.url>
+                <dudos.datasource.username>postgres</dudos.datasource.username>
+                <dudos.datasource.password>postgres</dudos.datasource.password>
+            </properties>
+        </profile>
+
     </profiles>
 
     <properties>
@@ -43,6 +57,7 @@
         <postgresql.jdbc.version>9.4.1208</postgresql.jdbc.version>
         <custom.flyway.version>4.0.3</custom.flyway.version>
         <custom.jooq.version>3.8.4</custom.jooq.version>
+        <db.url.name>dudoser</db.url.name>
     </properties>
 
     <dependencies>
@@ -155,6 +170,7 @@
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp</artifactId>
             <version>3.1.7</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
