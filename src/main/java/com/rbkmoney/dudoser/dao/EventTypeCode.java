@@ -13,8 +13,7 @@ public enum EventTypeCode {
         this.code = s;
     }
 
-    @Override
-    public String toString() {
+    public String getCode() {
         return code;
     }
 }

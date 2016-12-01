@@ -41,7 +41,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
                         "where mstt.id=msb.type and msb.template_id=t.id and mstt.code=:code and msb.merch_id is null and msb.shop_id is null";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("code", typeCode.toString());
+        params.addValue("code", typeCode.getCode());
         params.addValue("merch_id", merchId);
         params.addValue("shop_id", shopId);
         log.debug("Params for select template: typeCode = {}, merchId = {}, shopId = {}", typeCode, merchId, shopId);
@@ -64,7 +64,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
                         "where mstt.id=msb.type and msb.template_id=t.id and mstt.code=:code and msb.merch_id is null and msb.shop_id is null";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("code", typeCode.toString());
+        params.addValue("code", typeCode.getCode());
         try {
             return getNamedParameterJdbcTemplate().queryForObject(sql, params, String.class);
         } catch (NestedRuntimeException e) {

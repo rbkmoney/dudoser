@@ -1,4 +1,4 @@
-insert into dudos.last_event_id (id) values (1);
+insert into dudos.last_event_id (id, event_id) values (1, 1);
 
 insert into dudos.merchant_shop_template_types(id, code, description) values(1, 'PAYMENT.STARTED', 'Инициация платежа');
 insert into dudos.merchant_shop_template_types(id, code, description) values(2, 'INVOICE.STATUS.CHANGED', 'Изменение статуса платежа');

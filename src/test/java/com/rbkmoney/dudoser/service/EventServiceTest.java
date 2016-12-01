@@ -14,8 +14,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Component
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EventServiceTest {
 
     @Autowired
