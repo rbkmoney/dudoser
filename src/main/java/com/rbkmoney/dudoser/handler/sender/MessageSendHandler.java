@@ -18,7 +18,7 @@ public class MessageSendHandler {
     @Autowired
     private List<MessageHandler> messageHandlers;
 
-    public void handleEvent(Message message) {
+    public void handleEvent(Message message) throws Exception {
         for (MessageHandler messageHandler : messageHandlers) {
             if (messageHandler.accept(message)) {
                 messageHandler.handle(message);

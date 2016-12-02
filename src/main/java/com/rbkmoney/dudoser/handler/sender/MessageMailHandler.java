@@ -28,7 +28,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
     }
 
     @Override
-    public void handle(Message message) {
+    public void handle(Message message) throws Exception {
         MessageMail mail = message.getMessageMail();
         List<MailSenderUtils.Pair> listAttach = null;
         if (mail.getAttachments() != null) {
@@ -43,6 +43,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
                 log.info("Mail send from {} to {}", mail.getFromEmail(), to);
             } else {
                 log.error("Mail not send from {} to {}", mail.getFromEmail(), to);
+                throw new Exception("Mail not send.");
             }
         }
     }

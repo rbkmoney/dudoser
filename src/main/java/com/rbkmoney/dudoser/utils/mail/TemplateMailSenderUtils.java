@@ -21,6 +21,7 @@ import java.util.Map;
 public class TemplateMailSenderUtils extends MailSenderUtils {
 
     private static Logger log = LoggerFactory.getLogger(TemplateMailSenderUtils.class);
+    private static final String UNUSED_TEMPLATE_NAME = "templateName";
 
     @Autowired
     Configuration freemarkerConfiguration;
@@ -40,15 +41,12 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
     public String getFilledFreeMarkerTemplateContent() {
         Template t = null;
         try {
-            t = new Template("templateName", new StringReader(getFreeMarkerTemplateContent()), freemarkerConfiguration);
+            t = new Template(UNUSED_TEMPLATE_NAME, new StringReader(getFreeMarkerTemplateContent()), freemarkerConfiguration);
             Writer out = new StringWriter();
             t.process(getModel(), out);
             return out.toString();
-        } catch (IOException e) {
-            log.error("Throwing IOException while template processing", e);
-            throw new RuntimeException(e);
-        } catch (TemplateException e) {
-            log.error("Throwing TemlplateException while template processing", e);
+        } catch (IOException | TemplateException e) {
+            log.error("Throwing unknown exception while template processing", e);
             throw new RuntimeException(e);
         }
     }
@@ -69,5 +67,4 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
         this.model = model;
         return this;
     }
-
 }

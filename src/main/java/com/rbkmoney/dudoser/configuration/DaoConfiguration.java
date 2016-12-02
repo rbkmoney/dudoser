@@ -4,8 +4,8 @@ import com.rbkmoney.dudoser.dao.LastEventDao;
 import com.rbkmoney.dudoser.dao.LastEventDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.TemplateDaoImpl;
-import com.rbkmoney.dudoser.domain.Dudos;
 import org.jooq.Schema;
+import org.jooq.impl.SchemaImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -29,7 +29,6 @@ public class DaoConfiguration {
 
     @Bean
     public Schema dbSchema() {
-        return Dudos.DUDOS;
+        return new SchemaImpl("dudos");
     }
-
 }

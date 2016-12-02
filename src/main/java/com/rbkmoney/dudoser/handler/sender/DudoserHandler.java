@@ -21,6 +21,10 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
 
     @Override
     public void send(Message message) throws InvalidRequest, TException {
-        messageSendHandler.handleEvent(message);
+        try {
+            messageSendHandler.handleEvent(message);
+        } catch (Exception e) {
+            throw new TException(e);
+        }
     }
 }
