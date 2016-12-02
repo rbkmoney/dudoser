@@ -11,5 +11,4 @@ public class Converter {
     public static Long stringToLong(String str) throws NumberFormatException {
         return (str.isEmpty()) ? null : Long.parseLong(str);
     }
-
 }

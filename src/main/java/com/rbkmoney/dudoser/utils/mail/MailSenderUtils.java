@@ -20,8 +20,8 @@ public class MailSenderUtils {
     JavaMailSender mailSender;
 
     public boolean send(String from, String to, String subject, String text, List<Pair> listAttach) {
+        log.info("Send mail from {} with subject {}", from, subject);
         boolean isSuccess = false;
-
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -36,6 +36,7 @@ public class MailSenderUtils {
             helper.setText(text, true);
             mailSender.send(message);
             isSuccess = true;
+            log.info("Mail successfully sended.");
         } catch (Exception e) {
             log.error("Exception MailUtils", e);
         }

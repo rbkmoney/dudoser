@@ -35,5 +35,4 @@ public class EventStockHandler implements EventHandler<StockEvent> {
     public void handleNoMoreElements(String subsKey) {
         log.info("HandleNoMoreElements with subsKey {}", subsKey);
     }
-
 }

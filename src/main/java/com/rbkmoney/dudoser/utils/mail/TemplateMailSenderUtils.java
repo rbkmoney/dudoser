@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.utils.mail;
 
+import com.rbkmoney.dudoser.exception.UnknownException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -47,7 +48,7 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
             return out.toString();
         } catch (IOException | TemplateException e) {
             log.error("Throwing unknown exception while template processing", e);
-            throw new RuntimeException(e);
+            throw new UnknownException(e);
         }
     }
 

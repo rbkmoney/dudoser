@@ -29,6 +29,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
 
     @Override
     public void handle(Message message) throws Exception {
+        log.info("MessageMailHandler started.");
         MessageMail mail = message.getMessageMail();
         List<MailSenderUtils.Pair> listAttach = null;
         if (mail.getAttachments() != null) {
@@ -37,6 +38,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
                             .stream()
                             .map(x -> new MailSenderUtils.Pair(x.getName(), x.getData()))
                             .collect(Collectors.toList());
+            log.info("Attach count = " + listAttach.size());
         }
         for (String to : mail.getToEmails()) {
             if (mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach)) {
@@ -46,5 +48,6 @@ public class MessageMailHandler implements MessageHandler<Message> {
                 throw new Exception("Mail not send.");
             }
         }
+        log.info("MessageMailHandler end.");
     }
 }
