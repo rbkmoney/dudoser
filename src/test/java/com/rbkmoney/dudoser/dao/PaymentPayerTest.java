@@ -35,22 +35,4 @@ public class PaymentPayerTest {
         paymentPayer.setCurrency("FRA");
         assertEquals("-0.01 FRA", paymentPayer.getAmountWithCurrency());
     }
-
-//    @Test
-//    public void testSetAndGetDate() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-//
-//        String dateTime = "2016-03-22T00:12:00Z";
-//        String expected = "2016-03-22";
-//
-//        paymentPayer.setDate(dateTime);
-//        assertEquals(expected, paymentPayer.getDate());
-//
-//        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
-//        assertEquals(expected, localDateTime.toLocalDate().toString());
-//
-//        ZonedDateTime result = ZonedDateTime.parse(dateTime, formatter);
-//        assertEquals(expected, result.toLocalDate().toString());
-//    }
-
 }

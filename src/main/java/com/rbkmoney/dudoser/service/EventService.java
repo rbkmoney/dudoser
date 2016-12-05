@@ -24,5 +24,4 @@ public class EventService {
         lastEventDao.set(id);
         log.info("Set last event id = {}", id);
     }
-
 }

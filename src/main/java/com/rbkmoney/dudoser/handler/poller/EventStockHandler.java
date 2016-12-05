@@ -21,7 +21,11 @@ public class EventStockHandler implements EventHandler<StockEvent> {
     public void handleEvent(StockEvent stockEvent, String subsKey) {
         for (PollingEventHandler pollingEventHandler : pollingEventHandlers) {
             if (pollingEventHandler.accept(stockEvent)) {
-                pollingEventHandler.handle(stockEvent);
+                try {
+                    pollingEventHandler.handle(stockEvent);
+                } catch (Exception e) {
+                    log.error("Error when poller handling", e);
+                }
                 break;
             }
         }
@@ -31,5 +35,4 @@ public class EventStockHandler implements EventHandler<StockEvent> {
     public void handleNoMoreElements(String subsKey) {
         log.info("HandleNoMoreElements with subsKey {}", subsKey);
     }
-
 }

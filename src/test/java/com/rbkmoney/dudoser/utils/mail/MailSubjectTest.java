@@ -19,7 +19,5 @@ public class MailSubjectTest {
         assertEquals("Счет № " + invoiceId + " от " + date + " на сумму " + amountWithCurrency + ". Успешно оплачен",
                 String.format(MailSubject.PAYMENT_PAID.pattern, invoiceId, date, amountWithCurrency)
         );
-
     }
-
 }

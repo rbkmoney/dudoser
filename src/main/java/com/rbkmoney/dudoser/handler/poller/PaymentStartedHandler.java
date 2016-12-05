@@ -4,8 +4,10 @@ import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
+import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
@@ -36,8 +38,8 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
     @Value("${notification.create.invoice.from}")
     private String from;
 
-    @Value("${notification.create.invoice.fileNameTemplate}")
-    private String fileNameTemplate;
+    @Autowired
+    TemplateDao templateDao;
 
     @Autowired
     TemplateMailSenderUtils mailSenderUtils;
@@ -79,7 +81,10 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
                     paymentPayer.getAmountWithCurrency()
             );
 
-            mailSenderUtils.setFileNameTemplate(fileNameTemplate).setModel(model);
+            //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
+            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STARTED);
+            mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+            mailSenderUtils.setModel(model);
 
             if (mailSenderUtils.send(from, paymentPayer.getTo(), subject)) {
                 log.info("Mail send from {} to {}", from, paymentPayer.getTo());

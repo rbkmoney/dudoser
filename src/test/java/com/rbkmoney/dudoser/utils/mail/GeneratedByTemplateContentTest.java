@@ -1,6 +1,8 @@
 package com.rbkmoney.dudoser.utils.mail;
 
+import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,26 +13,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Ignore("integration test")
-public class SendMailTest {
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class GeneratedByTemplateContentTest {
     @Autowired
     TemplateMailSenderUtils mailSenderUtils;
-
+    @Autowired
+    TemplateDao templateDao;
     @Value("${mail.username}")
     private String from;
     @Value("${test.mail.to}")
     private String to;
 
     @Test
-    public void testMe() throws MessagingException {
+    public void testMe() throws MessagingException, IOException, URISyntaxException {
 
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
@@ -44,27 +49,12 @@ public class SendMailTest {
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
 
-        String subject = String.format(MailSubject.FORMED_THROUGH.pattern,
-                paymentPayer.getInvoiceId(),
-                paymentPayer.getDate(),
-                paymentPayer.getAmountWithCurrency()
-        );
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STARTED, "1", "1");
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+        mailSenderUtils.setModel(model);
 
-        String template = "payment_paid.ftl";
-
-        boolean result = mailSenderUtils.setFileNameTemplate(template)
-                .setModel(model)
-                .send(from, to, subject);
-
-        assertTrue(result);
-
-        template = "create_invoice.ftl";
-
-        result = mailSenderUtils.setFileNameTemplate(template)
-                .setModel(model)
-                .send(from, to, subject);
-
-        assertTrue(result);
+        String filledInvoice = mailSenderUtils.getFilledFreeMarkerTemplateContent().replaceAll("\r\n", "\n");
+        String content = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("payment_started.html").toURI())), "UTF-8").replaceAll("\r\n", "\n");
+        assertEquals(filledInvoice, content);
     }
-
 }
