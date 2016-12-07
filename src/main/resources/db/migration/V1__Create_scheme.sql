@@ -55,6 +55,27 @@ CREATE TABLE dudos.merchant_shop_bind
         ON DELETE NO ACTION
 );
 
+CREATE SEQUENCE dudos.javaobject_id_seq
+    INCREMENT 1
+    START 5
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+-- Table: dudos.javaobject
+
+-- DROP TABLE dudos.javaobject;
+
+CREATE TABLE dudos.javaobject
+(
+    id bigint NOT NULL DEFAULT nextval('dudos.javaobject_id_seq'::regclass),
+    source_id character varying COLLATE pg_catalog."default" NOT NULL,
+    object bytea,
+    CONSTRAINT javaobject_pkey PRIMARY KEY (id)
+);
+
+COMMENT ON TABLE dudos.javaobject
+    IS 'Table for saving java objects';
 COMMENT ON TABLE dudos.merchant_shop_bind
     IS 'Binding merchant shops with templates';
 COMMENT ON CONSTRAINT fk_merch_templates ON dudos.merchant_shop_bind

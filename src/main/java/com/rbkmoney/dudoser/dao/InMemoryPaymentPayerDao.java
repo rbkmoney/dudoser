@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.exception.UnknownException;
 import org.jooq.DSLContext;
-import org.jooq.InsertValuesStep3;
 import org.jooq.Record1;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
