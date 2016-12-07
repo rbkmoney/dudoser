@@ -1,11 +1,12 @@
 package com.rbkmoney.dudoser.dao;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PaymentPayer {
+public class PaymentPayer implements Serializable{
 
     private BigDecimal amount;
     private String currency;

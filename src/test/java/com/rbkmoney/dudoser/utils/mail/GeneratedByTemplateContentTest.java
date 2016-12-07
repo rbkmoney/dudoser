@@ -2,6 +2,7 @@ package com.rbkmoney.dudoser.utils.mail;
 
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.PaymentPayerDao;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Ignore;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +37,7 @@ public class GeneratedByTemplateContentTest {
     private String to;
 
     @Test
-    public void testMe() throws MessagingException, IOException, URISyntaxException {
+    public void testMe() throws Exception {
 
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");

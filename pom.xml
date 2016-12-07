@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -31,7 +31,7 @@
                 <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
                 <dudos.datasource.username>postgres</dudos.datasource.username>
-                <dudos.datasource.password>admin</dudos.datasource.password>
+                <dudos.datasource.password>postgres</dudos.datasource.password>
             </properties>
         </profile>
         <profile>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.107-1006c96</version>
+            <version>1.108-35f8043</version>
         </dependency>
         <!--Test libs-->
         <dependency>
@@ -232,7 +232,7 @@
                     <generator>
                         <database>
                             <name>org.jooq.util.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
+                            <includes>last_event_id|javaobject</includes>
                             <excludes>schema_version</excludes>
                             <inputSchema>dudos</inputSchema>
                         </database>
@@ -243,13 +243,13 @@
                     </generator>
                 </configuration>
                 <!-- The plugin should hook into the generate goal -->
-  <!--              <executions>
+                <executions>
                     <execution>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                     </execution>
-                </executions>-->
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -28,5 +28,4 @@ public class EventServiceTest {
             assertEquals(lastEventId, eventService.getLastEventId());
         }
     }
-
 }

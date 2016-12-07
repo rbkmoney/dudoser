@@ -1,9 +1,6 @@
 package com.rbkmoney.dudoser.configuration;
 
-import com.rbkmoney.dudoser.dao.LastEventDao;
-import com.rbkmoney.dudoser.dao.LastEventDaoImpl;
-import com.rbkmoney.dudoser.dao.TemplateDao;
-import com.rbkmoney.dudoser.dao.TemplateDaoImpl;
+import com.rbkmoney.dudoser.dao.*;
 import org.jooq.Schema;
 import org.jooq.impl.SchemaImpl;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +22,12 @@ public class DaoConfiguration {
     @DependsOn("dbInitializer")
     public TemplateDao templateDao(DataSource dataSource) {
         return new TemplateDaoImpl(dataSource);
+    }
+
+    @Bean
+    @DependsOn("dbInitializer")
+    public PaymentPayerDao paymentPayerDao(DataSource dataSource) {
+        return new InMemoryPaymentPayerDao(dataSource);
     }
 
     @Bean
