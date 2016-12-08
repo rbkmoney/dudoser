@@ -36,6 +36,16 @@ http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mail.h
 
 `Вопрос:`
 
+> Адрес для отправки сообщений на сервис?
+
+`Ответ:`
+
+http://<host>:<port>/dudos
+
+---
+
+`Вопрос:`
+
 > Описание вопроса
 
 `Ответ:`

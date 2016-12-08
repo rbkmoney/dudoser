@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-public class PaymentPayer {
+public class PaymentPayer{
 
     private BigDecimal amount;
     private String currency;
@@ -13,10 +14,10 @@ public class PaymentPayer {
     private String cardMaskPan;
     private String invoiceId;
     private String date;
-    private String to;
+    private String toReceiver;
 
     public String getAmountWithCurrency() {
-        return String.format("%.2f %s", amount, currency);
+        return String.format(Locale.US, "%.2f %s", amount, currency);
     }
 
     public BigDecimal getAmount() {
@@ -80,11 +81,11 @@ public class PaymentPayer {
         this.date = formattedDate;
     }
 
-    public String getTo() {
-        return to;
+    public String getToReceiver() {
+        return toReceiver;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToReceiver(String toReceiver) {
+        this.toReceiver = toReceiver;
     }
 }

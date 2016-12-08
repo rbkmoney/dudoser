@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -28,10 +28,9 @@
                 <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
                 <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
                 <bm.polling.delay>5000</bm.polling.delay>
-                <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
                 <dudos.datasource.username>postgres</dudos.datasource.username>
-                <dudos.datasource.password>admin</dudos.datasource.password>
+                <dudos.datasource.password>postgres</dudos.datasource.password>
             </properties>
         </profile>
         <profile>
@@ -40,7 +39,6 @@
                 <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
                 <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
                 <bm.polling.delay>5000</bm.polling.delay>
-                <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <db.url.host.name>dudoser_db</db.url.host.name>
                 <db.url.host.port>5432</db.url.host.port>
                 <dudos.datasource.url>jdbc:postgresql://${db.url.host.name}:${db.url.host.port}/${db.url.name}</dudos.datasource.url>
@@ -146,7 +144,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.107-1006c96</version>
+            <version>1.108-35f8043</version>
         </dependency>
         <!--Test libs-->
         <dependency>
@@ -209,47 +207,6 @@
                         <phase>generate-resources</phase>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- JOOQ -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${custom.jooq.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.jdbc.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>${dudos.datasource.url}</url>
-                        <user>${dudos.datasource.username}</user>
-                        <password>${dudos.datasource.password}</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.util.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes>schema_version</excludes>
-                            <inputSchema>dudos</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>com.rbkmoney.dudoser.domain</packageName>
-                            <directory>src/main/java/</directory>
-                        </target>
-                    </generator>
-                </configuration>
-                <!-- The plugin should hook into the generate goal -->
-  <!--              <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>-->
             </plugin>
         </plugins>
     </build>

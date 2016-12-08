@@ -15,19 +15,4 @@ public class ConverterTest {
         assertEquals(new BigDecimal("1225.54"), Converter.longToBigDecimal(122554L));
         assertEquals(new BigDecimal("-0.01"), Converter.longToBigDecimal(-1L));
     }
-
-    @Test
-    public void stringToLong() {
-        assertEquals(null, Converter.stringToLong(""));
-        assertEquals(new Long(12), Converter.stringToLong("12"));
-    }
-
-    @Test(expected = NumberFormatException.class)
-    public void stringToLongException() {
-        assertEquals(new Long(0), Converter.stringToLong("dfsf"));
-        assertEquals(new Long(123), Converter.stringToLong("df123sf"));
-        assertEquals(new Long(13), Converter.stringToLong("df<!13s?>./f"));
-        assertEquals(new Long(0), Converter.stringToLong("df<!>./f"));
-    }
-
 }

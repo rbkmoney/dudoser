@@ -5,8 +5,8 @@ import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
-import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
@@ -33,7 +33,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
     EventService eventService;
 
     @Autowired
-    InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
+    PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Value("${notification.create.invoice.from}")
     private String from;
@@ -70,7 +70,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             paymentPayer.setCardType(payer.getPaymentTool().getBankCard().getPaymentSystem().name());
             paymentPayer.setInvoiceId(event.getSource().getInvoice());
             paymentPayer.setDate(invoicePayment.getCreatedAt());
-            paymentPayer.setTo(payer.getContactInfo().getEmail());
+            paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", paymentPayer);
@@ -86,13 +86,13 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 
-            if (mailSenderUtils.send(from, paymentPayer.getTo(), subject)) {
-                log.info("Mail send from {} to {}", from, paymentPayer.getTo());
+            if (mailSenderUtils.send(from, paymentPayer.getToReceiver(), subject)) {
+                log.info("Mail send from {} to {}", from, paymentPayer.getToReceiver());
             } else {
-                log.error("Mail not send from {} to {}", from, paymentPayer.getTo());
+                log.error("Mail not send from {} to {}", from, paymentPayer.getToReceiver());
             }
 
-            if (!inMemoryPaymentPayerDao.add(paymentPayer)) {
+            if (!paymentPayerDaoImpl.add(paymentPayer)) {
                 log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
             } else {
                 log.info("PaymentStartedHandler: save Payment Payer, invoiceId {}", invoiceId);

@@ -4,7 +4,6 @@ import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.Converter;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -35,7 +31,7 @@ public class GeneratedByTemplateContentTest {
     private String to;
 
     @Test
-    public void testMe() throws MessagingException, IOException, URISyntaxException {
+    public void testMe() throws Exception {
 
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
@@ -44,7 +40,7 @@ public class GeneratedByTemplateContentTest {
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId("de3dddQscG135Hgf");
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
-        paymentPayer.setTo(to);
+        paymentPayer.setToReceiver(to);
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);

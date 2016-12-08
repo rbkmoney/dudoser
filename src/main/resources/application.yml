@@ -38,7 +38,7 @@ mail:
 
 test:
   mail:
-    to: @test.mail.to@
+    to: i.arsanukaev@rbkmoney.com
   server:
     port:7778
 

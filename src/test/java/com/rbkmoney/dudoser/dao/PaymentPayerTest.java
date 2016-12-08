@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +16,6 @@ public class PaymentPayerTest {
     }
 
     @Test
-    @Ignore
     public void testGetAmountWithCurrency() throws Exception {
         paymentPayer.setAmount(Converter.longToBigDecimal(12345L));
         paymentPayer.setCurrency("RUB");
