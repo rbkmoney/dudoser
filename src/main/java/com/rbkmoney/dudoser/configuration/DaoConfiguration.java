@@ -27,7 +27,7 @@ public class DaoConfiguration {
     @Bean
     @DependsOn("dbInitializer")
     public PaymentPayerDao paymentPayerDao(DataSource dataSource) {
-        return new InMemoryPaymentPayerDao(dataSource);
+        return new PaymentPayerDaoImpl(dataSource);
     }
 
     @Bean

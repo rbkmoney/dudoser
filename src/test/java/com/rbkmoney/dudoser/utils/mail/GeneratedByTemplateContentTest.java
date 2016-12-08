@@ -40,7 +40,7 @@ public class GeneratedByTemplateContentTest {
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId("de3dddQscG135Hgf");
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
-        paymentPayer.setTo(to);
+        paymentPayer.setToReceiver(to);
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);

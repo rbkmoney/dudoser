@@ -210,47 +210,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- JOOQ -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${custom.jooq.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.jdbc.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>${dudos.datasource.url}</url>
-                        <user>${dudos.datasource.username}</user>
-                        <password>${dudos.datasource.password}</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.util.postgres.PostgresDatabase</name>
-                            <includes>last_event_id|javaobject</includes>
-                            <excludes>schema_version</excludes>
-                            <inputSchema>dudos</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>com.rbkmoney.dudoser.domain</packageName>
-                            <directory>src/main/java/</directory>
-                        </target>
-                    </generator>
-                </configuration>
-                <!-- The plugin should hook into the generate goal -->
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

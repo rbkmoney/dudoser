@@ -4,8 +4,8 @@ package com.rbkmoney.dudoser.handler.poller;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
-import com.rbkmoney.dudoser.dao.InMemoryPaymentPayerDao;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
@@ -39,7 +39,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     TemplateDao templateDao;
 
     @Autowired
-    InMemoryPaymentPayerDao inMemoryPaymentPayerDao;
+    PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Autowired
     TemplateMailSenderUtils mailSenderUtils;
@@ -55,7 +55,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
         Event event = value.getSourceEvent().getProcessingEvent();
         String invoiceId = event.getSource().getInvoice();
         log.info("InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
-        Optional<PaymentPayer> paymentPayer = inMemoryPaymentPayerDao.getById(invoiceId);
+        Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
 
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
@@ -71,13 +71,13 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 
-            if (mailSenderUtils.send(from, payment.getTo(), subject)) {
-                log.info("Mail send from {} to {}", from, payment.getTo());
+            if (mailSenderUtils.send(from, payment.getToReceiver(), subject)) {
+                log.info("Mail send from {} to {}", from, payment.getToReceiver());
             } else {
-                log.error("Mail not send from {} to {}", from, payment.getTo());
+                log.error("Mail not send from {} to {}", from, payment.getToReceiver());
             }
 
-            inMemoryPaymentPayerDao.delete(invoiceId);
+            paymentPayerDaoImpl.delete(invoiceId);
         } else {
             log.error("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }

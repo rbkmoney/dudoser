@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class InMemoryPaymentPayerDaoTest {
+public class PaymentPayerDaoImplTest {
 
     @Autowired
     PaymentPayerDao paymentPayerDao;
@@ -28,7 +28,7 @@ public class InMemoryPaymentPayerDaoTest {
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId("eeeeeer");
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
-        paymentPayer.setTo("i.ars@rbk.com");
+        paymentPayer.setToReceiver("i.ars@rbk.com");
         assertTrue(paymentPayerDao.add(paymentPayer));
         assertEquals(paymentPayerDao.getById("eeeeeer").get().getCardType(), "visa");
         assertTrue(paymentPayerDao.delete("eeeeeer"));

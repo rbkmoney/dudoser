@@ -1,31 +1,38 @@
 package com.rbkmoney.dudoser.dao;
 
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 import javax.sql.DataSource;
-
-import static com.rbkmoney.dudoser.domain.Tables.LAST_EVENT_ID;
+import java.util.HashMap;
 
 /**
  * Created by inal on 24.11.2016.
  */
-public class LastEventDaoImpl implements LastEventDao {
-
-    private DSLContext dslContext;
+public class LastEventDaoImpl extends NamedParameterJdbcDaoSupport implements LastEventDao {
 
     public LastEventDaoImpl(DataSource ds) {
-        dslContext = DSL.using(ds, SQLDialect.POSTGRES);
+        setDataSource(ds);
     }
 
     @Override
     public Long get() {
-        return dslContext.select(LAST_EVENT_ID.EVENT_ID).from(LAST_EVENT_ID).where(LAST_EVENT_ID.ID.eq(1)).fetchAny().get(LAST_EVENT_ID.EVENT_ID);
+        final String sql = "SELECT event_id FROM dudos.last_event_id WHERE id=1";
+        try {
+            return getNamedParameterJdbcTemplate().queryForObject(sql, new HashMap<>(), Long.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public void set(Long id) {
-        dslContext.update(LAST_EVENT_ID).set(LAST_EVENT_ID.EVENT_ID, id).where(LAST_EVENT_ID.ID.eq(1)).execute();
+        final String sql = "UPDATE dudos.last_event_id SET event_id =:id where id=1";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        int x = getNamedParameterJdbcTemplate().update(sql, params);
+        if (x != 1) {
+            throw new RuntimeException("Could not set las event");
+        }
     }
 }
