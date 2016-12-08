@@ -28,7 +28,6 @@
                 <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
                 <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
                 <bm.polling.delay>5000</bm.polling.delay>
-                <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
                 <dudos.datasource.username>postgres</dudos.datasource.username>
                 <dudos.datasource.password>postgres</dudos.datasource.password>
@@ -40,7 +39,6 @@
                 <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
                 <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
                 <bm.polling.delay>5000</bm.polling.delay>
-                <test.mail.to>i.arsanukaev@rbkmoney.com</test.mail.to>
                 <db.url.host.name>dudoser_db</db.url.host.name>
                 <db.url.host.port>5432</db.url.host.port>
                 <dudos.datasource.url>jdbc:postgresql://${db.url.host.name}:${db.url.host.port}/${db.url.name}</dudos.datasource.url>
