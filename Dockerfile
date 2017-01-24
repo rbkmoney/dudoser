@@ -2,10 +2,8 @@ FROM dr.rbkmoney.com/rbkmoney/service-java:@dockerfile.base.service.tag@
 MAINTAINER Anatoly Cherkasov <a.cherkasov@rbkmoney.com>
 
 COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@.jar
-COPY containerpilot.json /etc/containerpilot.json
 
-ENTRYPOINT ["/bin/containerpilot", "-config", "file:///etc/containerpilot.json",  "java"]
-CMD ["-jar","/opt/@artifactId@/@artifactId@.jar"]
+CMD ["java", "-Xmx256m", "-jar","/opt/@artifactId@/@artifactId@.jar"]
 
 EXPOSE @server.port@
 
