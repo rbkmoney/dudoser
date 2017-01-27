@@ -35,17 +35,17 @@
             <table cellpadding="0" cellspacing="0" style="padding: 20px 25px; font-size: 16px; line-height: 20px;">
                 <tr>
                     <td style="padding-top: 5px; padding-bottom: 5px;">
-                        Тип карты: visa
+                        Тип карты: ${paymentPayer.cardType}
                     </td>
                 </tr>
                 <tr>
                     <td style="padding-top: 5px; padding-bottom: 5px;">
-                        Маскированная карта: **** **** **** 4242
+                        Маскированная карта: ${paymentPayer.cardMaskPan}
                     </td>
                 </tr>
                 <tr>
                     <td style="padding-top: 5px; padding-bottom: 5px;">
-                        E-mail: i.arsanukaev@rbkmoney.com
+                        E-mail: ${paymentPayer.toReceiver}
                     </td>
                 </tr>
             </table>
