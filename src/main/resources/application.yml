@@ -25,13 +25,13 @@ bm:
     delay: @bm.polling.delay@
 
 mail:
-  host: secure.emailsrvr.com
+  host: smtp.office365.com
   port: 587
   username: no-reply@rbkmoney.com
-  password: EIPe6wGYOC9StdFP
+  password: be:thoim3Ae1xeiC
   from: no-reply@rbkmoney.com
   protocol: smtp
-  smtps:
+  smtp:
     auth: true
     starttls:
       enable: true
