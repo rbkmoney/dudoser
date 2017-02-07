@@ -26,13 +26,17 @@ public class MailSenderConfiguration {
     @Value("${mail.protocol}")
     String protocol;
 
-    @Value("${mail.smtps.auth}")
+    @Value("${mail.smtp.auth}")
     boolean smtpsAuth;
+
+    @Value("${mail.smtp.starttls.enable}")
+    boolean starttls;
 
     @Bean
     public Properties mailProperties() {
         Properties javaMailProperties = new Properties();
-        javaMailProperties.put("mail.smtps.auth", smtpsAuth);
+        javaMailProperties.put("mail.smtp.auth", smtpsAuth);
+        javaMailProperties.put("mail.smtp.starttls.enable", starttls);
         javaMailProperties.put("mail.transport.protocol", protocol);
         return javaMailProperties;
     }
