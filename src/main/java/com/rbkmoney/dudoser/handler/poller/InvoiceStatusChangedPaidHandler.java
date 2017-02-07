@@ -7,6 +7,7 @@ import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
@@ -32,6 +33,9 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     private String path = "source_event.processing_event.payload.invoice_event.invoice_status_changed.status";
     private Filter filter;
 
+    @Autowired
+    EventService eventService;
+
     @Value("${notification.payment.paid.from}")
     private String from;
 
@@ -53,6 +57,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     @Override
     public void handle(StockEvent value) {
         Event event = value.getSourceEvent().getProcessingEvent();
+        long eventId = event.getId();
         String invoiceId = event.getSource().getInvoice();
         log.info("InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
         Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
@@ -78,6 +83,12 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
             }
 
             paymentPayerDaoImpl.delete(invoiceId);
+
+            try {
+                eventService.setLastEventId(eventId);
+            } catch (Exception e) {
+                log.error("Exception: not save Last id. Reason: " + e.getMessage());
+            }
         } else {
             log.error("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }
