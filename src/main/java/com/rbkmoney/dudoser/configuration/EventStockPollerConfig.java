@@ -54,7 +54,7 @@ public class EventStockPollerConfig {
         EventConstraint.EventIDRange eventIDRange = new EventConstraint.EventIDRange();
         Long lastEventId = eventService.getLastEventId();
         if (lastEventId != null) {
-            eventIDRange.setFromInclusive(lastEventId);
+            eventIDRange.setFromExclusive(lastEventId);
         } else {
             eventIDRange.setFromNow();
         }
