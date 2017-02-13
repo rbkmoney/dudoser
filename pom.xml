@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.rbkmoney</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.2.RELEASE</version>
+        <version>1.5.1.RELEASE</version>
         <relativePath/>
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -52,9 +52,9 @@
     <properties>
         <server.port>8022</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql.jdbc.version>9.4.1208</postgresql.jdbc.version>
+        <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
         <custom.flyway.version>4.0.3</custom.flyway.version>
-        <custom.jooq.version>3.8.4</custom.jooq.version>
+        <custom.jooq.version>3.9.1</custom.jooq.version>
         <db.url.name>dudoser</db.url.name>
     </properties>
 
@@ -67,18 +67,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
@@ -88,7 +86,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>2.4.6</version>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -134,7 +132,7 @@
         <dependency>
             <groupId>com.rbkmoney.logback</groupId>
             <artifactId>nop-rolling</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -179,7 +177,6 @@
                 <targetPath>${project.build.directory}</targetPath>
                 <includes>
                     <include>Dockerfile</include>
-                    <include>containerpilot.json</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
