@@ -20,9 +20,9 @@ server:
 # bm poller
 bm:
   pooling:
-    url: @bm.polling.url@
-    maxPoolSize: @bm.polling.maxPoolSize@
-    delay: @bm.polling.delay@
+    url: http://localhost:8023/repo
+    maxPoolSize: 1
+    delay: 5000
 
 mail:
   host: smtp.office365.com
@@ -61,9 +61,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
-    url: @dudos.datasource.url@
-    username: @dudos.datasource.username@
-    password: @dudos.datasource.password@
+    url: @db.url@
+    username: @db.user@
+    password: @db.password@
     hikari:
       maximum-pool-size: 3
       idle-timeout: 30000
