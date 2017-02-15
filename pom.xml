@@ -18,45 +18,27 @@
     <name>dudoser</name>
     <description>Message notification service</description>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
-                <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
-                <bm.polling.delay>5000</bm.polling.delay>
-                <dudos.datasource.url>jdbc:postgresql://localhost:5432/dudoser</dudos.datasource.url>
-                <dudos.datasource.username>postgres</dudos.datasource.username>
-                <dudos.datasource.password>postgres</dudos.datasource.password>
-            </properties>
-        </profile>
-        <profile>
-            <id>ci</id>
-            <properties>
-                <bm.polling.url>http://localhost:8023/repo</bm.polling.url>
-                <bm.polling.maxPoolSize>1</bm.polling.maxPoolSize>
-                <bm.polling.delay>5000</bm.polling.delay>
-                <db.url.host.name>dudoser_db</db.url.host.name>
-                <db.url.host.port>5432</db.url.host.port>
-                <dudos.datasource.url>jdbc:postgresql://${db.url.host.name}:${db.url.host.port}/${db.url.name}</dudos.datasource.url>
-                <dudos.datasource.username>postgres</dudos.datasource.username>
-                <dudos.datasource.password>postgres</dudos.datasource.password>
-            </properties>
-        </profile>
-
-    </profiles>
-
     <properties>
         <server.port>8022</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
         <custom.flyway.version>4.0.3</custom.flyway.version>
         <custom.jooq.version>3.9.1</custom.jooq.version>
-        <db.url.name>dudoser</db.url.name>
+        <dockerfile.base.service.tag>f26fcc19d1941ab74f1c72dd8a408be17a769333</dockerfile.base.service.tag>
+        <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
+        <db.user>postgres</db.user>
+        <db.password>postgres</db.password>
+        <db.schema>dud</db.schema>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <properties>
+                <db.url>jdbc:postgresql://dudoser_db:5432/dudoser</db.url>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!--Thirdparty libs-->
