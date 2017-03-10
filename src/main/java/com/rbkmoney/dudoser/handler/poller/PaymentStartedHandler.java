@@ -59,7 +59,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
         String invoiceId = event.getSource().getInvoice();
         InvoicePayment invoicePayment = event.getPayload().getInvoiceEvent().getInvoicePaymentEvent().getInvoicePaymentStarted().getPayment();
         Payer payer = invoicePayment.getPayer();
-        log.info("PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+        log.info("Start PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
 
         if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
             PaymentPayer paymentPayer = new PaymentPayer();
@@ -71,26 +71,6 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             paymentPayer.setInvoiceId(event.getSource().getInvoice());
             paymentPayer.setDate(invoicePayment.getCreatedAt());
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
-
-            Map<String, Object> model = new HashMap<>();
-            model.put("paymentPayer", paymentPayer);
-
-            String subject = String.format(MailSubject.FORMED_THROUGH.pattern,
-                    paymentPayer.getInvoiceId(),
-                    paymentPayer.getDate(),
-                    paymentPayer.getAmountWithCurrency()
-            );
-
-            //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
-            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STARTED);
-            mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
-            mailSenderUtils.setModel(model);
-
-            if (mailSenderUtils.send(from, paymentPayer.getToReceiver(), subject)) {
-                log.info("Mail send from {} to {}", from, paymentPayer.getToReceiver());
-            } else {
-                log.error("Mail not send from {} to {}", from, paymentPayer.getToReceiver());
-            }
 
             if (!paymentPayerDaoImpl.add(paymentPayer)) {
                 log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
@@ -104,6 +84,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
         } catch (Exception e) {
             log.error("Exception: not save Last id. Reason: " + e.getMessage());
         }
+        log.info("End PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
     }
 
     @Override

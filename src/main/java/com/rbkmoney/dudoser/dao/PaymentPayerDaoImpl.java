@@ -32,6 +32,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
+            log.error("PaymentPayerDaoImpl.getById error", e);
             throw new DaoException(e);
         }
         return Optional.ofNullable(paymentPayer);
@@ -40,6 +41,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean add(final PaymentPayer paymentPayer) {
         if (getById(paymentPayer.getInvoiceId()).isPresent()) {
+            log.warn("Payment info with invoiceId = {} already exists", paymentPayer.getInvoiceId());
             return false;
         }
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, amount, currency, card_type, card_mask_pan, date, to_receiver) " +
@@ -58,6 +60,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
+            log.error("PaymentPayerDaoImpl.add error", e);
             throw new DaoException(e);
         }
         log.info("Payment info with invoiceId = {} added to table", paymentPayer.getInvoiceId());
@@ -66,6 +69,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
 
     @Override
     public boolean delete(final String id) {
+        log.info("Start deleting payment info with invoiceId = {}", id);
         final String sql = "DELETE FROM dudos.payment_payer where invoice_id=:invoice_id";
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, new MapSqlParameterSource("invoice_id", id));
@@ -73,6 +77,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
+            log.error("PaymentPayerDaoImpl.delete error", e);
             throw new DaoException(e);
         }
         log.info("Payment info with invoiceId = {} deleted from table", id);
