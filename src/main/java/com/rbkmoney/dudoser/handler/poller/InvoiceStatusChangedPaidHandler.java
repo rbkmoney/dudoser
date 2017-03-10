@@ -59,7 +59,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoice();
-        log.info("InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
+        log.info("Start InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
         Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
 
         if (paymentPayer.isPresent()) {
@@ -92,6 +92,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
         } else {
             log.error("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }
+        log.info("End InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
 
     @Override
