@@ -7,6 +7,8 @@ info:
   version: @version@
   responsible: Anatoly Cherkasov
   stage: dev
+  damsel:
+    version: @damsel.version@
 ---
 endpoints:
   health:
