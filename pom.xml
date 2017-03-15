@@ -21,7 +21,7 @@
     <properties>
         <project.maintainer>Inal Arsanukaev &lt;i.arsanukaev@rbkmoney.com&gt;</project.maintainer>
         <damsel.version>1.132-27bc11c</damsel.version>
-        <shared.resources.version>0.2</shared.resources.version>
+        <shared.resources.version>0.2.1</shared.resources.version>
         <server.port>8022</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
