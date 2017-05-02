@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class MailSenderUtils {
@@ -19,8 +20,7 @@ public class MailSenderUtils {
     @Autowired
     JavaMailSender mailSender;
 
-    public boolean send(String from, String to, String subject, String text, List<Pair> listAttach) {
-        log.info("Send mail from {} with subject {}", from, subject);
+    public boolean send(String from, String to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach) {
         boolean isSuccess = false;
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -29,37 +29,18 @@ public class MailSenderUtils {
             helper.setTo(to);
             helper.setSubject(subject);
             if (listAttach != null) {
-                for (Pair pair : listAttach) {
-                    helper.addAttachment(pair.getName(), new ByteArrayResource(pair.getData()));
+                for (Map.Entry<String, byte[]> pair : listAttach) {
+                    helper.addAttachment(pair.getKey(), new ByteArrayResource(pair.getValue()));
                 }
             }
             helper.setText(text, true);
             mailSender.send(message);
             isSuccess = true;
-            log.info("Mail successfully sended.");
         } catch (Exception e) {
-            log.error("Exception MailUtils", e);
+            log.error("Exception MailSenderUtils. From: {}, to: {}, subject: {}", from ,to, subject, e);
         }
 
         return isSuccess;
-    }
-
-    public static class Pair {
-        private String name;
-        private byte[] data;
-
-        public Pair(String name, byte[] data) {
-            this.name = name;
-            this.data = data;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public byte[] getData() {
-            return data;
-        }
     }
 }
 

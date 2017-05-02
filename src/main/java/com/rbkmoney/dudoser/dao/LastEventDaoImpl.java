@@ -32,7 +32,7 @@ public class LastEventDaoImpl extends NamedParameterJdbcDaoSupport implements La
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         int x = getNamedParameterJdbcTemplate().update(sql, params);
         if (x != 1) {
-            throw new RuntimeException("Could not set las event");
+            throw new DaoException("Couldn't set last event with id " + id);
         }
     }
 }
