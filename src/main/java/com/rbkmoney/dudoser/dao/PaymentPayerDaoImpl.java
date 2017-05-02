@@ -32,7 +32,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.getById error", e);
+            log.warn("PaymentPayerDaoImpl.getById error with id {}", id, e);
             throw new DaoException(e);
         }
         return Optional.ofNullable(paymentPayer);
@@ -60,16 +60,16 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.add error", e);
+            log.warn("PaymentPayerDaoImpl.add error with invoiceId {}", paymentPayer.getInvoiceId(), e);
             throw new DaoException(e);
         }
-        log.info("Payment info with invoiceId = {} added to table", paymentPayer.getInvoiceId());
+        log.debug("Payment info with invoiceId {} added to table", paymentPayer.getInvoiceId());
         return true;
     }
 
     @Override
     public boolean delete(final String id) {
-        log.info("Start deleting payment info with invoiceId = {}", id);
+        log.debug("Start deleting payment info with invoiceId = {}", id);
         final String sql = "DELETE FROM dudos.payment_payer where invoice_id=:invoice_id";
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, new MapSqlParameterSource("invoice_id", id));
@@ -77,10 +77,10 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.delete error", e);
+            log.warn("PaymentPayerDaoImpl.delete error with id {}", id, e);
             throw new DaoException(e);
         }
-        log.info("Payment info with invoiceId = {} deleted from table", id);
+        log.debug("Payment info with invoiceId {} deleted from table", id);
         return true;
     }
 }

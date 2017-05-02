@@ -21,7 +21,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
     //TODO Refactoring!!!
     @Override
     public String getTemplateBodyByMerchShopParams(EventTypeCode typeCode, String merchId, String shopId) {
-        log.info("New getTemplateBodyByMerchShopParams request. TypeCode = {}, merchId = {}, shopId = {}", typeCode, merchId, shopId);
+        log.debug("getTemplateBodyByMerchShopParams request. TypeCode = {}, merchId = {}, shopId = {}", typeCode, merchId, shopId);
         final String sql =
                 "select t.body \n" +
                         "from dudos.templates t, \n" +
@@ -48,17 +48,17 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
 
         try {
             String result = getNamedParameterJdbcTemplate().queryForList(sql, params, String.class).get(0);
-            log.info("Response getTemplateBodyByMerchShopParams.");
+            log.debug("getTemplateBodyByMerchShopParams response. TypeCode = {}, merchId = {}, shopId = {}", typeCode, merchId, shopId);
             return result;
         } catch (NestedRuntimeException | IndexOutOfBoundsException e) {
-            log.error("Couldn't find template", e);
+            log.warn("Couldn't find template", e);
             throw new DaoException("Couldn't find template with typeCode = " + typeCode + "; merchId = " + merchId + "; shopId = " + shopId);
         }
     }
 
     @Override
     public String getTemplateBodyByTypeCode(EventTypeCode typeCode) {
-        log.info("New getTemplateBodyByTypeCode request. TypeCode = {}", typeCode);
+        log.debug("New getTemplateBodyByTypeCode request. TypeCode = {}", typeCode);
         final String sql =
                 "select t.body \n" +
                         "from dudos.templates t, \n" +
@@ -70,7 +70,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
         params.addValue("code", typeCode.getCode());
         try {
             String result = getNamedParameterJdbcTemplate().queryForObject(sql, params, String.class);
-            log.info("Response getTemplateBodyByTypeCode.");
+            log.debug("Response getTemplateBodyByTypeCode. TypeCode = {}", typeCode);
             return result;
         } catch (NestedRuntimeException e) {
             logger.error("Couldn't find template", e);

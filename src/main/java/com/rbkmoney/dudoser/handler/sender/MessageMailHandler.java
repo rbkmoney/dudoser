@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,20 +33,20 @@ public class MessageMailHandler implements MessageHandler<Message> {
     public void handle(Message message) throws Exception {
         log.info("MessageMailHandler started.");
         MessageMail mail = message.getMessageMail();
-        List<MailSenderUtils.Pair> listAttach = null;
+        List<Map.Entry<String, byte[]>> listAttach = null;
         if (mail.getAttachments() != null) {
             listAttach =
                     mail.getAttachments()
                             .stream()
-                            .map(x -> new MailSenderUtils.Pair(x.getName(), x.getData()))
+                            .map(x -> new AbstractMap.SimpleImmutableEntry<>(x.getName(), x.getData()))
                             .collect(Collectors.toList());
-            log.info("Attach count = " + listAttach.size());
+            log.debug("Attach count = {}", listAttach.size());
         }
         for (String to : mail.getToEmails()) {
             if (mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach)) {
                 log.info("Mail send from {} to {}", mail.getFromEmail(), to);
             } else {
-                log.error("Mail not send from {} to {}", mail.getFromEmail(), to);
+                log.warn("Mail not send from {} to {}", mail.getFromEmail(), to);
                 throw new Exception("Mail not send.");
             }
         }

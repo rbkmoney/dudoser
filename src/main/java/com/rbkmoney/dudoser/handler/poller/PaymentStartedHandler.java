@@ -4,13 +4,11 @@ import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
-import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import com.rbkmoney.thrift.filter.Filter;
 import com.rbkmoney.thrift.filter.PathConditionFilter;
@@ -20,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
@@ -52,7 +47,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
         filter = new PathConditionFilter(new PathConditionRule(path));
     }
 
-    @Override
+  //  @Override
     public void handle(StockEvent value) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
@@ -73,17 +68,13 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
             if (!paymentPayerDaoImpl.add(paymentPayer)) {
-                log.error("PaymentStartedHandler: not save Payment Payer, invoiceId {}", invoiceId);
+                log.warn("PaymentStartedHandler: couldn't save payment info, invoiceId {}", invoiceId);
             } else {
-                log.info("PaymentStartedHandler: save Payment Payer, invoiceId {}", invoiceId);
+                log.info("PaymentStartedHandler: saved payment info, invoiceId {}", invoiceId);
             }
         }
 
-        try {
-            eventService.setLastEventId(eventId);
-        } catch (Exception e) {
-            log.error("Exception: not save Last id. Reason: " + e.getMessage());
-        }
+        eventService.setLastEventId(eventId);
         log.info("End PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
     }
 

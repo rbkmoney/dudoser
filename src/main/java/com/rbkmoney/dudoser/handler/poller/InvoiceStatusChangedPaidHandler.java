@@ -79,18 +79,13 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
             if (mailSenderUtils.send(from, payment.getToReceiver(), subject)) {
                 log.info("Mail send from {} to {}", from, payment.getToReceiver());
             } else {
-                log.error("Mail not send from {} to {}", from, payment.getToReceiver());
+                log.warn("Mail not send from {} to {}", from, payment.getToReceiver());
             }
 
             paymentPayerDaoImpl.delete(invoiceId);
-
-            try {
-                eventService.setLastEventId(eventId);
-            } catch (Exception e) {
-                log.error("Exception: not save Last id. Reason: " + e.getMessage());
-            }
+            eventService.setLastEventId(eventId);
         } else {
-            log.error("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
+            log.warn("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }
         log.info("End InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
