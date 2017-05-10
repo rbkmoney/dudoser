@@ -32,7 +32,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
-            log.warn("PaymentPayerDaoImpl.getById error with id {}", id, e);
+            log.error("PaymentPayerDaoImpl.getById error with id {}", id, e);
             throw new DaoException(e);
         }
         return Optional.ofNullable(paymentPayer);
@@ -60,7 +60,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.warn("PaymentPayerDaoImpl.add error with invoiceId {}", paymentPayer.getInvoiceId(), e);
+            log.error("PaymentPayerDaoImpl.add error with invoiceId {}", paymentPayer.getInvoiceId(), e);
             throw new DaoException(e);
         }
         log.debug("Payment info with invoiceId {} added to table", paymentPayer.getInvoiceId());
@@ -77,7 +77,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.warn("PaymentPayerDaoImpl.delete error with id {}", id, e);
+            log.error("PaymentPayerDaoImpl.delete error with id {}", id, e);
             throw new DaoException(e);
         }
         log.debug("Payment info with invoiceId {} deleted from table", id);

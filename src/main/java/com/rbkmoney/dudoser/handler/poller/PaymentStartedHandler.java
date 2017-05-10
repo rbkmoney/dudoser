@@ -75,7 +75,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
         }
 
         eventService.setLastEventId(eventId);
-        log.info("End PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+        log.debug("End PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
     }
 
     @Override

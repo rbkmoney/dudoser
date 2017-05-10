@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.utils.mail;
 
+import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.UnknownException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -30,13 +31,8 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
     private String freeMarkerTemplateContent;
     private Map<String, Object> model;
 
-    public boolean send(String from, String to, String subject) {
-        try {
-            return super.send(from, to, subject, getFilledFreeMarkerTemplateContent(), null);
-        } catch (Exception e) {
-            log.error("Exception TemplateMailSenderUtils", e);
-        }
-        return false;
+    public void send(String from, String to, String subject) throws MailNotSendException {
+        super.send(from, to, subject, getFilledFreeMarkerTemplateContent(), null);
     }
 
     public String getFilledFreeMarkerTemplateContent() {
