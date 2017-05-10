@@ -22,9 +22,9 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
     @Override
     public void send(Message message) throws InvalidRequest, TException {
         try {
-            log.info("DudoserHandler started.");
+            log.info("Start mail sending from {} to {}", message.getMessageMail().getFromEmail(), message.getMessageMail().getToEmails());
             messageSendHandler.handleEvent(message);
-            log.info("DudoserHandler end.");
+            log.info("Mail successfully sended.");
         } catch (Exception e) {
             throw new TException(e);
         }

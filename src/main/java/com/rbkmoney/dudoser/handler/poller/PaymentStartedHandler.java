@@ -70,7 +70,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             if (!paymentPayerDaoImpl.add(paymentPayer)) {
                 log.warn("PaymentStartedHandler: couldn't save payment info, invoiceId {}", invoiceId);
             } else {
-                log.info("PaymentStartedHandler: saved payment info, invoiceId {}", invoiceId);
+                log.debug("PaymentStartedHandler: saved payment info, invoiceId {}", invoiceId);
             }
         }
 

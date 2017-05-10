@@ -31,7 +31,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
 
     @Override
     public void handle(Message message) throws Exception {
-        log.info("MessageMailHandler started.");
+        log.debug("MessageMailHandler started.");
         MessageMail mail = message.getMessageMail();
         List<Map.Entry<String, byte[]>> listAttach = null;
         if (mail.getAttachments() != null) {
@@ -44,12 +44,12 @@ public class MessageMailHandler implements MessageHandler<Message> {
         }
         for (String to : mail.getToEmails()) {
             if (mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach)) {
-                log.info("Mail send from {} to {}", mail.getFromEmail(), to);
+                log.debug("Mail send from {} to {}", mail.getFromEmail(), to);
             } else {
                 log.warn("Mail not send from {} to {}", mail.getFromEmail(), to);
                 throw new Exception("Mail not send.");
             }
         }
-        log.info("MessageMailHandler end.");
+        log.debug("MessageMailHandler end.");
     }
 }

@@ -73,7 +73,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
             log.debug("Response getTemplateBodyByTypeCode. TypeCode = {}", typeCode);
             return result;
         } catch (NestedRuntimeException e) {
-            logger.error("Couldn't find template", e);
+            log.error("Couldn't find template", e);
             throw new DaoException("Couldn't find template with typeCode = " + typeCode);
         }
     }
