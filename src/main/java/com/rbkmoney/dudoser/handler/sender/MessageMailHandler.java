@@ -44,13 +44,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
             log.debug("Attach count = {}", listAttach.size());
         }
         for (String to : mail.getToEmails()) {
-            try {
-                mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach);
-                log.debug("Mail send from {} to {}", mail.getFromEmail(), to);
-            } catch (MailNotSendException e) {
-                log.warn("Mail not send from {} to {}", mail.getFromEmail(), to);
-                throw new Exception(e);
-            }
+            mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach);
         }
         log.debug("MessageMailHandler end.");
     }

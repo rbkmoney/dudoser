@@ -79,7 +79,6 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
 
             try {
                 mailSenderUtils.send(from, payment.getToReceiver(), subject);
-                log.debug("Mail send from {} to {}", from, payment.getToReceiver());
             } catch (MailNotSendException e) {
                 log.warn("Mail not send from {} to {}", from, payment.getToReceiver());
             }
