@@ -7,6 +7,7 @@ import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
@@ -76,9 +77,9 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 
-            if (mailSenderUtils.send(from, payment.getToReceiver(), subject)) {
-                log.info("Mail send from {} to {}", from, payment.getToReceiver());
-            } else {
+            try {
+                mailSenderUtils.send(from, payment.getToReceiver(), subject);
+            } catch (MailNotSendException e) {
                 log.warn("Mail not send from {} to {}", from, payment.getToReceiver());
             }
 
@@ -87,7 +88,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
         } else {
             log.warn("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
         }
-        log.info("End InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
+        log.debug("End InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
 
     @Override

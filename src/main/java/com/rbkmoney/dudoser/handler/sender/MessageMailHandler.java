@@ -2,6 +2,7 @@ package com.rbkmoney.dudoser.handler.sender;
 
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
+import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class MessageMailHandler implements MessageHandler<Message> {
 
     @Override
     public void handle(Message message) throws Exception {
-        log.info("MessageMailHandler started.");
+        log.debug("MessageMailHandler started.");
         MessageMail mail = message.getMessageMail();
         List<Map.Entry<String, byte[]>> listAttach = null;
         if (mail.getAttachments() != null) {
@@ -43,13 +44,8 @@ public class MessageMailHandler implements MessageHandler<Message> {
             log.debug("Attach count = {}", listAttach.size());
         }
         for (String to : mail.getToEmails()) {
-            if (mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach)) {
-                log.info("Mail send from {} to {}", mail.getFromEmail(), to);
-            } else {
-                log.warn("Mail not send from {} to {}", mail.getFromEmail(), to);
-                throw new Exception("Mail not send.");
-            }
+            mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach);
         }
-        log.info("MessageMailHandler end.");
+        log.debug("MessageMailHandler end.");
     }
 }
