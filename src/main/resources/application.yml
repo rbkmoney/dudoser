@@ -30,13 +30,14 @@ mail:
   host: smtp.office365.com
   port: 587
   username: no-reply@rbkmoney.com
-  password: be:thoim3Ae1xeiC
+  password: jah;qu5chaeJeoCo
   from: no-reply@rbkmoney.com
   protocol: smtp
   smtp:
     auth: true
     starttls:
       enable: true
+    timeout: 30000
 
 test:
   mail:
