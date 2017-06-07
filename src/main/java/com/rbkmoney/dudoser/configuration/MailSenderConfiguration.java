@@ -32,12 +32,17 @@ public class MailSenderConfiguration {
     @Value("${mail.smtp.starttls.enable}")
     boolean starttls;
 
+    @Value("${mail.smtp.timeout:30000}")
+    int timeout;
+
     @Bean
     public Properties mailProperties() {
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.auth", smtpsAuth);
         javaMailProperties.put("mail.smtp.starttls.enable", starttls);
         javaMailProperties.put("mail.transport.protocol", protocol);
+        javaMailProperties.put("mail.smtp.connectiontimeout", timeout);
+        javaMailProperties.put("mail.smtp.timeout", timeout);
         return javaMailProperties;
     }
 

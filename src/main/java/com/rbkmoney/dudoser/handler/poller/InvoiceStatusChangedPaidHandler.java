@@ -60,11 +60,11 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoice();
-        log.info("Start InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
         Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
 
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
+            log.info("Start InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
             String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
@@ -80,7 +80,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
             try {
                 mailSenderUtils.send(from, payment.getToReceiver(), subject);
             } catch (MailNotSendException e) {
-                log.warn("Mail not send from {} to {}", from, payment.getToReceiver());
+                log.warn("Mail not send from {} to {}", from, payment.getToReceiver(), e);
             }
 
             paymentPayerDaoImpl.delete(invoiceId);
