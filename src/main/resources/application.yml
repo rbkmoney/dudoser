@@ -10,9 +10,6 @@ info:
   damsel:
     version: @damsel.version@
 ---
-endpoints:
-  health:
-    sensitive: false
 #logging:
 #  file: /tmp/@artifactId@.json
 ---
@@ -70,3 +67,6 @@ spring:
     hikari:
       maximum-pool-size: 3
       idle-timeout: 30000
+management:
+  security:
+    enabled: false
