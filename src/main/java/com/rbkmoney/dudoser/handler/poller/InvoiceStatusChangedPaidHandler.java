@@ -44,11 +44,6 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler {
     TemplateMailSenderUtils mailSenderUtils;
 
     @Override
-    public boolean accept(InvoiceChange change) {
-        return false;
-    }
-
-    @Override
     public void handle(InvoiceChange ic, StockEvent value) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
