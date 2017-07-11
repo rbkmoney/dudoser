@@ -10,7 +10,7 @@ import com.rbkmoney.geck.filter.rule.PathConditionRule;
  */
 public enum ChangeType {
     INVOICE_STATUS_CHANGED_PAID("invoice_status_changed.status.paid",  new IsNullCondition().not()),
-    INVOICE_PAYMENT_STARTED("invoice_payment_change.invoice_payment_started", new IsNullCondition().not());
+    INVOICE_PAYMENT_STARTED("invoice_payment_change.payload.invoice_payment_started", new IsNullCondition().not());
 
     Filter filter;
 
