@@ -1,12 +1,8 @@
 package com.rbkmoney.dudoser.handler.poller;
 
+import com.rbkmoney.damsel.event_stock.StockEvent;
+import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.handler.Handler;
-import com.rbkmoney.thrift.filter.Filter;
 
-public interface PollingEventHandler<T> extends Handler<T> {
-    default boolean accept(T value) {
-        return getFilter().match(value);
-    }
-
-    Filter getFilter();
+public interface PollingEventHandler extends Handler<InvoiceChange, StockEvent> {
 }
