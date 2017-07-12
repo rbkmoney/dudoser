@@ -34,15 +34,6 @@
         <db.schema>dud</db.schema>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>ci</id>
-            <properties>
-                <db.url>jdbc:postgresql://dudoser_db:5432/dudoser</db.url>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!--Thirdparty libs-->
         <dependency>
