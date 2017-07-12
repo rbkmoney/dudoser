@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.utils.mail;
 
 import com.rbkmoney.damsel.message_sender.*;
+import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.woody.api.event.ClientEventListener;
 import com.rbkmoney.woody.api.event.CompositeClientEventListener;
 import com.rbkmoney.woody.api.generator.IdGenerator;
@@ -34,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class APIMailTest {
+public class APIMailTest extends AbstractIntegrationTest {
 
     @Value("${mail.port}")
     private int mailPort;
