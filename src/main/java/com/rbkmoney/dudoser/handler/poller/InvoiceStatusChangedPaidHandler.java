@@ -3,19 +3,16 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
+import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
+import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
-import com.rbkmoney.thrift.filter.Filter;
-import com.rbkmoney.thrift.filter.PathConditionFilter;
-import com.rbkmoney.thrift.filter.condition.CompareCondition;
-import com.rbkmoney.thrift.filter.condition.Relation;
-import com.rbkmoney.thrift.filter.rule.PathConditionRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +24,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<StockEvent> {
+public class InvoiceStatusChangedPaidHandler implements PollingEventHandler {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
-
-    private String path = "source_event.processing_event.payload.invoice_event.invoice_status_changed.status";
-    private Filter filter;
 
     @Autowired
     EventService eventService;
@@ -49,17 +43,11 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     @Autowired
     TemplateMailSenderUtils mailSenderUtils;
 
-    public InvoiceStatusChangedPaidHandler() {
-        filter = new PathConditionFilter(
-                new PathConditionRule(path, new CompareCondition("paid", Relation.EQ))
-        );
-    }
-
     @Override
-    public void handle(StockEvent value) {
+    public void handle(InvoiceChange ic, StockEvent value) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
-        String invoiceId = event.getSource().getInvoice();
+        String invoiceId = event.getSource().getInvoiceId();
         Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
 
         if (paymentPayer.isPresent()) {
@@ -92,8 +80,8 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler<Stoc
     }
 
     @Override
-    public Filter getFilter() {
-        return filter;
+    public ChangeType getChangeType() {
+        return ChangeType.INVOICE_STATUS_CHANGED_PAID;
     }
 
 }

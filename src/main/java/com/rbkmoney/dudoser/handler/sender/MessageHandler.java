@@ -1,6 +1,8 @@
 package com.rbkmoney.dudoser.handler.sender;
 
-import com.rbkmoney.dudoser.handler.Handler;
+import com.rbkmoney.damsel.message_sender.Message;
 
-public interface MessageHandler<T> extends Handler<T> {
+interface MessageHandler {
+    boolean accept(Message value);
+    void handle(Message message) throws Exception;
 }

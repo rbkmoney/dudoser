@@ -4,23 +4,19 @@ import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
+import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
-import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
-import com.rbkmoney.thrift.filter.Filter;
-import com.rbkmoney.thrift.filter.PathConditionFilter;
-import com.rbkmoney.thrift.filter.rule.PathConditionRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
+public class PaymentStartedHandler implements PollingEventHandler{
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -30,32 +26,14 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
     @Autowired
     PaymentPayerDaoImpl paymentPayerDaoImpl;
 
-    @Value("${notification.create.invoice.from}")
-    private String from;
-
-    @Autowired
-    TemplateDao templateDao;
-
-    @Autowired
-    TemplateMailSenderUtils mailSenderUtils;
-
-    private Filter filter;
-
-    private String path = "source_event.processing_event.payload.invoice_event.invoice_payment_event.invoice_payment_started.payment";
-
-    public PaymentStartedHandler() {
-        filter = new PathConditionFilter(new PathConditionRule(path));
-    }
-
-  //  @Override
-    public void handle(StockEvent value) {
+    @Override
+    public void handle(InvoiceChange ic, StockEvent value) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
-        String invoiceId = event.getSource().getInvoice();
-        InvoicePayment invoicePayment = event.getPayload().getInvoiceEvent().getInvoicePaymentEvent().getInvoicePaymentStarted().getPayment();
+        String invoiceId = event.getSource().getInvoiceId();
+        InvoicePayment invoicePayment = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentStarted().getPayment();
         Payer payer = invoicePayment.getPayer();
         log.info("Start PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
-
         if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
             PaymentPayer paymentPayer = new PaymentPayer();
             paymentPayer.setInvoiceId(invoiceId);
@@ -63,7 +41,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
             paymentPayer.setCurrency(invoicePayment.getCost().getCurrency().getSymbolicCode());
             paymentPayer.setCardMaskPan(payer.getPaymentTool().getBankCard().getMaskedPan());
             paymentPayer.setCardType(payer.getPaymentTool().getBankCard().getPaymentSystem().name());
-            paymentPayer.setInvoiceId(event.getSource().getInvoice());
+            paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
             paymentPayer.setDate(invoicePayment.getCreatedAt());
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
@@ -79,8 +57,7 @@ public class PaymentStartedHandler implements PollingEventHandler<StockEvent> {
     }
 
     @Override
-    public Filter getFilter() {
-        return filter;
+    public ChangeType getChangeType() {
+        return ChangeType.INVOICE_PAYMENT_STARTED;
     }
-
 }

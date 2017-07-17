@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PaymentPayerDaoImplTest {
+public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
 
     @Autowired
     PaymentPayerDao paymentPayerDao;

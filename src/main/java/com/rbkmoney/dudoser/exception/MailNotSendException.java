@@ -1,7 +1,5 @@
 package com.rbkmoney.dudoser.exception;
 
-import org.springframework.mail.MailException;
-
 /**
  * Created by inalarsanukaev on 10.05.17.
  */
