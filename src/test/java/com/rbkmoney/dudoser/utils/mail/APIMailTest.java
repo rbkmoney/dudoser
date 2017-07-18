@@ -1,13 +1,14 @@
 package com.rbkmoney.dudoser.utils.mail;
 
 import com.rbkmoney.damsel.message_sender.*;
+import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.woody.api.event.ClientEventListener;
 import com.rbkmoney.woody.api.event.CompositeClientEventListener;
 import com.rbkmoney.woody.api.generator.IdGenerator;
+import com.rbkmoney.woody.api.generator.TimestampIdGenerator;
 import com.rbkmoney.woody.thrift.impl.http.THClientBuilder;
 import com.rbkmoney.woody.thrift.impl.http.event.ClientEventLogListener;
 import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
-import com.rbkmoney.woody.thrift.impl.http.generator.TimestampIdGenerator;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.thrift.TException;
 import org.junit.Before;
@@ -34,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class APIMailTest {
+public class APIMailTest extends AbstractIntegrationTest {
 
     @Value("${mail.port}")
     private int mailPort;
@@ -49,7 +50,6 @@ public class APIMailTest {
         try {
             THClientBuilder clientBuilder = new THClientBuilder();
             clientBuilder.withAddress(new URI(url));
-            clientBuilder.withHttpClient(HttpClientBuilder.create().build());
             clientBuilder.withIdGenerator(idGenerator);
             clientBuilder.withEventListener(eventListener);
             return clientBuilder.build(iface);

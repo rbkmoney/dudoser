@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.service;
 
+import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EventServiceTest {
+public class EventServiceTest extends AbstractIntegrationTest {
 
     @Autowired
     EventService eventService;

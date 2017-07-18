@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser.handler.sender;
 
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
-import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  * Created by inal on 24.11.2016.
  */
 @Component
-public class MessageMailHandler implements MessageHandler<Message> {
+public class MessageMailHandler implements MessageHandler {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 

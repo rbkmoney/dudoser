@@ -3,9 +3,14 @@ package com.rbkmoney.dudoser.handler;
 /**
  * Created by inal on 24.11.2016.
  */
-public interface Handler<T> {
+public interface Handler<C, P> {
 
-    boolean accept(T value);
+    default boolean accept(C change) {
+        return getChangeType().getFilter().match(change);
+    }
 
-    void handle(T value) throws Exception;
+    void handle(C change, P parent);
+
+    ChangeType getChangeType();
+
 }
