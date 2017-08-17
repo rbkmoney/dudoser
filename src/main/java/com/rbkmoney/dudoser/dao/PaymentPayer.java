@@ -108,24 +108,6 @@ public class PaymentPayer{
         this.date = formattedDate;
     }
 
-    public static void main(String[] args) {
-        String date = "2016-03-22T06:12:27Z";
-        String formattedDate;
-        if (date.isEmpty()) {
-            formattedDate = date;
-        } else {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date dateStr = formatter.parse(date);
-                formattedDate = formatter.format(dateStr);
-            } catch (ParseException e) {
-                formattedDate = date;
-            }
-        }
-        System.out.println(formattedDate);
-
-    }
-
     public String getToReceiver() {
         return toReceiver;
     }
