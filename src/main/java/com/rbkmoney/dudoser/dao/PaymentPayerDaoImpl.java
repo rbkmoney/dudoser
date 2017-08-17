@@ -32,8 +32,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.getById error with id {}", id, e);
-            throw new DaoException(e);
+            throw new DaoException("PaymentPayerDaoImpl.getById error with id " + id, e);
         }
         return Optional.ofNullable(paymentPayer);
     }
@@ -56,8 +55,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.update error with invoiceId {}", paymentPayer.getInvoiceId(), e);
-            throw new DaoException(e);
+            throw new DaoException("PaymentPayerDaoImpl.update error with invoiceId " + paymentPayer.getInvoiceId(), e);
         }
         log.debug("Payment info with invoiceId {} updated to table", paymentPayer.getInvoiceId());
         return true;
@@ -78,8 +76,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.add error with invoiceId {}", invoiceId, e);
-            throw new DaoException(e);
+            throw new DaoException("PaymentPayerDaoImpl.add error with invoiceId "+ invoiceId, e);
         }
         log.debug("Payment info with invoiceId {} added to table", invoiceId);
         return true;
@@ -95,8 +92,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            log.error("PaymentPayerDaoImpl.delete error with id {}", id, e);
-            throw new DaoException(e);
+            throw new DaoException("PaymentPayerDaoImpl.delete error with id "+ id, e);
         }
         log.debug("Payment info with invoiceId {} deleted from table", id);
         return true;
