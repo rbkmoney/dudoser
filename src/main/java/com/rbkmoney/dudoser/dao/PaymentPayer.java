@@ -13,6 +13,9 @@ public class PaymentPayer{
     private String cardType;
     private String cardMaskPan;
     private String invoiceId;
+    private String partyId;
+    private String shopId;
+    private String shopUrl;
     private String date;
     private String toReceiver;
 
@@ -60,6 +63,30 @@ public class PaymentPayer{
         this.invoiceId = invoiceId;
     }
 
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopUrl() {
+        return shopUrl;
+    }
+
+    public void setShopUrl(String shopUrl) {
+        this.shopUrl = shopUrl;
+    }
+
     public String getDate() {
         return date;
     }
@@ -79,6 +106,24 @@ public class PaymentPayer{
         }
 
         this.date = formattedDate;
+    }
+
+    public static void main(String[] args) {
+        String date = "2016-03-22T06:12:27Z";
+        String formattedDate;
+        if (date.isEmpty()) {
+            formattedDate = date;
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date dateStr = formatter.parse(date);
+                formattedDate = formatter.format(dateStr);
+            } catch (ParseException e) {
+                formattedDate = date;
+            }
+        }
+        System.out.println(formattedDate);
+
     }
 
     public String getToReceiver() {

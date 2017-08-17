@@ -151,14 +151,8 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.1.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.1.8</version>
+            <version>1.4.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

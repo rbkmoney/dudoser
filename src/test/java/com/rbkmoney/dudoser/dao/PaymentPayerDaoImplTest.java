@@ -2,11 +2,15 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.utils.Converter;
+import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,18 +24,33 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
 
     @Autowired
     PaymentPayerDao paymentPayerDao;
+    @Autowired
+    TemplateDao templateDao;
+    @Autowired
+    TemplateMailSenderUtils mailSenderUtils;
     @Test
     public void test() throws Exception {
+        String invoiceId = "eeeeeer";
+        String partyId = "dsgsgr";
+        String shopId = "1";
+        assertTrue(paymentPayerDao.add(invoiceId, partyId, shopId, "www.2ch.ru"));
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
         paymentPayer.setCurrency("RUB");
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
-        paymentPayer.setInvoiceId("eeeeeer");
+        paymentPayer.setInvoiceId(invoiceId);
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setToReceiver("i.ars@rbk.com");
-        assertTrue(paymentPayerDao.add(paymentPayer));
-        assertEquals(paymentPayerDao.getById("eeeeeer").get().getCardType(), "visa");
-        assertTrue(paymentPayerDao.delete("eeeeeer"));
+        assertTrue(paymentPayerDao.update(paymentPayer));
+        PaymentPayer paymentPayer1 = paymentPayerDao.getById(invoiceId).get();
+        assertEquals(paymentPayer1.getCardType(), "visa");
+        assertTrue(paymentPayerDao.delete(invoiceId));
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.INVOICE_STATUS_CHANGED);
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+        Map<String, Object> model = new HashMap<>();
+        model.put("paymentPayer", paymentPayer1);
+        mailSenderUtils.setModel(model);
+        assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Успешный платеж на сайте www.2ch.ru"));
     }
 }
