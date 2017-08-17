@@ -23,6 +23,9 @@ bm:
     maxPoolSize: 1
     delay: 5000
 
+hellgate:
+  url: http://hellgate:8022/v1/processing/partymgmt
+
 mail:
   host: smtp.office365.com
   port: 587
