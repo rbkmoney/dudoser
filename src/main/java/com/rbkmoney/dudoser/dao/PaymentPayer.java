@@ -13,6 +13,9 @@ public class PaymentPayer{
     private String cardType;
     private String cardMaskPan;
     private String invoiceId;
+    private String partyId;
+    private String shopId;
+    private String shopUrl;
     private String date;
     private String toReceiver;
 
@@ -58,6 +61,30 @@ public class PaymentPayer{
 
     public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopUrl() {
+        return shopUrl;
+    }
+
+    public void setShopUrl(String shopUrl) {
+        this.shopUrl = shopUrl;
     }
 
     public String getDate() {
