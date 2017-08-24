@@ -11,9 +11,10 @@ public class Converter {
         return new BigDecimal(amount).divide(BigDecimal.valueOf(100)).setScale(2);
     }
 
+    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
     public static synchronized String getFormattedDate(String date) {
         String formattedDate;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateStr = formatter.parse(date);
             formattedDate = formatter.format(dateStr);
