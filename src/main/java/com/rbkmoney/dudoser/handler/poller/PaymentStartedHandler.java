@@ -45,7 +45,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
             paymentPayer.setDate(invoicePayment.getCreatedAt());
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
-            if (!paymentPayerDaoImpl.add(paymentPayer)) {
+            if (!paymentPayerDaoImpl.update(paymentPayer)) {
                 log.warn("PaymentStartedHandler: couldn't save payment info, invoiceId {}", invoiceId);
             } else {
                 log.debug("PaymentStartedHandler: saved payment info, invoiceId {}", invoiceId);
