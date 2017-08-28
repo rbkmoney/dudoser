@@ -11,7 +11,9 @@ import com.rbkmoney.geck.filter.rule.PathConditionRule;
 public enum ChangeType {
     INVOICE_CREATED("invoice_created", new IsNullCondition().not()),
     INVOICE_PAYMENT_STATUS_CHANGED_PROCESSED("invoice_payment_change.payload.invoice_payment_status_changed.status.processed", new IsNullCondition().not()),
-    INVOICE_PAYMENT_STARTED("invoice_payment_change.payload.invoice_payment_started", new IsNullCondition().not());
+    INVOICE_PAYMENT_STARTED("invoice_payment_change.payload.invoice_payment_started", new IsNullCondition().not()),
+    INVOICE_PAYMENT_REFUND_CREATED("invoice_payment_change.payload.invoice_payment_refund_change.payload.invoice_payment_refund_created", new IsNullCondition().not()),
+    INVOICE_PAYMENT_STATUS_CHANGED_REFUNDED("invoice_payment_change.payload.invoice_payment_status_changed.status.refunded", new IsNullCondition().not());
 
     Filter filter;
 

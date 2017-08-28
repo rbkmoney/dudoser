@@ -5,7 +5,7 @@ package com.rbkmoney.dudoser.dao;
  */
 public enum EventTypeCode {
     INVOICE_STATUS_CHANGED("INVOICE.STATUS.CHANGED"),
-    PAYMENT_STARTED("PAYMENT.STARTED");
+    INVOICE_PAYMENT_STATUS_CHANGED("INVOICE.PAYMENT.STATUS.CHANGED.REFUNDED");
 
     private final String code;
 
