@@ -9,7 +9,6 @@ import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
-import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
@@ -48,7 +47,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
-        Optional<PaymentPayer> paymentPayer = paymentPayerDaoImpl.getById(invoiceId);
+        Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceId, ic);
 
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
@@ -61,7 +60,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                     payment.getAmountWithCurrency()
             );
             //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
-            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.INVOICE_STATUS_CHANGED);
+            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(getEventTypeCode());
             mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
             mailSenderUtils.setModel(model);
 
@@ -78,4 +77,8 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         }
         log.debug("End InvoicePaymentStatusChangedProcessedHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
+
+    protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);
+
+    protected abstract EventTypeCode getEventTypeCode();
 }

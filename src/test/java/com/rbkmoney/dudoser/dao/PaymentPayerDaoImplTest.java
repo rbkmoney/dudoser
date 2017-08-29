@@ -46,7 +46,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         PaymentPayer paymentPayer1 = paymentPayerDao.getById(invoiceId).get();
         assertEquals(paymentPayer1.getCardType(), "visa");
         assertTrue(paymentPayerDao.delete(invoiceId));
-        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.INVOICE_STATUS_CHANGED);
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED);
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer1);

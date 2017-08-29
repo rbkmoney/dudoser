@@ -1,7 +1,12 @@
 package com.rbkmoney.dudoser.handler.poller;
 
+import com.rbkmoney.damsel.payment_processing.InvoiceChange;
+import com.rbkmoney.dudoser.dao.EventTypeCode;
+import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentStatusChangedHandler {
@@ -9,5 +14,15 @@ public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentSt
     @Override
     public ChangeType getChangeType() {
         return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_REFUNDED;
+    }
+
+    @Override
+    protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
+        return paymentPayerDaoImpl.getById(invoiceId);
+    }
+
+    @Override
+    protected EventTypeCode getEventTypeCode() {
+        return EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED;
     }
 }
