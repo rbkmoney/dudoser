@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class InvoiceStatusChangedPaidHandler implements PollingEventHandler {
+public class InvoicePaymentStatusChangedProcessedHandler implements PollingEventHandler {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -52,7 +52,7 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler {
 
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
-            log.info("Start InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
+            log.info("Start InvoicePaymentStatusChangedProcessedHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
             String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
@@ -74,14 +74,14 @@ public class InvoiceStatusChangedPaidHandler implements PollingEventHandler {
             paymentPayerDaoImpl.delete(invoiceId);
             eventService.setLastEventId(eventId);
         } else {
-            log.warn("InvoiceStatusChangedPaidHandler: invoiceId {} not found in repository", invoiceId);
+            log.warn("InvoicePaymentStatusChangedProcessedHandler: invoiceId {} not found in repository", invoiceId);
         }
-        log.debug("End InvoiceStatusChangedPaidHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
+        log.debug("End InvoicePaymentStatusChangedProcessedHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
 
     @Override
     public ChangeType getChangeType() {
-        return ChangeType.INVOICE_STATUS_CHANGED_PAID;
+        return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_PROCESSED;
     }
 
 }

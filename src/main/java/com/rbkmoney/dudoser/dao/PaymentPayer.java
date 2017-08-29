@@ -1,5 +1,7 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.utils.Converter;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,20 +94,7 @@ public class PaymentPayer{
     }
 
     public void setDate(String date) {
-        String formattedDate;
-        if (date.isEmpty()) {
-            formattedDate = date;
-        } else {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date dateStr = formatter.parse(date);
-                formattedDate = formatter.format(dateStr);
-            } catch (ParseException e) {
-                formattedDate = date;
-            }
-        }
-
-        this.date = formattedDate;
+        this.date = date;
     }
 
     public String getToReceiver() {
