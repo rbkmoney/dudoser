@@ -77,7 +77,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addRefund(PaymentPayer refund) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :currency, :card_type, :ard_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", refund.getInvoiceId())
                 .addValue("party_id", refund.getPartyId())

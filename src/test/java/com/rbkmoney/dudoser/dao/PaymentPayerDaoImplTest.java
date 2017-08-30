@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
-
     @Autowired
     PaymentPayerDao paymentPayerDao;
     @Autowired
@@ -34,7 +33,9 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String paymentId = "paymId1";
         String partyId = "dsgsgr";
         String shopId = "1";
+        //--------add invoice-------------
         assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+        //--------prepare payment info----
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
@@ -44,14 +45,36 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setPaymentId(paymentId);
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setToReceiver("i.ars@rbk.com");
+        //------ update payment info------
         assertTrue(paymentPayerDao.updatePayment(paymentPayer));
-        PaymentPayer paymentPayer1 = paymentPayerDao.getPayment(invoiceId, paymentId).get();
-        assertEquals(paymentPayer1.getCardType(), "visa");
+        //-------- get payment info-------
+        PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
+        assertEquals(paymentPayerGet.getCardType(), "visa");
+        //-------- check mail about payment ------
         String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED);
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
-        model.put("paymentPayer", paymentPayer1);
+        model.put("paymentPayer", paymentPayerGet);
         mailSenderUtils.setModel(model);
         assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Успешный платеж на сайте www.2ch.ru"));
+
+        //-------- add refund ---------------
+        PaymentPayer refundInfo = paymentPayerGet;
+        refundInfo.setAmount(Converter.longToBigDecimal(112L));
+        refundInfo.setCurrency("RUB");
+        String refundId = "234";
+        refundInfo.setRefundId(refundId);
+        refundInfo.setDate("2017-08-26T20:12:34.983390Z");
+        paymentPayerDao.addRefund(refundInfo);
+        //----------- get refund ------------
+        PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
+        assertEquals(refundInfoGet.getRefundId(), refundId);
+        //-------- check mail about refund ------
+        String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED);
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContentRefund);
+        Map<String, Object> modelRefund = new HashMap<>();
+        modelRefund.put("paymentPayer", refundInfoGet);
+        mailSenderUtils.setModel(modelRefund);
+        assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Возврат средств на сайте www.2ch.ru"));
     }
 }
