@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class RefundStartedHandler implements PollingEventHandler{
@@ -32,23 +33,26 @@ public class RefundStartedHandler implements PollingEventHandler{
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
-        log.info("Start RefundStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
         String paymentId = ic.getInvoicePaymentChange().getId();
         InvoicePaymentRefund refund = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getPayload().getInvoicePaymentRefundCreated().getRefund();
         String refundId = refund.getId();
-        PaymentPayer paymentPayer = paymentPayerDaoImpl.getPayment(invoiceId, paymentId).get();
-        List<FinalCashFlowPosting> cashFlow = refund.getCashFlow();
-        paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
-        paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
-        paymentPayer.setRefundId(refundId);
-        paymentPayer.setDate(refund.getCreatedAt());
-
-        if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
-            log.warn("RefundStartedHandler: couldn't save refund info: {}", invoiceId);
+        log.info("Start RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
+        Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
+        if (paymentPayerOptional.isPresent()) {
+            PaymentPayer paymentPayer = paymentPayerOptional.get();
+            List<FinalCashFlowPosting> cashFlow = refund.getCashFlow();
+            paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
+            paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
+            paymentPayer.setRefundId(refundId);
+            paymentPayer.setDate(refund.getCreatedAt());
+            if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
+                log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", invoiceId, paymentId, refundId);
+            }
+            eventService.setLastEventId(eventId);
+        } else {
+            log.warn("RefundStartedHandler: refund {}.{}.{} not found in repository", invoiceId, paymentId, refundId);
         }
-
-        eventService.setLastEventId(eventId);
-        log.debug("End RefundStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+        log.info("End RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
     }
     public static long getAmount(List<FinalCashFlowPosting> finalCashFlow) {
         return finalCashFlow.stream()

@@ -47,11 +47,11 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
+        String paymentId = ic.getInvoicePaymentChange().getId();
+        log.info("Start InvoicePaymentStatusChangedHandler: event_id {}, payment change {}.{}", event.getId(), invoiceId, paymentId);
         Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceId, ic);
-
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
-            log.info("Start InvoicePaymentStatusChangedHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
             String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
@@ -72,9 +72,9 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
             eventService.setLastEventId(eventId);
         } else {
-            log.warn("InvoicePaymentStatusChangedHandler: invoiceId {} not found in repository", invoiceId);
+            log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", invoiceId, paymentId);
         }
-        log.debug("End InvoicePaymentStatusChangedHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
+        log.info("End InvoicePaymentStatusChangedHandler: event_id {}, payment change {}.{}", event.getId(), invoiceId, paymentId);
     }
 
     protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);

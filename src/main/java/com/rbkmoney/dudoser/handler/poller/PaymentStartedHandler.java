@@ -33,11 +33,12 @@ public class PaymentStartedHandler implements PollingEventHandler{
         String invoiceId = event.getSource().getInvoiceId();
         InvoicePayment invoicePayment = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentStarted().getPayment();
         Payer payer = invoicePayment.getPayer();
-        log.info("Start PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+        String paymentId = ic.getInvoicePaymentChange().getId();
+        log.info("Start PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
         if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
             PaymentPayer paymentPayer = new PaymentPayer();
             paymentPayer.setInvoiceId(invoiceId);
-            paymentPayer.setPaymentId(ic.getInvoicePaymentChange().getId());
+            paymentPayer.setPaymentId(paymentId);
             paymentPayer.setAmount(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()));
             paymentPayer.setCurrency(invoicePayment.getCost().getCurrency().getSymbolicCode());
             paymentPayer.setCardMaskPan(payer.getPaymentTool().getBankCard().getMaskedPan());
@@ -47,14 +48,14 @@ public class PaymentStartedHandler implements PollingEventHandler{
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
             if (!paymentPayerDaoImpl.updatePayment(paymentPayer)) {
-                log.warn("PaymentStartedHandler: couldn't save payment info, invoiceId {}", invoiceId);
+                log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", invoiceId, paymentId);
             } else {
-                log.debug("PaymentStartedHandler: saved payment info, invoiceId {}", invoiceId);
+                log.debug("PaymentStartedHandler: saved payment info, payment {}.{}", invoiceId, paymentId);
             }
         }
 
         eventService.setLastEventId(eventId);
-        log.debug("End PaymentStartedHandler: event_id {}, invoiceId {}", eventId, invoiceId);
+        log.info("End PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
     }
     @Override
     public ChangeType getChangeType() {
