@@ -51,7 +51,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
-            log.info("Start InvoicePaymentStatusChangedProcessedHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
+            log.info("Start InvoicePaymentStatusChangedHandler: event_id {}, invoiceId {}, to {}", event.getId(), invoiceId, payment.getToReceiver());
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
             String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
@@ -70,12 +70,11 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                 log.warn("Mail not send from {} to {}", from, payment.getToReceiver(), e);
             }
 
-            paymentPayerDaoImpl.delete(invoiceId);
             eventService.setLastEventId(eventId);
         } else {
-            log.warn("InvoicePaymentStatusChangedProcessedHandler: invoiceId {} not found in repository", invoiceId);
+            log.warn("InvoicePaymentStatusChangedHandler: invoiceId {} not found in repository", invoiceId);
         }
-        log.debug("End InvoicePaymentStatusChangedProcessedHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
+        log.debug("End InvoicePaymentStatusChangedHandler: event_id {}, invoiceId {}", event.getId(), invoiceId);
     }
 
     protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);

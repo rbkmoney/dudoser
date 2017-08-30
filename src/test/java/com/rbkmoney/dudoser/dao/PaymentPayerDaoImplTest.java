@@ -30,22 +30,23 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     TemplateMailSenderUtils mailSenderUtils;
     @Test
     public void test() throws Exception {
-        String invoiceId = "eeeeeer";
+        String invoiceId = "invId1";
+        String paymentId = "paymId1";
         String partyId = "dsgsgr";
         String shopId = "1";
-        assertTrue(paymentPayerDao.add(invoiceId, partyId, shopId, "www.2ch.ru"));
+        assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
         paymentPayer.setCurrency("RUB");
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId(invoiceId);
+        paymentPayer.setPaymentId(paymentId);
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setToReceiver("i.ars@rbk.com");
-        assertTrue(paymentPayerDao.update(paymentPayer));
-        PaymentPayer paymentPayer1 = paymentPayerDao.getById(invoiceId).get();
+        assertTrue(paymentPayerDao.updatePayment(paymentPayer));
+        PaymentPayer paymentPayer1 = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayer1.getCardType(), "visa");
-        assertTrue(paymentPayerDao.delete(invoiceId));
         String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED);
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();

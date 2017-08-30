@@ -18,7 +18,9 @@ public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentSt
 
     @Override
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
-        return paymentPayerDaoImpl.getById(invoiceId);
+        String paymentId = ic.getInvoicePaymentChange().getId();
+        String refundId = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getId();
+        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId, refundId);
     }
 
     @Override

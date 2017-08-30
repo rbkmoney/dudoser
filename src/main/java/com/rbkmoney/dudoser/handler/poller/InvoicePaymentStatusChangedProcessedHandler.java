@@ -18,7 +18,8 @@ public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentS
 
     @Override
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
-        return paymentPayerDaoImpl.getById(invoiceId);
+        String paymentId = ic.getInvoicePaymentChange().getId();
+        return paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
     }
 
     @Override
