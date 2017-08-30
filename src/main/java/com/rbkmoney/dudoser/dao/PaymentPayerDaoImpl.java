@@ -38,8 +38,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("card_mask_pan", paymentPayer.getCardMaskPan())
                 .addValue("date", paymentPayer.getDate())
                 .addValue("to_receiver", paymentPayer.getToReceiver())
-                .addValue("payment_type", PAYMENT)
-                .addValue("invoice_type", INVOICE);
+                .addValue("payment_type", PAYMENT.name())
+                .addValue("invoice_type", INVOICE.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount != 1) {
@@ -61,7 +61,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("party_id", partyId)
                 .addValue("shop_id", shopId)
                 .addValue("shop_url", shopUrl)
-                .addValue("type", INVOICE);
+                .addValue("type", INVOICE.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount != 1) {
@@ -91,7 +91,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("card_mask_pan", refund.getCardMaskPan())
                 .addValue("date", refund.getDate())
                 .addValue("to_receiver", refund.getToReceiver())
-                .addValue("type", REFUND);
+                .addValue("type", REFUND.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount != 1) {
@@ -109,7 +109,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND (payment_id IS NULL OR payment_id=:payment_id) AND (type IS NULL OR type=CAST(:type AS dudos.payment_type))";
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
                 .addValue("payment_id", paymentId)
-                .addValue("type", PAYMENT);
+                .addValue("type", PAYMENT.name());
         PaymentPayer paymentPayer = null;
         try {
             paymentPayer = (PaymentPayer) getNamedParameterJdbcTemplate()
@@ -128,7 +128,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
                 .addValue("payment_id", paymentId)
                 .addValue("refund_id", refundId)
-                .addValue("type", REFUND);
+                .addValue("type", REFUND.name());
         PaymentPayer paymentPayer = null;
         try {
             paymentPayer = (PaymentPayer) getNamedParameterJdbcTemplate()
