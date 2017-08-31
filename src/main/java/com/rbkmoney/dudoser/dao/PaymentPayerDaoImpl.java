@@ -136,7 +136,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
-            throw new DaoException("PaymentPayerDaoImpl.refund_id error with id " + invoiceId + "." + paymentId + "." + refundId, e);
+            throw new DaoException("PaymentPayerDaoImpl.getRefund error with id " + invoiceId + "." + paymentId + "." + refundId, e);
         }
         return Optional.ofNullable(paymentPayer);
     }
