@@ -12,6 +12,7 @@ import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.thrift.TException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,6 +69,7 @@ public class APIMailTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testAPI() throws TException, IOException, URISyntaxException, MessagingException {
         sendMail();
     }

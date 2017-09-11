@@ -5,6 +5,7 @@ import com.rbkmoney.damsel.domain.InvoicePaymentRefund;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
+import com.rbkmoney.damsel.payment_processing.InvoicePaymentRefundCreated;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.handler.ChangeType;
@@ -34,13 +35,14 @@ public class RefundStartedHandler implements PollingEventHandler{
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
         String paymentId = ic.getInvoicePaymentChange().getId();
-        InvoicePaymentRefund refund = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getPayload().getInvoicePaymentRefundCreated().getRefund();
+        InvoicePaymentRefundCreated invoicePaymentRefundCreated = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getPayload().getInvoicePaymentRefundCreated();
+        InvoicePaymentRefund refund = invoicePaymentRefundCreated.getRefund();
         String refundId = refund.getId();
         log.info("Start RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
         Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
         if (paymentPayerOptional.isPresent()) {
             PaymentPayer paymentPayer = paymentPayerOptional.get();
-            List<FinalCashFlowPosting> cashFlow = refund.getCashFlow();
+            List<FinalCashFlowPosting> cashFlow = invoicePaymentRefundCreated.getCashFlow();
             paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
             paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
             paymentPayer.setRefundId(refundId);
