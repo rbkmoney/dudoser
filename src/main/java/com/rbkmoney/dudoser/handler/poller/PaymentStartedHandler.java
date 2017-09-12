@@ -42,7 +42,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
             paymentPayer.setCardMaskPan(payer.getPaymentTool().getBankCard().getMaskedPan());
             paymentPayer.setCardType(payer.getPaymentTool().getBankCard().getPaymentSystem().name());
             paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
-            paymentPayer.setDate(invoicePayment.getCreatedAt());
+            paymentPayer.setDate(Converter.getFormattedDate(invoicePayment.getCreatedAt()));
             paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
 
             if (!paymentPayerDaoImpl.update(paymentPayer)) {
