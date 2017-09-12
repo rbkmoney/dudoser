@@ -52,7 +52,7 @@ public class PaymentPayer{
     }
 
     public String getCardMaskPan() {
-        return "**** **** **** " + cardMaskPan;
+        return cardMaskPan;
     }
 
     public void setCardMaskPan(String cardMaskPan) {
