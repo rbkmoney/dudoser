@@ -9,21 +9,22 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentStatusChangedHandler {
+public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentStatusChangedHandler {
 
     @Override
     public ChangeType getChangeType() {
-        return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_PROCESSED;
+        return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_REFUNDED;
     }
 
     @Override
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
         String paymentId = ic.getInvoicePaymentChange().getId();
-        return paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
+        String refundId = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getId();
+        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId, refundId);
     }
 
     @Override
     protected EventTypeCode getEventTypeCode() {
-        return EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED;
+        return EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED;
     }
 }

@@ -28,7 +28,7 @@ public class InvoiceCreatedHandler implements PollingEventHandler {
         Invoice invoice = ic.getInvoiceCreated().getInvoice();
         String shopUrl = partyManagementService.getShopUrl(invoice.getOwnerId(), invoice.getShopId(), invoice.getCreatedAt());
         log.info("Start creating invoice with id {}", invoice.getId());
-        paymentDao.add(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl);
+        paymentDao.addInvoice(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl);
         log.info("End creating invoice with id {}", invoice.getId());
     }
 
