@@ -35,7 +35,7 @@ public class MailSenderUtils {
             }
             helper.setText(text, true);
             mailSender.send(message);
-            log.debug("Mail send from {} to {}", from, to);
+            log.debug("Mail send from {} to {}. Subject: {} Text: {}", from, to, subject, text);
         } catch (Exception e) {
             log.error("Exception MailSenderUtils. From: {}, to: {}, subject: {}", from ,to, subject, e);
             throw new MailNotSendException("Couldn't send mail", e);

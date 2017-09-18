@@ -8,6 +8,7 @@ import com.rbkmoney.damsel.payment_processing.UserType;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @since 20.06.17
@@ -30,7 +31,8 @@ public class PartyManagementService {
             }
 
             if (shop.getLocation().isSetUrl()) {
-                return shop.getLocation().getUrl();
+                String url = shop.getLocation().getUrl();
+                return StringUtils.isEmpty(url) ? null : url;
             }
         } catch (TException e) {
             throw new RuntimeException(String.format("Unable to checkout Party by partyId: %s shopId: %s timestamp: %s", partyId, shopId, timeStamp), e);

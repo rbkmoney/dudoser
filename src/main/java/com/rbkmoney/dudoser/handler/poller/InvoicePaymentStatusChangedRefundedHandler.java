@@ -4,6 +4,7 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
+import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -19,8 +20,12 @@ public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentSt
     @Override
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
         String paymentId = ic.getInvoicePaymentChange().getId();
-        String refundId = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getId();
-        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId, refundId);
+        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId);
+    }
+
+    @Override
+    protected String getMailSubject() {
+        return MailSubject.REFUNDED.pattern;
     }
 
     @Override

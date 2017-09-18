@@ -4,6 +4,7 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
+import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -20,6 +21,11 @@ public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentS
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
         String paymentId = ic.getInvoicePaymentChange().getId();
         return paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
+    }
+
+    @Override
+    protected String getMailSubject() {
+        return MailSubject.PAYMENT_PAID.pattern;
     }
 
     @Override

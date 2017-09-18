@@ -54,7 +54,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
             PaymentPayer payment = paymentPayer.get();
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
-            String subject = String.format(MailSubject.PAYMENT_PAID.pattern,
+            String subject = String.format(getMailSubject(),
                     payment.getInvoiceId(),
                     payment.getDate(),
                     payment.getAmountWithCurrency()
@@ -78,6 +78,8 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
     }
 
     protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);
+
+    protected abstract String getMailSubject();
 
     protected abstract EventTypeCode getEventTypeCode();
 }
