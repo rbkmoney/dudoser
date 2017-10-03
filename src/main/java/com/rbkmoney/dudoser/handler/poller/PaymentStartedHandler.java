@@ -1,7 +1,8 @@
 package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.domain.InvoicePayment;
-import com.rbkmoney.damsel.domain.Payer;
+import com.rbkmoney.damsel.domain.LegacyPayerDetails;
+import com.rbkmoney.damsel.domain.PaymentTool;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
@@ -32,20 +33,23 @@ public class PaymentStartedHandler implements PollingEventHandler{
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
         InvoicePayment invoicePayment = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentStarted().getPayment();
-        Payer payer = invoicePayment.getPayer();
+        LegacyPayerDetails legacyPayerDetails = invoicePayment.getPayerDetails();
         String paymentId = ic.getInvoicePaymentChange().getId();
         log.info("Start PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
-        if (payer.getPaymentTool().isSetBankCard() && payer.isSetContactInfo() && payer.getContactInfo().isSetEmail()) {
+        if (legacyPayerDetails.getContactInfo().isSetEmail()) {
             PaymentPayer paymentPayer = new PaymentPayer();
             paymentPayer.setInvoiceId(invoiceId);
             paymentPayer.setPaymentId(paymentId);
             paymentPayer.setAmount(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()));
             paymentPayer.setCurrency(invoicePayment.getCost().getCurrency().getSymbolicCode());
-            paymentPayer.setCardMaskPan(payer.getPaymentTool().getBankCard().getMaskedPan());
-            paymentPayer.setCardType(payer.getPaymentTool().getBankCard().getPaymentSystem().name());
+            PaymentTool paymentTool = legacyPayerDetails.getPaymentTool();
+            if (paymentTool.isSetBankCard()) {
+                paymentPayer.setCardMaskPan(paymentTool.getBankCard().getMaskedPan());
+                paymentPayer.setCardType(paymentTool.getBankCard().getPaymentSystem().name());
+            }
             paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
             paymentPayer.setDate(Converter.getFormattedDate(invoicePayment.getCreatedAt()));
-            paymentPayer.setToReceiver(payer.getContactInfo().getEmail());
+            paymentPayer.setToReceiver(legacyPayerDetails.getContactInfo().getEmail());
 
             if (!paymentPayerDaoImpl.updatePayment(paymentPayer)) {
                 log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", invoiceId, paymentId);
