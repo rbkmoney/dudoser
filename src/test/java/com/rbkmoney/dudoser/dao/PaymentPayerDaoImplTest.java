@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -75,6 +76,40 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         Map<String, Object> modelRefund = new HashMap<>();
         modelRefund.put("paymentPayer", refundInfoGet);
         mailSenderUtils.setModel(modelRefund);
-        assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Возврат средств на сайте www.2ch.ru"));
+        String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        assertTrue(filledFreeMarkerTemplateContent.contains("Возврат средств на сайте www.2ch.ru"));
+        assertTrue(filledFreeMarkerTemplateContent.contains("Номер карты"));
+    }
+
+    @Test
+    public void testPaymentTerminalTool() throws Exception {
+
+        String invoiceId = "invId2";
+        String paymentId = "paymId2";
+        String partyId = "dsgsgr4";
+        String shopId = "1";
+        //--------add invoice-------------
+        assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+        //--------prepare payment info----
+        PaymentPayer paymentPayer = new PaymentPayer();
+        paymentPayer.setCurrency("RUB");
+        paymentPayer.setAmount(Converter.longToBigDecimal(111L));
+        paymentPayer.setInvoiceId(invoiceId);
+        paymentPayer.setPaymentId(paymentId);
+        paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
+        paymentPayer.setToReceiver("i.ars@rbk.com");
+        //------ update payment info------
+        assertTrue(paymentPayerDao.updatePayment(paymentPayer));
+        //-------- get payment info-------
+        PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
+        assertEquals(paymentPayerGet.getToReceiver(), "i.ars@rbk.com");
+        //-------- check mail about payment ------
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED);
+        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
+        Map<String, Object> model = new HashMap<>();
+        model.put("paymentPayer", paymentPayerGet);
+        mailSenderUtils.setModel(model);
+        String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        assertFalse(filledFreeMarkerTemplateContent.contains("Номер карты"));
     }
 }
