@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.service;
 
-import com.rbkmoney.damsel.domain.*;
+import com.rbkmoney.damsel.domain.Party;
+import com.rbkmoney.damsel.domain.Shop;
 import com.rbkmoney.damsel.payment_processing.InternalUser;
 import com.rbkmoney.damsel.payment_processing.PartyManagementSrv;
 import com.rbkmoney.damsel.payment_processing.UserInfo;

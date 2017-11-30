@@ -2,6 +2,7 @@ package com.rbkmoney.dudoser.handler.sender;
 
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
+import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ public class MessageMailHandler implements MessageHandler {
 
     @Override
     public void handle(Message message) throws Exception {
-        log.debug("MessageMailHandler started.");
         MessageMail mail = message.getMessageMail();
         List<Map.Entry<String, byte[]>> listAttach = null;
         if (mail.getAttachments() != null) {
@@ -42,9 +42,12 @@ public class MessageMailHandler implements MessageHandler {
                             .collect(Collectors.toList());
             log.debug("Attach count = {}", listAttach.size());
         }
-        for (String to : mail.getToEmails()) {
-            mailSenderUtils.send(mail.getFromEmail(), to, mail.getSubject(), mail.getMailBody().getText(), listAttach);
+        try {
+            log.info("Mail send from {} to {}. Subject: {}", mail.getFromEmail(), mail.getToEmails(), mail.getSubject());
+            mailSenderUtils.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
+            log.info("Mail has been sent to {}", mail.getToEmails());
+        } catch (MailNotSendException e) {
+            log.warn("Mail not send to {}", mail.getToEmails(), e);
         }
-        log.debug("MessageMailHandler end.");
     }
 }
