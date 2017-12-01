@@ -1,6 +1,5 @@
 package com.rbkmoney.dudoser.handler.poller;
 
-
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
@@ -10,7 +9,6 @@ import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.service.EventService;
-import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,9 +63,11 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
             mailSenderUtils.setModel(model);
 
             try {
-                mailSenderUtils.send(from, payment.getToReceiver(), subject);
+                log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
+                mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
+                log.info("Mail has been sent to {}", payment.getToReceiver());
             } catch (MailNotSendException e) {
-                log.warn("Mail not send from {} to {}", from, payment.getToReceiver(), e);
+                log.warn("Mail not send to {}", payment.getToReceiver(), e);
             }
 
             eventService.setLastEventId(eventId);

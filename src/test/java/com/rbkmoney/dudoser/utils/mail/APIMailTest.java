@@ -9,7 +9,6 @@ import com.rbkmoney.woody.api.generator.TimestampIdGenerator;
 import com.rbkmoney.woody.thrift.impl.http.THClientBuilder;
 import com.rbkmoney.woody.thrift.impl.http.event.ClientEventLogListener;
 import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.thrift.TException;
 import org.junit.Before;
 import org.junit.Ignore;

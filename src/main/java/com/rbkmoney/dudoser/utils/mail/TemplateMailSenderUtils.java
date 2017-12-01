@@ -31,7 +31,7 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
     private String freeMarkerTemplateContent;
     private Map<String, Object> model;
 
-    public void send(String from, String to, String subject) throws MailNotSendException {
+    public void send(String from, String[] to, String subject) throws MailNotSendException {
         super.send(from, to, subject, getFilledFreeMarkerTemplateContent(), null);
     }
 
