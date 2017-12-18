@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -65,28 +64,6 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't find template", e);
             throw new DaoException("Couldn't find template with typeCode = " + typeCode + "; merchId = " + merchId + "; shopId = " + shopId);
-        }
-    }
-
-    @Override
-    public Template getTemplateBodyByTypeCode(EventTypeCode typeCode) {
-        log.debug("New getTemplateBodyByTypeCode request. TypeCode = {}", typeCode);
-        final String sql =
-                "select t.body, msb.is_active " +
-                        "from dudos.templates t, " +
-                        "dudos.merchant_shop_template_types mstt, " +
-                        "dudos.merchant_shop_bind msb " +
-                        "where mstt.id=msb.type and msb.template_id=t.id and mstt.code=:code and msb.merch_id is null and msb.shop_id is null";
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("code", typeCode.getCode());
-        try {
-            Template result = getNamedParameterJdbcTemplate().queryForObject(sql, params, new BeanPropertyRowMapper<>(Template.class));
-            log.debug("Response getTemplateBodyByTypeCode. TypeCode = {}", typeCode);
-            return result;
-        } catch (NestedRuntimeException e) {
-            log.warn("Couldn't find template", e);
-            throw new DaoException("Couldn't find template with typeCode = " + typeCode);
         }
     }
 }

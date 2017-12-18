@@ -50,7 +50,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getCardType(), "visa");
         //-------- check mail about payment ------
-        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED).getBody();
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "1", "1").getBody();
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);
@@ -69,7 +69,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId).get();
         assertEquals(refundInfoGet.getRefundId(), refundId);
         //-------- check mail about refund ------
-        String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED).getBody();
+        String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED, "1", "1").getBody();
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContentRefund);
         Map<String, Object> modelRefund = new HashMap<>();
         modelRefund.put("paymentPayer", refundInfoGet);
@@ -102,7 +102,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getToReceiver(), "i.ars@rbk.com");
         //-------- check mail about payment ------
-        String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED).getBody();
+        String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "1", "1").getBody();
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);

@@ -5,6 +5,4 @@ package com.rbkmoney.dudoser.dao;
  */
 public interface TemplateDao {
     Template getTemplateBodyByMerchShopParams(EventTypeCode typeCode, String merchId, String shopId);
-
-    Template getTemplateBodyByTypeCode(EventTypeCode typeCode);
 }
