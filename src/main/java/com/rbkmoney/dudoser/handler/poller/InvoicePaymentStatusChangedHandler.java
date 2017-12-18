@@ -57,7 +57,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
             String partyId = payment.getPartyId();
             String shopId = payment.getShopId();
             Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
-            if (template == null || !template.isActive()) {
+            if (!template.isActive()) {
                 log.info("Not found active template for partyId={}, shopId={}");
             } else {
                 mailSenderUtils.setFreeMarkerTemplateContent(template.getBody());

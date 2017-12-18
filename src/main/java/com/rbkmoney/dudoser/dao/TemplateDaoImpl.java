@@ -59,8 +59,6 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
                 }
             });
             return result;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't find template", e);
             throw new DaoException("Couldn't find template with typeCode = " + typeCode + "; merchId = " + merchId + "; shopId = " + shopId);
