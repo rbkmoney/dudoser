@@ -3,10 +3,7 @@ package com.rbkmoney.dudoser.handler.poller;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
-import com.rbkmoney.dudoser.dao.EventTypeCode;
-import com.rbkmoney.dudoser.dao.PaymentPayer;
-import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
-import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.dao.*;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
@@ -57,17 +54,22 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                     payment.getDate(),
                     payment.getAmountWithCurrency()
             );
-            //TODO should be getTemplateBodyByMerchShopParams but we haven't merchId and shopId
-            String freeMarkerTemplateContent = templateDao.getTemplateBodyByTypeCode(getEventTypeCode());
-            mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
-            mailSenderUtils.setModel(model);
+            String partyId = payment.getPartyId();
+            String shopId = payment.getShopId();
+            Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
+            if (template == null || !template.isActive()) {
+                log.info("Not found active template for partyId={}, shopId={}");
+            } else {
+                mailSenderUtils.setFreeMarkerTemplateContent(template.getBody());
+                mailSenderUtils.setModel(model);
 
-            try {
-                log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
-                mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
-                log.info("Mail has been sent to {}", payment.getToReceiver());
-            } catch (MailNotSendException e) {
-                log.warn("Mail not send to {}", payment.getToReceiver(), e);
+                try {
+                    log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
+                    mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
+                    log.info("Mail has been sent to {}", payment.getToReceiver());
+                } catch (MailNotSendException e) {
+                    log.warn("Mail not send to {}", payment.getToReceiver(), e);
+                }
             }
 
             eventService.setLastEventId(eventId);
