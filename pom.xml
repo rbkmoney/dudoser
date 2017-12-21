@@ -27,7 +27,7 @@
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
         <custom.flyway.version>4.0.3</custom.flyway.version>
         <custom.jooq.version>3.9.1</custom.jooq.version>
-        <dockerfile.base.service.tag>f26fcc19d1941ab74f1c72dd8a408be17a769333</dockerfile.base.service.tag>
+        <dockerfile.base.service.tag>60ec6caf5c52778c9e89075656cca2ceeee4d0dd</dockerfile.base.service.tag>
         <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
