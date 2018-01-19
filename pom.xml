@@ -20,7 +20,7 @@
 
     <properties>
         <project.maintainer>Inal Arsanukaev &lt;i.arsanukaev@rbkmoney.com&gt;</project.maintainer>
-        <damsel.version>1.219-5f8d67d-epic</damsel.version>
+        <damsel.version>1.212-284cb1a</damsel.version>
         <shared.resources.version>0.2.1</shared.resources.version>
         <server.port>8022</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
