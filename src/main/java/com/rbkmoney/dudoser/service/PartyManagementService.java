@@ -2,10 +2,7 @@ package com.rbkmoney.dudoser.service;
 
 import com.rbkmoney.damsel.domain.Party;
 import com.rbkmoney.damsel.domain.Shop;
-import com.rbkmoney.damsel.payment_processing.InternalUser;
-import com.rbkmoney.damsel.payment_processing.PartyManagementSrv;
-import com.rbkmoney.damsel.payment_processing.UserInfo;
-import com.rbkmoney.damsel.payment_processing.UserType;
+import com.rbkmoney.damsel.payment_processing.*;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +21,9 @@ public class PartyManagementService {
     public String getShopUrl(String partyId, String shopId, String timeStamp) {
         try {
             UserInfo userInfo = new UserInfo("admin", UserType.internal_user(new InternalUser()));
-            Party party = hellgateClient.checkout(userInfo, partyId, timeStamp);
+            PartyRevisionParam partyRevisionParam = new PartyRevisionParam();
+            partyRevisionParam.setTimestamp(timeStamp);
+            Party party = hellgateClient.checkout(userInfo, partyId, partyRevisionParam);
             Shop shop = party.getShops().get(shopId);
 
             if (shop == null) {
