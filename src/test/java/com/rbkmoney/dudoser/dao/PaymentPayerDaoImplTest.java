@@ -45,7 +45,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ update payment info------
-        assertTrue(paymentPayerDao.updatePayment(paymentPayer));
+        assertTrue(paymentPayerDao.addPayment(paymentPayer));
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getCardType(), "visa");
@@ -97,7 +97,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ update payment info------
-        assertTrue(paymentPayerDao.updatePayment(paymentPayer));
+        assertTrue(paymentPayerDao.addPayment(paymentPayer));
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getToReceiver(), "i.ars@rbk.com");

@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class PaymentStartedHandler implements PollingEventHandler{
 
@@ -45,23 +47,27 @@ public class PaymentStartedHandler implements PollingEventHandler{
         String paymentId = ic.getInvoicePaymentChange().getId();
         log.info("Start PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
         if (contactInfo != null && contactInfo.isSetEmail()) {
-            PaymentPayer paymentPayer = new PaymentPayer();
-            paymentPayer.setInvoiceId(invoiceId);
-            paymentPayer.setPaymentId(paymentId);
-            paymentPayer.setAmount(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()));
-            paymentPayer.setCurrency(invoicePayment.getCost().getCurrency().getSymbolicCode());
-            if (paymentTool.isSetBankCard()) {
-                paymentPayer.setCardMaskPan(paymentTool.getBankCard().getMaskedPan());
-                paymentPayer.setCardType(paymentTool.getBankCard().getPaymentSystem().name());
-            }
-            paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
-            paymentPayer.setDate(Converter.getFormattedDate(invoicePayment.getCreatedAt()));
-            paymentPayer.setToReceiver(contactInfo.getEmail());
+            Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getInvoice(invoiceId);
+            if (paymentPayerOptional.isPresent()) {
+                PaymentPayer paymentPayer = paymentPayerOptional.get();
+                paymentPayer.setPaymentId(paymentId);
+                paymentPayer.setAmount(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()));
+                paymentPayer.setCurrency(invoicePayment.getCost().getCurrency().getSymbolicCode());
+                if (paymentTool.isSetBankCard()) {
+                    paymentPayer.setCardMaskPan(paymentTool.getBankCard().getMaskedPan());
+                    paymentPayer.setCardType(paymentTool.getBankCard().getPaymentSystem().name());
+                }
+                paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
+                paymentPayer.setDate(Converter.getFormattedDate(invoicePayment.getCreatedAt()));
+                paymentPayer.setToReceiver(contactInfo.getEmail());
 
-            if (!paymentPayerDaoImpl.updatePayment(paymentPayer)) {
-                log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", invoiceId, paymentId);
+                if (!paymentPayerDaoImpl.addPayment(paymentPayer)) {
+                    log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", invoiceId, paymentId);
+                } else {
+                    log.debug("PaymentStartedHandler: saved payment info, payment {}.{}", invoiceId, paymentId);
+                }
             } else {
-                log.debug("PaymentStartedHandler: saved payment info, payment {}.{}", invoiceId, paymentId);
+                log.warn("PaymentStartedHandler: invoice {} not found in repository", invoiceId);
             }
         }
 

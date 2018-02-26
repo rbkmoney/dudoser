@@ -52,7 +52,7 @@ public class RefundStartedHandler implements PollingEventHandler{
             }
             eventService.setLastEventId(eventId);
         } else {
-            log.warn("RefundStartedHandler: refund {}.{}.{} not found in repository", invoiceId, paymentId, refundId);
+            log.warn("RefundStartedHandler: payment {}.{} not found in repository", invoiceId, paymentId);
         }
         log.info("End RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
     }
