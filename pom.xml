@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.rbkmoney</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.2.RELEASE</version>
+        <version>1.5.10.RELEASE</version>
         <relativePath/>
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>1.2.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>

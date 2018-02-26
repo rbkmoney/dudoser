@@ -124,7 +124,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
 
     @Override
     public Optional<PaymentPayer> getInvoice(String invoiceId) {
-        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
+        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
                 .addValue("type", INVOICE.name());
         PaymentPayer paymentPayer = null;
