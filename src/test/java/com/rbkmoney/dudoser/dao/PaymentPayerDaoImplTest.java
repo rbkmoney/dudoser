@@ -45,6 +45,9 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ add payment info------
         assertTrue(paymentPayerDao.addPayment(paymentPayer));
+        paymentId = "paymId2";
+        paymentPayer.setPaymentId(paymentId);
+        assertTrue(paymentPayerDao.addPayment(paymentPayer));
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getCardType(), "visa");
