@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface PaymentPayerDao {
 
-    boolean updatePayment(PaymentPayer customer) throws Exception;
+    boolean addPayment(PaymentPayer paymentPayer) throws Exception;
 
     boolean addInvoice(String invoiceId, String partyId, String shopId, String shopUrl);
 
@@ -12,5 +12,7 @@ public interface PaymentPayerDao {
 
     Optional<PaymentPayer> getPayment(String invoiceId, String paymentId);
 
-    Optional<PaymentPayer> getRefund(String invoiceId, String paymentId);
+    Optional<PaymentPayer> getInvoice(String invoiceId);
+
+    Optional<PaymentPayer> getRefund(String invoiceId, String paymentId, String refundId);
 }
