@@ -68,7 +68,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         refundInfo.setDate("2017-08-26T20:12:34.983390Z");
         paymentPayerDao.addRefund(refundInfo);
         //----------- get refund ------------
-        PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
+        PaymentPayer refundInfoGet = paymentPayerDao.getLastRefund(invoiceId, paymentId).get();
         assertEquals(refundInfoGet.getRefundId(), refundId);
         //-------- check mail about refund ------
         String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED, "1", "1").getBody();

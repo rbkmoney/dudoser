@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.handler.poller;
 
+import com.rbkmoney.damsel.domain.Cash;
 import com.rbkmoney.damsel.domain.FinalCashFlowPosting;
 import com.rbkmoney.damsel.domain.InvoicePaymentRefund;
 import com.rbkmoney.damsel.event_stock.StockEvent;
@@ -43,8 +44,15 @@ public class RefundStartedHandler implements PollingEventHandler{
         if (paymentPayerOptional.isPresent()) {
             PaymentPayer paymentPayer = paymentPayerOptional.get();
             List<FinalCashFlowPosting> cashFlow = invoicePaymentRefundCreated.getCashFlow();
-            paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
-            paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
+            if (invoicePaymentRefundCreated.getRefund().isSetCash()) {
+                Cash cash = invoicePaymentRefundCreated.getRefund().getCash();
+                paymentPayer.setAmount(Converter.longToBigDecimal(cash.getAmount()));
+                paymentPayer.setCurrency(cash.getCurrency().getSymbolicCode());
+            } else {
+                paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
+                paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
+            }
+
             paymentPayer.setRefundId(refundId);
             paymentPayer.setDate(refund.getCreatedAt());
             if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
