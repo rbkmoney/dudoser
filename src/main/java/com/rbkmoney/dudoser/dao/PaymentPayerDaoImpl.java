@@ -140,11 +140,10 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
-    public Optional<PaymentPayer> getRefund(String invoiceId, String paymentId, String refundId) {
-        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND refund_id=:refund_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
+    public Optional<PaymentPayer> getLastRefund(String invoiceId, String paymentId) {
+        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
                 .addValue("payment_id", paymentId)
-                .addValue("refund_id", refundId)
                 .addValue("type", REFUND.name());
         PaymentPayer paymentPayer = null;
         try {
@@ -153,7 +152,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
-            throw new DaoException("PaymentPayerDaoImpl.getRefund error with id " + invoiceId + "." + paymentId + "." + refundId, e);
+            throw new DaoException("PaymentPayerDaoImpl.getRefund error with id " + invoiceId + "." + paymentId, e);
         }
         return Optional.ofNullable(paymentPayer);
     }
