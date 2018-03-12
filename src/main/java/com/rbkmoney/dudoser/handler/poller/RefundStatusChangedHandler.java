@@ -4,23 +4,30 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
+import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentStatusChangedHandler {
+public class RefundStatusChangedHandler extends InvoicePaymentStatusChangedHandler {
 
     @Override
     public ChangeType getChangeType() {
-        return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_REFUNDED;
+        return ChangeType.INVOICE_PAYMENT_REFUND_STATUS_CHANGED_SUCCEEDED;
+    }
+
+    @Override
+    protected String getFormattedAmount(PaymentPayer payment) {
+        return Converter.getFormattedAmount(payment.getRefundAmount(), payment.getCurrency());
     }
 
     @Override
     protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
         String paymentId = ic.getInvoicePaymentChange().getId();
-        return paymentPayerDaoImpl.getLastRefund(invoiceId, paymentId);
+        String refundId = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getId();
+        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId, refundId);
     }
 
     @Override
@@ -30,6 +37,6 @@ public class InvoicePaymentStatusChangedRefundedHandler extends InvoicePaymentSt
 
     @Override
     protected EventTypeCode getEventTypeCode() {
-        return EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED;
+        return EventTypeCode.REFUND_STATUS_CHANGED_SUCCEEDED;
     }
 }

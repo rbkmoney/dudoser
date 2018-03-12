@@ -46,10 +46,10 @@ public class RefundStartedHandler implements PollingEventHandler{
             List<FinalCashFlowPosting> cashFlow = invoicePaymentRefundCreated.getCashFlow();
             if (invoicePaymentRefundCreated.getRefund().isSetCash()) {
                 Cash cash = invoicePaymentRefundCreated.getRefund().getCash();
-                paymentPayer.setAmount(Converter.longToBigDecimal(cash.getAmount()));
+                paymentPayer.setRefundAmount(Converter.longToBigDecimal(cash.getAmount()));
                 paymentPayer.setCurrency(cash.getCurrency().getSymbolicCode());
             } else {
-                paymentPayer.setAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
+                paymentPayer.setRefundAmount(Converter.longToBigDecimal(getAmount(cashFlow)));
                 paymentPayer.setCurrency(cashFlow.get(0).getVolume().getCurrency().getSymbolicCode());
             }
 

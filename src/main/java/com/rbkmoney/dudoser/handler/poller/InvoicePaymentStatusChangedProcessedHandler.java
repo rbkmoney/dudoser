@@ -4,6 +4,7 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
+import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,11 @@ public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentS
     @Override
     public ChangeType getChangeType() {
         return ChangeType.INVOICE_PAYMENT_STATUS_CHANGED_PROCESSED;
+    }
+
+    @Override
+    protected String getFormattedAmount(PaymentPayer payment) {
+        return Converter.getFormattedAmount(payment.getAmount(), payment.getCurrency());
     }
 
     @Override

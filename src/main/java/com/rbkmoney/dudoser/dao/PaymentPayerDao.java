@@ -14,5 +14,5 @@ public interface PaymentPayerDao {
 
     Optional<PaymentPayer> getInvoice(String invoiceId);
 
-    Optional<PaymentPayer> getLastRefund(String invoiceId, String paymentId);
+    Optional<PaymentPayer> getRefund(String invoiceId, String paymentId, String refundId);
 }
