@@ -6,6 +6,7 @@ import java.util.Locale;
 public class PaymentPayer{
 
     private BigDecimal amount;
+    private BigDecimal refundAmount;
     private String currency;
     private String cardType;
     private String cardMaskPan;
@@ -18,16 +19,20 @@ public class PaymentPayer{
     private String date;
     private String toReceiver;
 
-    public String getAmountWithCurrency() {
-        return String.format(Locale.US, "%.2f %s", amount, currency);
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
     }
 
     public String getCurrency() {

@@ -76,8 +76,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
 
     @Override
     public boolean addRefund(PaymentPayer refund) {
-        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
+        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, refund_amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", refund.getInvoiceId())
                 .addValue("party_id", refund.getPartyId())
@@ -86,6 +86,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("payment_id", refund.getPaymentId())
                 .addValue("refund_id", refund.getRefundId())
                 .addValue("amount", refund.getAmount())
+                .addValue("refund_amount", refund.getRefundAmount())
                 .addValue("currency", refund.getCurrency())
                 .addValue("card_type", refund.getCardType())
                 .addValue("card_mask_pan", refund.getCardMaskPan())
@@ -140,10 +141,11 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
-    public Optional<PaymentPayer> getLastRefund(String invoiceId, String paymentId) {
-        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
+    public Optional<PaymentPayer> getRefund(String invoiceId, String paymentId, String refundId) {
+        final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND refund_id=:refund_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
                 .addValue("payment_id", paymentId)
+                .addValue("refund_id", refundId)
                 .addValue("type", REFUND.name());
         PaymentPayer paymentPayer = null;
         try {

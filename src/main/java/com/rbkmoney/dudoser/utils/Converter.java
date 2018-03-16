@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Converter {
 
@@ -22,5 +23,9 @@ public class Converter {
             formattedDate = date;
         }
         return formattedDate;
+    }
+
+    public static String getFormattedAmount(BigDecimal amount, String currency) {
+        return String.format(Locale.US, "%.2f %s", amount, currency);
     }
 }

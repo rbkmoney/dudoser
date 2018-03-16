@@ -6,6 +6,7 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.*;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.service.EventService;
+import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +48,14 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceId, ic);
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
+            String formattedAmount = getFormattedAmount(payment);
             Map<String, Object> model = new HashMap<>();
             model.put("paymentPayer", payment);
+            model.put("formattedAmount", formattedAmount);
             String subject = String.format(getMailSubject(),
                     payment.getInvoiceId(),
                     payment.getDate(),
-                    payment.getAmountWithCurrency()
+                    formattedAmount
             );
             String partyId = payment.getPartyId();
             String shopId = payment.getShopId();
@@ -78,6 +81,8 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         }
         log.info("End InvoicePaymentStatusChangedHandler: event_id {}, payment change {}.{}", event.getId(), invoiceId, paymentId);
     }
+
+    protected abstract String getFormattedAmount(PaymentPayer payment);
 
     protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);
 

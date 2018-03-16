@@ -56,25 +56,27 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);
+        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
         mailSenderUtils.setModel(model);
         assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Успешный платеж на сайте www.2ch.ru"));
 
         //-------- add refund ---------------
         PaymentPayer refundInfo = paymentPayerGet;
-        refundInfo.setAmount(Converter.longToBigDecimal(112L));
+        refundInfo.setRefundAmount(Converter.longToBigDecimal(111L));
         refundInfo.setCurrency("RUB");
         String refundId = "234";
         refundInfo.setRefundId(refundId);
         refundInfo.setDate("2017-08-26T20:12:34.983390Z");
         paymentPayerDao.addRefund(refundInfo);
         //----------- get refund ------------
-        PaymentPayer refundInfoGet = paymentPayerDao.getLastRefund(invoiceId, paymentId).get();
+        PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
         assertEquals(refundInfoGet.getRefundId(), refundId);
         //-------- check mail about refund ------
-        String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_REFUNDED, "1", "1").getBody();
+        String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.REFUND_STATUS_CHANGED_SUCCEEDED, "1", "1").getBody();
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContentRefund);
         Map<String, Object> modelRefund = new HashMap<>();
         modelRefund.put("paymentPayer", refundInfoGet);
+        modelRefund.put("formattedAmount", Converter.getFormattedAmount(refundInfoGet.getRefundAmount(), refundInfoGet.getCurrency()));
         mailSenderUtils.setModel(modelRefund);
         String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
         assertTrue(filledFreeMarkerTemplateContent.contains("Возврат средств на сайте www.2ch.ru"));
@@ -108,6 +110,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);
+        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
         mailSenderUtils.setModel(model);
         String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
         assertFalse(filledFreeMarkerTemplateContent.contains("Номер карты"));
