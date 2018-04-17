@@ -25,7 +25,11 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
             log.info("Start mail sending from {} to {}", message.getMessageMail().getFromEmail(), message.getMessageMail().getToEmails());
             messageSendHandler.handleEvent(message);
             log.info("Mail sending completed.");
+        } catch (InvalidRequest e) {
+            log.warn("Invalid request parameters for mail {}", message.getMessageMail().getToEmails(), e);
+            throw e;
         } catch (Exception e) {
+            log.warn("Mail not send to {}", message.getMessageMail().getToEmails(), e);
             throw new TException(e);
         }
     }
