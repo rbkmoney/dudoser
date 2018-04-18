@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.handler.sender;
 
+import com.rbkmoney.damsel.base.InvalidRequest;
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,12 +44,11 @@ public class MessageMailHandler implements MessageHandler {
                             .collect(Collectors.toList());
             log.debug("Attach count = {}", listAttach.size());
         }
-        try {
-            log.info("Mail send from {} to {}. Subject: {}", mail.getFromEmail(), mail.getToEmails(), mail.getSubject());
-            mailSenderUtils.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
-            log.info("Mail has been sent to {}", mail.getToEmails());
-        } catch (MailNotSendException e) {
-            log.warn("Mail not send to {}", mail.getToEmails(), e);
+        log.info("Mail send from {} to {}. Subject: {}", mail.getFromEmail(), mail.getToEmails(), mail.getSubject());
+        if (mail.getToEmails().isEmpty()) {
+            throw new InvalidRequest(Collections.singletonList("Mailing list shouldn't be empty"));
         }
+        mailSenderUtils.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
+        log.info("Mail has been sent to {}", mail.getToEmails());
     }
 }
