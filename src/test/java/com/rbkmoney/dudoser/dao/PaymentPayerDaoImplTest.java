@@ -3,6 +3,7 @@ package com.rbkmoney.dudoser.dao;
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setCurrency("RUB");
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setPaymentId(paymentId);
-        paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
+        paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ add payment info------
         assertTrue(paymentPayerDao.addPayment(paymentPayer));
@@ -58,15 +59,16 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         model.put("paymentPayer", paymentPayerGet);
         model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
         mailSenderUtils.setModel(model);
-        assertTrue(mailSenderUtils.getFilledFreeMarkerTemplateContent().contains("Успешный платеж на сайте www.2ch.ru"));
+        String filledFreeMarkerTemplateContent1 = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        assertTrue(filledFreeMarkerTemplateContent1.contains("Успешный платеж на сайте www.2ch.ru"));
 
         //-------- add refund ---------------
         PaymentPayer refundInfo = paymentPayerGet;
-        refundInfo.setRefundAmount(Converter.longToBigDecimal(111L));
+        refundInfo.setRefundAmount(Converter.longToBigDecimal(110L));
         refundInfo.setCurrency("RUB");
         String refundId = "234";
         refundInfo.setRefundId(refundId);
-        refundInfo.setDate("2017-08-26T20:12:34.983390Z");
+        refundInfo.setDate(TypeUtil.stringToLocalDateTime("2017-08-26T20:12:34.983390Z"));
         paymentPayerDao.addRefund(refundInfo);
         //----------- get refund ------------
         PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
@@ -79,8 +81,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         modelRefund.put("formattedAmount", Converter.getFormattedAmount(refundInfoGet.getRefundAmount(), refundInfoGet.getCurrency()));
         mailSenderUtils.setModel(modelRefund);
         String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
-        assertTrue(filledFreeMarkerTemplateContent.contains("Возврат средств на сайте www.2ch.ru"));
-        assertTrue(filledFreeMarkerTemplateContent.contains("Номер карты"));
+        assertTrue(filledFreeMarkerTemplateContent.contains("Возврат средств"));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setInvoiceId(invoiceId);
         paymentPayer.setPaymentId(paymentId);
-        paymentPayer.setDate("2016-10-26T20:12:47.983390Z");
+        paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ update payment info------
         assertTrue(paymentPayerDao.addPayment(paymentPayer));

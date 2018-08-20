@@ -5,11 +5,13 @@ import com.rbkmoney.dudoser.exception.UnknownException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import no.api.freemarker.java8.Java8ObjectWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -30,6 +32,12 @@ public class TemplateMailSenderUtils extends MailSenderUtils {
 
     private String freeMarkerTemplateContent;
     private Map<String, Object> model;
+
+    @PostConstruct
+    public void postConstruct() {
+        freemarkerConfiguration.setObjectWrapper(
+                new Java8ObjectWrapper(freemarker.template.Configuration.getVersion()));
+    }
 
     public void send(String from, String[] to, String subject) throws MailNotSendException {
         super.send(from, to, subject, getFilledFreeMarkerTemplateContent(), null);

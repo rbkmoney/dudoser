@@ -12,6 +12,7 @@ import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class RefundStartedHandler implements PollingEventHandler{
             }
 
             paymentPayer.setRefundId(refundId);
-            paymentPayer.setDate(refund.getCreatedAt());
+            paymentPayer.setDate(TypeUtil.stringToLocalDateTime(refund.getCreatedAt()));
             if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
                 log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", invoiceId, paymentId, refundId);
             }

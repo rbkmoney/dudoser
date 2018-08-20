@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.dao;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 public class PaymentPayer{
@@ -16,7 +17,7 @@ public class PaymentPayer{
     private String partyId;
     private String shopId;
     private String shopUrl;
-    private String date;
+    private LocalDateTime date;
     private String toReceiver;
 
     public BigDecimal getAmount() {
@@ -107,11 +108,11 @@ public class PaymentPayer{
         this.shopUrl = shopUrl;
     }
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
