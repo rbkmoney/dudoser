@@ -11,6 +11,7 @@ import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
                     paymentPayer.setCardType(paymentTool.getBankCard().getPaymentSystem().name());
                 }
                 paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
-                paymentPayer.setDate(Converter.getFormattedDate(invoicePayment.getCreatedAt()));
+                paymentPayer.setDate(TypeUtil.stringToLocalDateTime(invoicePayment.getCreatedAt()));
                 paymentPayer.setToReceiver(contactInfo.getEmail());
 
                 if (!paymentPayerDaoImpl.addPayment(paymentPayer)) {

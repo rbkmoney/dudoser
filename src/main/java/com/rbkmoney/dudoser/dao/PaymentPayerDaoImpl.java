@@ -1,15 +1,19 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.rbkmoney.dudoser.dao.PaymentType.*;
@@ -130,8 +134,27 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("type", INVOICE.name());
         PaymentPayer paymentPayer = null;
         try {
-            paymentPayer = (PaymentPayer) getNamedParameterJdbcTemplate()
-                    .queryForObject(sql, params, new BeanPropertyRowMapper(PaymentPayer.class));
+            paymentPayer = getNamedParameterJdbcTemplate()
+                    .queryForObject(sql, params, (resultSet, i) -> {
+                        PaymentPayer pp = new PaymentPayer();
+                        pp.setAmount(resultSet.getBigDecimal("amount"));
+                        pp.setRefundAmount(resultSet.getBigDecimal("refund_amount"));
+                        pp.setCurrency(resultSet.getString("currency"));
+                        pp.setCardType(resultSet.getString("card_type"));
+                        pp.setCardMaskPan(resultSet.getString("card_mask_pan"));
+                        pp.setInvoiceId(resultSet.getString("invoice_id"));
+                        pp.setPaymentId(resultSet.getString("payment_id"));
+                        pp.setRefundId(resultSet.getString("refund_id"));
+                        pp.setPartyId(resultSet.getString("party_id"));
+                        pp.setShopId(resultSet.getString("shop_id"));
+                        pp.setShopUrl(resultSet.getString("shop_url"));
+                        String sDate = resultSet.getString("date");
+                        if (sDate != null) {
+                            pp.setDate(TypeUtil.stringToLocalDateTime(sDate));
+                        }
+                        pp.setToReceiver(resultSet.getString("to_receiver"));
+                        return pp;
+                    });
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
