@@ -12,12 +12,11 @@ import java.io.IOException;
 @Configuration
 public class PartyManagementConfig {
 
-    @Value("${hellgate.url}")
-    Resource resource;
-
     @Bean
-    public PartyManagementSrv.Iface partyManagementSrv() throws IOException {
+    public PartyManagementSrv.Iface partyManagementSrv(@Value("${hellgate.url}") Resource resource,
+                                                       @Value("${hellgate.networkTimeout}") int networkTimeout) throws IOException {
         return new THSpawnClientBuilder()
+                .withNetworkTimeout(networkTimeout)
                 .withAddress(resource.getURI()).build(PartyManagementSrv.Iface.class);
     }
 }

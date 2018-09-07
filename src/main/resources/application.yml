@@ -25,6 +25,7 @@ bm:
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
+  networkTimeout: 30000
 
 mail:
   host: smtp.office365.com
