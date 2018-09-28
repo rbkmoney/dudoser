@@ -22,6 +22,7 @@ bm:
     url: http://localhost:8023/repo
     maxPoolSize: 1
     delay: 5000
+    housekeeperTimeout: 15000
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
