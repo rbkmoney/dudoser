@@ -27,6 +27,9 @@ public class EventStockPollerConfig {
     @Value("${bm.pooling.maxPoolSize}")
     int maxPoolSize;
 
+    @Value("${bm.pooling.housekeeperTimeout}")
+    int housekeeperTimeout;
+
     @Autowired
     List<PollingEventHandler> pollingEventHandlers;
 
@@ -37,6 +40,7 @@ public class EventStockPollerConfig {
     public EventPublisher eventPublisher() throws IOException {
         return new PollingEventPublisherBuilder()
                 .withURI(bmUri.getURI())
+                .withHousekeeperTimeout(housekeeperTimeout)
                 .withEventHandler(new EventStockHandler(pollingEventHandlers))
                 .withMaxPoolSize(maxPoolSize)
                 .withPollDelay(pollDelay)
