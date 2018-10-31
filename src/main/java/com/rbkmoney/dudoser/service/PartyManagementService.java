@@ -41,4 +41,26 @@ public class PartyManagementService {
         }
         return null;
     }
+
+    public String getShopUrl(String partyId, String shopId, String timeStamp) {
+        try {
+            UserInfo userInfo = new UserInfo("admin", UserType.internal_user(new InternalUser()));
+            PartyRevisionParam partyRevisionParam = new PartyRevisionParam();
+            partyRevisionParam.setTimestamp(timeStamp);
+            Party party = hellgateClient.checkout(userInfo, partyId, partyRevisionParam);
+            Shop shop = party.getShops().get(shopId);
+
+            if (shop == null) {
+                throw new TException(String.format("Shop not found, partyId='%s', shopId='%s'", partyId, shopId));
+            }
+
+            if (shop.getLocation().isSetUrl()) {
+                String url = shop.getLocation().getUrl();
+                return StringUtils.isEmpty(url) ? null : url;
+            }
+        } catch (TException e) {
+            throw new RuntimeException(String.format("Unable to checkout Party by partyId: %s shopId: %s timestamp: %s", partyId, shopId, timeStamp), e);
+        }
+        return null;
+    }
 }
