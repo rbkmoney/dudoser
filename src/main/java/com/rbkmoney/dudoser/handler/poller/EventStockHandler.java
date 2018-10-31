@@ -28,8 +28,9 @@ public class EventStockHandler implements EventHandler<StockEvent> {
                     if (pollingEventHandler.accept(ic)) {
                         try {
                             pollingEventHandler.handle(ic, stockEvent);
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             log.error("Error when poller handling", e);
+                            return EventAction.DELAYED_RETRY;
                         }
                         break;
                     }

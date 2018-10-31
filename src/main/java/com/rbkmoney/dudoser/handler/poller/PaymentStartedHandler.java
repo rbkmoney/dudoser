@@ -2,6 +2,7 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.domain.ContactInfo;
 import com.rbkmoney.damsel.domain.InvoicePayment;
+import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.domain.PaymentTool;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
@@ -38,16 +39,20 @@ public class PaymentStartedHandler implements PollingEventHandler{
         InvoicePayment invoicePayment = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentStarted().getPayment();
         ContactInfo contactInfo = null;
         PaymentTool paymentTool = null;
-        if (invoicePayment.getPayer().isSetCustomer()) {
-            contactInfo = invoicePayment.getPayer().getCustomer().getContactInfo();
-            paymentTool = invoicePayment.getPayer().getCustomer().getPaymentTool();
-        } else if (invoicePayment.getPayer().isSetPaymentResource()) {
-            contactInfo = invoicePayment.getPayer().getPaymentResource().getContactInfo();
-            paymentTool = invoicePayment.getPayer().getPaymentResource().getResource().getPaymentTool();
+        Payer payer = invoicePayment.getPayer();
+        if (payer.isSetCustomer()) {
+            contactInfo = payer.getCustomer().getContactInfo();
+            paymentTool = payer.getCustomer().getPaymentTool();
+        } else if (payer.isSetPaymentResource()) {
+            contactInfo = payer.getPaymentResource().getContactInfo();
+            paymentTool = payer.getPaymentResource().getResource().getPaymentTool();
+        } else if (payer.isSetRecurrent()) {
+            contactInfo = payer.getRecurrent().getContactInfo();
+            paymentTool = payer.getRecurrent().getPaymentTool();
         }
         String paymentId = ic.getInvoicePaymentChange().getId();
         log.info("Start PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
-        if (contactInfo != null && contactInfo.isSetEmail()) {
+        if (contactInfo != null) {
             Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getInvoice(invoiceId);
             if (paymentPayerOptional.isPresent()) {
                 PaymentPayer paymentPayer = paymentPayerOptional.get();
@@ -70,6 +75,8 @@ public class PaymentStartedHandler implements PollingEventHandler{
             } else {
                 log.warn("PaymentStartedHandler: invoice {} not found in repository", invoiceId);
             }
+        } else {
+            log.warn("ContactInfo for payment {}.{} not found", invoiceId, paymentId);
         }
 
         eventService.setLastEventId(eventId);
