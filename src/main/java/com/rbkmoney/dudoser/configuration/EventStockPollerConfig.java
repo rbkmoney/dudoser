@@ -24,6 +24,9 @@ public class EventStockPollerConfig {
     @Value("${bm.pooling.delay}")
     int pollDelay;
 
+    @Value("${bm.pooling.retryDelay}")
+    int retryDelay;
+
     @Value("${bm.pooling.maxPoolSize}")
     int maxPoolSize;
 
@@ -44,6 +47,7 @@ public class EventStockPollerConfig {
                 .withEventHandler(new EventStockHandler(pollingEventHandlers))
                 .withMaxPoolSize(maxPoolSize)
                 .withPollDelay(pollDelay)
+                .withEventRetryDelay(retryDelay)
                 .build();
     }
 

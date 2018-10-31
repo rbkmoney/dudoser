@@ -48,33 +48,36 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceId, ic);
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
-            String formattedAmount = getFormattedAmount(payment);
-            Map<String, Object> model = new HashMap<>();
-            model.put("paymentPayer", payment);
-            model.put("formattedAmount", formattedAmount);
-            String subject = String.format(getMailSubject(),
-                    payment.getInvoiceId(),
-                    payment.getDate(),
-                    formattedAmount
-            );
-            String partyId = payment.getPartyId();
-            String shopId = payment.getShopId();
-            Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
-            if (!template.isActive()) {
-                log.info("Not found active template for partyId={}, shopId={}");
+            if (payment.getToReceiver() == null) {
+                log.info("Email not found for payment change {}.{}", invoiceId, paymentId);
             } else {
-                mailSenderUtils.setFreeMarkerTemplateContent(template.getBody());
-                mailSenderUtils.setModel(model);
+                String formattedAmount = getFormattedAmount(payment);
+                Map<String, Object> model = new HashMap<>();
+                model.put("paymentPayer", payment);
+                model.put("formattedAmount", formattedAmount);
+                String subject = String.format(getMailSubject(),
+                        payment.getInvoiceId(),
+                        payment.getDate(),
+                        formattedAmount
+                );
+                String partyId = payment.getPartyId();
+                String shopId = payment.getShopId();
+                Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
+                if (!template.isActive()) {
+                    log.info("Not found active template for partyId={}, shopId={}", partyId, shopId);
+                } else {
+                    mailSenderUtils.setFreeMarkerTemplateContent(template.getBody());
+                    mailSenderUtils.setModel(model);
 
-                try {
-                    log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
-                    mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
-                    log.info("Mail has been sent to {}", payment.getToReceiver());
-                } catch (MailNotSendException e) {
-                    log.warn("Mail not send to {}", payment.getToReceiver(), e);
+                    try {
+                        log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
+                        mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
+                        log.info("Mail has been sent to {}", payment.getToReceiver());
+                    } catch (MailNotSendException e) {
+                        log.warn("Mail not send to {}", payment.getToReceiver(), e);
+                    }
                 }
             }
-
             eventService.setLastEventId(eventId);
         } else {
             log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", invoiceId, paymentId);

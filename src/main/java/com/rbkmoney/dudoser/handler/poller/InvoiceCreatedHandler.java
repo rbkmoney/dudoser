@@ -26,7 +26,7 @@ public class InvoiceCreatedHandler implements PollingEventHandler {
     @Override
     public void handle(InvoiceChange ic, StockEvent value) throws DaoException {
         Invoice invoice = ic.getInvoiceCreated().getInvoice();
-        String shopUrl = partyManagementService.getShopUrl(invoice.getOwnerId(), invoice.getShopId(), invoice.getCreatedAt());
+        String shopUrl = partyManagementService.getShopUrl(invoice.getOwnerId(), invoice.getShopId(), invoice.getPartyRevision());
         log.info("Start creating invoice with id {}", invoice.getId());
         paymentDao.addInvoice(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl);
         log.info("End creating invoice with id {}", invoice.getId());
