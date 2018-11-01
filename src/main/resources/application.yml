@@ -30,7 +30,7 @@ hellgate:
   networkTimeout: 30000
 
 mail:
-  host: gmail.com
+  host: smtp.office365.com
   port: 587
   username: no-reply@rbkmoney.com
   password: jah;qu5chaeJeoCo
