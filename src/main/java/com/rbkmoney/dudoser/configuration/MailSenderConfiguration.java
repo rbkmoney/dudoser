@@ -5,8 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.xbill.DNS.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @Configuration
 public class MailSenderConfiguration {
@@ -47,14 +51,25 @@ public class MailSenderConfiguration {
     }
 
     @Bean
-    public JavaMailSender javaMailSender(Properties mailProperties) {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
-        mailSender.setJavaMailProperties(mailProperties);
-        return mailSender;
+    public List<JavaMailSender> javaMailSender(Properties mailProperties) {
+        try {
+            Record[]  records = new Lookup(host, Type.MX).run();
+            if (records == null) {
+                throw new RuntimeException("Not found MX-records for host " + host);
+            }
+            return Arrays.stream(records).map(r -> {
+                JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+                String host = ((MXRecord) r).getTarget().toString(true);
+                System.out.println("MX-record: " + host);
+                mailSender.setHost(host);
+                mailSender.setPort(port);
+                mailSender.setUsername(username);
+                mailSender.setPassword(password);
+                mailSender.setJavaMailProperties(mailProperties);
+                return mailSender;
+            }).collect(Collectors.toList());
+        } catch (TextParseException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }

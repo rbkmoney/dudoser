@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.2.20-SNAPSHOT</version>
+    <version>1.2.21-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -86,6 +86,12 @@
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
             <version>${custom.jooq.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/dnsjava/dnsjava -->
+        <dependency>
+            <groupId>dnsjava</groupId>
+            <artifactId>dnsjava</artifactId>
+            <version>2.1.7</version>
         </dependency>
         <!-- Spring MVC Mail Related Dependency -->
         <dependency>

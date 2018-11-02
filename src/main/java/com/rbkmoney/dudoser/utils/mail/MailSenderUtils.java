@@ -10,15 +10,21 @@ import org.springframework.stereotype.Component;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Component
 public class MailSenderUtils {
 
     @Autowired
-    private JavaMailSender mailSender;
+    private List<JavaMailSender> mailSenders;
+
+    private JavaMailSender getRandomMailSender() {
+        return mailSenders.get(new Random().nextInt(mailSenders.size()));
+    }
 
     public void send(String from, String[] to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach) throws MailNotSendException {
         try {
+            JavaMailSender mailSender = getRandomMailSender();
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(from);
