@@ -2,7 +2,7 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
+import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.geck.common.util.TypeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     @Autowired
     TemplateDao templateDao;
     @Autowired
-    TemplateMailSenderUtils mailSenderUtils;
+    TemplateService templateService;
     @Test
     public void test() throws Exception {
         String invoiceId = "invId1";
@@ -54,12 +54,10 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         assertEquals(paymentPayerGet.getCardType(), "visa");
         //-------- check mail about payment ------
         String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "1", "1").getBody();
-        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);
         model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
-        mailSenderUtils.setModel(model);
-        String filledFreeMarkerTemplateContent1 = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        String filledFreeMarkerTemplateContent1 = templateService.getFilledContent(freeMarkerTemplateContent, model);
         assertTrue(filledFreeMarkerTemplateContent1.contains("Успешный платеж на сайте www.2ch.ru"));
 
         //-------- add refund ---------------
@@ -75,12 +73,10 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         assertEquals(refundInfoGet.getRefundId(), refundId);
         //-------- check mail about refund ------
         String freeMarkerTemplateContentRefund = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.REFUND_STATUS_CHANGED_SUCCEEDED, "1", "1").getBody();
-        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContentRefund);
         Map<String, Object> modelRefund = new HashMap<>();
         modelRefund.put("paymentPayer", refundInfoGet);
         modelRefund.put("formattedAmount", Converter.getFormattedAmount(refundInfoGet.getRefundAmount(), refundInfoGet.getCurrency()));
-        mailSenderUtils.setModel(modelRefund);
-        String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        String filledFreeMarkerTemplateContent = templateService.getFilledContent(freeMarkerTemplateContentRefund, modelRefund);
         assertTrue(filledFreeMarkerTemplateContent.contains("Возврат средств"));
     }
 
@@ -108,12 +104,10 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         assertEquals(paymentPayerGet.getToReceiver(), "i.ars@rbk.com");
         //-------- check mail about payment ------
         String freeMarkerTemplateContent = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "1", "1").getBody();
-        mailSenderUtils.setFreeMarkerTemplateContent(freeMarkerTemplateContent);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayerGet);
         model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
-        mailSenderUtils.setModel(model);
-        String filledFreeMarkerTemplateContent = mailSenderUtils.getFilledFreeMarkerTemplateContent();
+        String filledFreeMarkerTemplateContent = templateService.getFilledContent(freeMarkerTemplateContent, model);
         assertFalse(filledFreeMarkerTemplateContent.contains("Номер карты"));
     }
 }

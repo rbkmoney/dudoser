@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -21,11 +22,11 @@ public class EventServiceTest extends AbstractIntegrationTest {
     EventService eventService;
 
     @Test
-    public void getLastEventId() throws Exception {
-
-        Long lastEventId = eventService.getLastEventId();
-        if (lastEventId != null) {
-            assertEquals(lastEventId, eventService.getLastEventId());
-        }
+    public void test() throws Exception {
+        eventService.setLastEventId(123L, 0);
+        eventService.setLastEventId(123L, 0);
+        assertEquals(123, eventService.getLastEventId(0).longValue());
+        eventService.setLastEventId(124L, 1);
+        assertEquals(124, eventService.getLastEventId(1).longValue());
     }
 }

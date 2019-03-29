@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser.configuration;
 
 import com.rbkmoney.dudoser.handler.poller.EventStockHandler;
 import com.rbkmoney.dudoser.handler.poller.PollingEventHandler;
-import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.eventstock.client.*;
 import com.rbkmoney.eventstock.client.poll.EventFlowFilter;
 import com.rbkmoney.eventstock.client.poll.PollingEventPublisherBuilder;
@@ -13,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -36,34 +36,29 @@ public class EventStockPollerConfig {
     @Autowired
     List<PollingEventHandler> pollingEventHandlers;
 
-    @Autowired
-    EventService eventService;
-
-    @Bean(destroyMethod = "destroy")
-    public EventPublisher eventPublisher() throws IOException {
-        return new PollingEventPublisherBuilder()
-                .withURI(bmUri.getURI())
-                .withHousekeeperTimeout(housekeeperTimeout)
-                .withEventHandler(new EventStockHandler(pollingEventHandlers))
-                .withMaxPoolSize(maxPoolSize)
-                .withPollDelay(pollDelay)
-                .withEventRetryDelay(retryDelay)
-                .build();
+    @Bean
+    public List<EventPublisher> eventPublishers(List<EventStockHandler> eventStockHandlers,
+            @Value("${bm.pooling.workersCount}") int workersCount) throws IOException {
+        List<EventPublisher> eventPublishers = new ArrayList<>();
+        for (int i = 0; i < workersCount; ++i) {
+            eventPublishers.add(new PollingEventPublisherBuilder()
+                    .withURI(bmUri.getURI())
+                    .withHousekeeperTimeout(housekeeperTimeout)
+                    .withEventHandler(eventStockHandlers.get(i))
+                    .withMaxPoolSize(maxPoolSize)
+                    .withPollDelay(pollDelay)
+                    .withEventRetryDelay(retryDelay)
+                    .build());
+        }
+        return eventPublishers;
     }
 
     @Bean
-    public SubscriberConfig subscriberConfig() {
-        return new DefaultSubscriberConfig(eventFilter());
-    }
-
-    public EventFilter eventFilter() {
-        EventConstraint.EventIDRange eventIDRange = new EventConstraint.EventIDRange();
-        Long lastEventId = eventService.getLastEventId();
-        if (lastEventId != null) {
-            eventIDRange.setFromExclusive(lastEventId);
-        } else {
-            eventIDRange.setFromNow();
+    public List<EventStockHandler> eventStockHandlers(@Value("${bm.pooling.workersCount}") int workersCount) {
+        List<EventStockHandler> eventStockHandlers = new ArrayList<>();
+        for (int i = 0; i < workersCount; ++i) {
+            eventStockHandlers.add(new EventStockHandler(pollingEventHandlers, workersCount, i));
         }
-        return new EventFlowFilter(new EventConstraint(eventIDRange));
+        return eventStockHandlers;
     }
 }

@@ -32,7 +32,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
     PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value) {
+    public void handle(InvoiceChange ic, StockEvent value, int mod) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
@@ -79,7 +79,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
             log.warn("ContactInfo for payment {}.{} not found", invoiceId, paymentId);
         }
 
-        eventService.setLastEventId(eventId);
+        eventService.setLastEventId(eventId, mod);
         log.info("End PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
     }
     @Override

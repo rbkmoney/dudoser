@@ -6,8 +6,8 @@ import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.*;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.service.EventService;
-import com.rbkmoney.dudoser.utils.Converter;
-import com.rbkmoney.dudoser.utils.mail.TemplateMailSenderUtils;
+import com.rbkmoney.dudoser.service.MailSenderService;
+import com.rbkmoney.dudoser.service.TemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,13 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
     PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Autowired
-    TemplateMailSenderUtils mailSenderUtils;
+    TemplateService templateService;
+
+    @Autowired
+    MailSenderService mailSenderService;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value) {
+    public void handle(InvoiceChange ic, StockEvent value, int mod) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
@@ -66,19 +69,17 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                 if (!template.isActive()) {
                     log.info("Not found active template for partyId={}, shopId={}", partyId, shopId);
                 } else {
-                    mailSenderUtils.setFreeMarkerTemplateContent(template.getBody());
-                    mailSenderUtils.setModel(model);
-
+                    String text = templateService.getFilledContent(template.getBody(), model);
                     try {
                         log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
-                        mailSenderUtils.send(from, new String[]{payment.getToReceiver()}, subject);
+                        mailSenderService.send(from, new String[]{payment.getToReceiver()}, subject, text, null);
                         log.info("Mail has been sent to {}", payment.getToReceiver());
                     } catch (MailNotSendException e) {
                         log.warn("Mail not send to {}", payment.getToReceiver(), e);
                     }
                 }
             }
-            eventService.setLastEventId(eventId);
+            eventService.setLastEventId(eventId, mod);
         } else {
             log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", invoiceId, paymentId);
         }

@@ -24,6 +24,7 @@ bm:
     delay: 5000
     retryDelay: 5000
     housekeeperTimeout: 15000
+    workersCount: 5
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
