@@ -32,7 +32,7 @@ public class RefundStartedHandler implements PollingEventHandler{
     PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value) {
+    public void handle(InvoiceChange ic, StockEvent value, int mod) {
         Event event = value.getSourceEvent().getProcessingEvent();
         long eventId = event.getId();
         String invoiceId = event.getSource().getInvoiceId();
@@ -59,7 +59,7 @@ public class RefundStartedHandler implements PollingEventHandler{
             if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
                 log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", invoiceId, paymentId, refundId);
             }
-            eventService.setLastEventId(eventId);
+            eventService.setLastEventId(eventId, mod);
         } else {
             log.warn("RefundStartedHandler: payment {}.{} not found in repository", invoiceId, paymentId);
         }

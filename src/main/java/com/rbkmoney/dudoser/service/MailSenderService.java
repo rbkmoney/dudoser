@@ -1,4 +1,4 @@
-package com.rbkmoney.dudoser.utils.mail;
+package com.rbkmoney.dudoser.service;
 
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,14 +6,15 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-@Component
-public class MailSenderUtils {
+@Service
+public class MailSenderService {
 
     @Autowired
     private List<JavaMailSender> mailSenders;

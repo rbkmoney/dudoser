@@ -15,18 +15,18 @@ public class EventService {
     @Autowired
     LastEventDao lastEventDao;
 
-    public Long getLastEventId() {
-        Long lastEventId = lastEventDao.get();
-        log.info("Get last event id = {}", lastEventId);
+    public Long getLastEventId(int id) {
+        Long lastEventId = lastEventDao.get(id);
+        log.info("Get lastEventId = {} with id {}", lastEventId, id);
         return lastEventId;
     }
 
-    public void setLastEventId(Long id) {
+    public void setLastEventId(Long eventId, int id) {
         try {
-            lastEventDao.set(id);
-            log.info("Set last event id {}", id);
+            lastEventDao.set(eventId, id);
+            log.info("Set lastEventId {} with id {}", eventId, id);
         } catch (DaoException e) {
-            log.error("Couldn't set last event with id {}", id, e);
+            log.error("Couldn't set last event with id {}", eventId, e);
         }
     }
 }

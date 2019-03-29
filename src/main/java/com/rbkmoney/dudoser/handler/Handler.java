@@ -9,7 +9,7 @@ public interface Handler<C, P> {
         return getChangeType().getFilter().match(change);
     }
 
-    void handle(C change, P parent);
+    void handle(C change, P parent, int mod);
 
     ChangeType getChangeType();
 

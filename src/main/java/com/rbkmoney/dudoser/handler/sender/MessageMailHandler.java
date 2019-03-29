@@ -3,8 +3,7 @@ package com.rbkmoney.dudoser.handler.sender;
 import com.rbkmoney.damsel.base.InvalidRequest;
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
-import com.rbkmoney.dudoser.exception.MailNotSendException;
-import com.rbkmoney.dudoser.utils.mail.MailSenderUtils;
+import com.rbkmoney.dudoser.service.MailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class MessageMailHandler implements MessageHandler {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    MailSenderUtils mailSenderUtils;
+    MailSenderService mailSenderService;
 
     @Override
     public boolean accept(Message value) {
@@ -48,7 +47,7 @@ public class MessageMailHandler implements MessageHandler {
         if (mail.getToEmails().isEmpty()) {
             throw new InvalidRequest(Collections.singletonList("Mailing list shouldn't be empty"));
         }
-        mailSenderUtils.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
+        mailSenderService.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
         log.info("Mail has been sent to {}", mail.getToEmails());
     }
 }
