@@ -24,7 +24,7 @@ public class MessageMailHandler implements MessageHandler {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    MailSenderService mailSenderUtils;
+    MailSenderService mailSenderService;
 
     @Override
     public boolean accept(Message value) {
@@ -47,7 +47,7 @@ public class MessageMailHandler implements MessageHandler {
         if (mail.getToEmails().isEmpty()) {
             throw new InvalidRequest(Collections.singletonList("Mailing list shouldn't be empty"));
         }
-        mailSenderUtils.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
+        mailSenderService.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
         log.info("Mail has been sent to {}", mail.getToEmails());
     }
 }
