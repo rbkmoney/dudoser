@@ -2,6 +2,38 @@ spring:
   application:
     name: @name@
     description: @description@
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    #    bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
+    #    ssl:
+    #      trust-store-location: "classpath:cert/truststore.p12"
+    #      trust-store-password: "kenny12"
+    #      key-store-location: "classpath:cert/kenny-k.struzhkin.p12"
+    #      key-store-password: "kenny"
+    #      key-password: "kenny"
+    #      key-store-type: PKCS12
+    #      trust-store-type: PKCS12
+    consumer:
+      group-id: "HookerListener"
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.rbkmoney.hooker.serde.SinkEventDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      client-id: test
+    listener:
+      type: batch
+      ack-mode: manual
+      concurrency: 1
+      poll-timeout: 1000 #ms
+      no-poll-threshold: 5.0 # * poll-timeout value = when consumer is dead
+      log-container-config: true
+      monitor-interval: 10s
+    client-id: test
+    properties:
+      security:
+        protocol: PLAINTEXT
+
 ---
 info:
   version: @version@
@@ -16,15 +48,13 @@ info:
 server:
   port: @server.port@
 ---
-# bm poller
-bm:
-  pooling:
-    url: http://localhost:8023/repo
-    maxPoolSize: 1
-    delay: 5000
-    retryDelay: 5000
-    housekeeperTimeout: 15000
-    workersCount: 5
+
+retry-policy:
+  maxAttempts: -1
+
+kafka:
+  invoice:
+    topic: mg-invoice-100-2
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt

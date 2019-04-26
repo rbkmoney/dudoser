@@ -1,15 +1,12 @@
 package com.rbkmoney.dudoser.service;
 
-import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.UnknownException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.api.freemarker.java8.Java8ObjectWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -22,14 +19,13 @@ import java.util.Map;
 /**
  * Created by inal on 18.11.2016.
  */
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class TemplateService {
 
-    private static Logger log = LoggerFactory.getLogger(TemplateService.class);
     private static final String UNUSED_TEMPLATE_NAME = "templateName";
-
-    @Autowired
-    Configuration freemarkerConfiguration;
+    private final Configuration freemarkerConfiguration;
 
     @PostConstruct
     public void postConstruct() {

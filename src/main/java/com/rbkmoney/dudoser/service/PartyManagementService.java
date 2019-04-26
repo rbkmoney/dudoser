@@ -3,8 +3,8 @@ package com.rbkmoney.dudoser.service;
 import com.rbkmoney.damsel.domain.Party;
 import com.rbkmoney.damsel.domain.Shop;
 import com.rbkmoney.damsel.payment_processing.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.thrift.TException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,11 +13,11 @@ import org.springframework.util.StringUtils;
  * @since 20.06.17
  **/
 
+@RequiredArgsConstructor
 @Service
 public class PartyManagementService {
 
-    @Autowired
-    PartyManagementSrv.Iface hellgateClient;
+    private final PartyManagementSrv.Iface hellgateClient;
 
     @Cacheable("shops")
     public String getShopUrl(String partyId, String shopId, long revision) {

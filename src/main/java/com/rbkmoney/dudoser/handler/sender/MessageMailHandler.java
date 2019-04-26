@@ -4,9 +4,8 @@ import com.rbkmoney.damsel.base.InvalidRequest;
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageMail;
 import com.rbkmoney.dudoser.service.MailSenderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -18,13 +17,12 @@ import java.util.stream.Collectors;
 /**
  * Created by inal on 24.11.2016.
  */
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class MessageMailHandler implements MessageHandler {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    MailSenderService mailSenderService;
+    private final MailSenderService mailSenderService;
 
     @Override
     public boolean accept(Message value) {

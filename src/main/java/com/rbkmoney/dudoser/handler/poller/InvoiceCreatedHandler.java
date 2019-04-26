@@ -1,37 +1,25 @@
 package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.domain.Invoice;
-import com.rbkmoney.damsel.event_stock.StockEvent;
-import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.DaoException;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.handler.ChangeType;
-import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.service.PartyManagementService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class InvoiceCreatedHandler implements PollingEventHandler {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    EventService eventService;
-
-    @Autowired
-    PaymentPayerDaoImpl paymentDao;
-
-    @Autowired
-    PartyManagementService partyManagementService;
+    private final PaymentPayerDaoImpl paymentDao;
+    private final PartyManagementService partyManagementService;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value, int mod) throws DaoException {
-        Event event = value.getSourceEvent().getProcessingEvent();
-        long eventId = event.getId();
+    public void handle(InvoiceChange ic, String sourceId) throws DaoException {
         Invoice invoice = ic.getInvoiceCreated().getInvoice();
         String shopUrl;
         if (invoice.isSetPartyRevision()) {
@@ -42,7 +30,6 @@ public class InvoiceCreatedHandler implements PollingEventHandler {
 
         log.info("Start creating invoice with id {}", invoice.getId());
         paymentDao.addInvoice(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl);
-        eventService.setLastEventId(eventId, mod);
         log.info("End creating invoice with id {}", invoice.getId());
     }
 

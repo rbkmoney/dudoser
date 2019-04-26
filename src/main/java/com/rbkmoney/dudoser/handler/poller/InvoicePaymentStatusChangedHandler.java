@@ -1,58 +1,42 @@
 package com.rbkmoney.dudoser.handler.poller;
 
-import com.rbkmoney.damsel.event_stock.StockEvent;
-import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.*;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
-import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.service.MailSenderService;
 import com.rbkmoney.dudoser.service.TemplateService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Slf4j
+@RequiredArgsConstructor
 public abstract class InvoicePaymentStatusChangedHandler implements PollingEventHandler {
-
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    EventService eventService;
 
     @Value("${notification.payment.paid.from}")
     private String from;
 
-    @Autowired
-    TemplateDao templateDao;
+    private final TemplateDao templateDao;
 
-    @Autowired
-    PaymentPayerDaoImpl paymentPayerDaoImpl;
+    private final TemplateService templateService;
 
-    @Autowired
-    TemplateService templateService;
+    protected final PaymentPayerDaoImpl paymentPayerDaoImpl;
 
-    @Autowired
-    MailSenderService mailSenderService;
+    private final MailSenderService mailSenderService;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value, int mod) {
-        Event event = value.getSourceEvent().getProcessingEvent();
-        long eventId = event.getId();
-        String invoiceId = event.getSource().getInvoiceId();
+    public void handle(InvoiceChange ic, String sourceId) {
         String paymentId = ic.getInvoicePaymentChange().getId();
-        log.info("Start InvoicePaymentStatusChangedHandler: event_id {}, payment change {}.{}", event.getId(), invoiceId, paymentId);
-        Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceId, ic);
+        log.info("Start InvoicePaymentStatusChangedHandler: payment change {}.{}", sourceId, paymentId);
+        Optional<PaymentPayer> paymentPayer = getPaymentPayer(sourceId, ic);
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
             if (payment.getToReceiver() == null) {
-                log.info("Email not found for payment change {}.{}", invoiceId, paymentId);
+                log.info("Email not found for payment change {}.{}", sourceId, paymentId);
             } else {
                 String formattedAmount = getFormattedAmount(payment);
                 Map<String, Object> model = new HashMap<>();
@@ -79,11 +63,10 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                     }
                 }
             }
-            eventService.setLastEventId(eventId, mod);
         } else {
-            log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", invoiceId, paymentId);
+            log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", sourceId, paymentId);
         }
-        log.info("End InvoicePaymentStatusChangedHandler: event_id {}, payment change {}.{}", event.getId(), invoiceId, paymentId);
+        log.info("End InvoicePaymentStatusChangedHandler: payment change {}.{}", sourceId, paymentId);
     }
 
     protected abstract String getFormattedAmount(PaymentPayer payment);

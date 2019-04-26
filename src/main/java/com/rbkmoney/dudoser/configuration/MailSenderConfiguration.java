@@ -14,33 +14,11 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class MailSenderConfiguration {
-
-    @Value("${mail.host}")
-    String host;
-
-    @Value("${mail.port}")
-    int port;
-
-    @Value("${mail.username}")
-    String username;
-
-    @Value("${mail.password}")
-    String password;
-
-    @Value("${mail.protocol}")
-    String protocol;
-
-    @Value("${mail.smtp.auth}")
-    boolean smtpsAuth;
-
-    @Value("${mail.smtp.starttls.enable}")
-    boolean starttls;
-
-    @Value("${mail.smtp.timeout:30000}")
-    int timeout;
-
     @Bean
-    public Properties mailProperties() {
+    public Properties mailProperties(@Value("${mail.protocol}") String protocol,
+                                     @Value("${mail.smtp.auth}") boolean smtpsAuth,
+                                     @Value("${mail.smtp.starttls.enable}") boolean starttls,
+                                     @Value("${mail.smtp.timeout:30000}") int timeout) {
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.auth", smtpsAuth);
         javaMailProperties.put("mail.smtp.starttls.enable", starttls);
@@ -51,7 +29,11 @@ public class MailSenderConfiguration {
     }
 
     @Bean
-    public List<JavaMailSender> javaMailSender(Properties mailProperties) {
+    public List<JavaMailSender> javaMailSender(@Value("${mail.host}") String host,
+                                               @Value("${mail.port}") int port,
+                                               @Value("${mail.username}") String username,
+                                               @Value("${mail.password}") String password,
+                                               Properties mailProperties) {
         try {
             Record[]  records = new Lookup(host, Type.MX).run();
             if (records == null) {
@@ -59,9 +41,8 @@ public class MailSenderConfiguration {
             }
             return Arrays.stream(records).map(r -> {
                 JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-                String host = ((MXRecord) r).getTarget().toString(true);
-                System.out.println("MX-record: " + host);
-                mailSender.setHost(host);
+                String mxHost = ((MXRecord) r).getTarget().toString(true);
+                mailSender.setHost(mxHost);
                 mailSender.setPort(port);
                 mailSender.setUsername(username);
                 mailSender.setPassword(password);

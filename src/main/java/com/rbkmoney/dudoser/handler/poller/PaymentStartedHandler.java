@@ -4,8 +4,6 @@ import com.rbkmoney.damsel.domain.ContactInfo;
 import com.rbkmoney.damsel.domain.InvoicePayment;
 import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.domain.PaymentTool;
-import com.rbkmoney.damsel.event_stock.StockEvent;
-import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
@@ -13,29 +11,21 @@ import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class PaymentStartedHandler implements PollingEventHandler{
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    EventService eventService;
-
-    @Autowired
-    PaymentPayerDaoImpl paymentPayerDaoImpl;
+    private final PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value, int mod) {
-        Event event = value.getSourceEvent().getProcessingEvent();
-        long eventId = event.getId();
-        String invoiceId = event.getSource().getInvoiceId();
+    public void handle(InvoiceChange ic, String sourceId) {
         InvoicePayment invoicePayment = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentStarted().getPayment();
         ContactInfo contactInfo = null;
         PaymentTool paymentTool = null;
@@ -51,9 +41,9 @@ public class PaymentStartedHandler implements PollingEventHandler{
             paymentTool = payer.getRecurrent().getPaymentTool();
         }
         String paymentId = ic.getInvoicePaymentChange().getId();
-        log.info("Start PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
+        log.info("Start PaymentStartedHandler: payment {}.{}", sourceId, paymentId);
         if (contactInfo != null) {
-            Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getInvoice(invoiceId);
+            Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getInvoice(sourceId);
             if (paymentPayerOptional.isPresent()) {
                 PaymentPayer paymentPayer = paymentPayerOptional.get();
                 paymentPayer.setPaymentId(paymentId);
@@ -63,24 +53,23 @@ public class PaymentStartedHandler implements PollingEventHandler{
                     paymentPayer.setCardMaskPan(paymentTool.getBankCard().getMaskedPan());
                     paymentPayer.setCardType(paymentTool.getBankCard().getPaymentSystem().name());
                 }
-                paymentPayer.setInvoiceId(event.getSource().getInvoiceId());
+                paymentPayer.setInvoiceId(sourceId);
                 paymentPayer.setDate(TypeUtil.stringToLocalDateTime(invoicePayment.getCreatedAt()));
                 paymentPayer.setToReceiver(contactInfo.getEmail());
 
                 if (!paymentPayerDaoImpl.addPayment(paymentPayer)) {
-                    log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", invoiceId, paymentId);
+                    log.warn("PaymentStartedHandler: couldn't save payment info, payment {}.{}", sourceId, paymentId);
                 } else {
-                    log.debug("PaymentStartedHandler: saved payment info, payment {}.{}", invoiceId, paymentId);
+                    log.debug("PaymentStartedHandler: saved payment info, payment {}.{}", sourceId, paymentId);
                 }
             } else {
-                log.warn("PaymentStartedHandler: invoice {} not found in repository", invoiceId);
+                log.warn("PaymentStartedHandler: invoice {} not found in repository", sourceId);
             }
         } else {
-            log.warn("ContactInfo for payment {}.{} not found", invoiceId, paymentId);
+            log.warn("ContactInfo for payment {}.{} not found", sourceId, paymentId);
         }
 
-        eventService.setLastEventId(eventId, mod);
-        log.info("End PaymentStartedHandler: event_id {}, payment {}.{}", eventId, invoiceId, paymentId);
+        log.info("End PaymentStartedHandler: event_id {}, payment {}.{}", sourceId, paymentId);
     }
     @Override
     public ChangeType getChangeType() {
