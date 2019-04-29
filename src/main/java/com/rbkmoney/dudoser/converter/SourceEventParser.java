@@ -2,6 +2,8 @@ package com.rbkmoney.dudoser.converter;
 
 import com.rbkmoney.damsel.payment_processing.EventPayload;
 import com.rbkmoney.dudoser.exception.ParseException;
+import com.rbkmoney.kafka.common.converter.BinaryConverter;
+import com.rbkmoney.kafka.common.converter.BinaryConverterImpl;
 import com.rbkmoney.machinegun.eventsink.MachineEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SourceEventParser {
 
-    private final BinaryConverter<EventPayload> converter;
+    private final BinaryConverter<EventPayload> converter = new BinaryConverterImpl();
 
     public EventPayload parseEvent(MachineEvent message) {
         try {
