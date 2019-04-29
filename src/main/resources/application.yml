@@ -15,9 +15,9 @@ spring:
     #      key-store-type: PKCS12
     #      trust-store-type: PKCS12
     consumer:
-      group-id: "HookerListener"
+      group-id: "DudoserListener"
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: com.rbkmoney.hooker.serde.SinkEventDeserializer
+      value-deserializer: com.rbkmoney.dudoser.serde.SinkEventDeserializer
       enable-auto-commit: false
       auto-offset-reset: earliest
       client-id: test

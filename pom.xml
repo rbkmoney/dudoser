@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>4.2.0</version>
+            <version>5.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
@@ -285,10 +285,6 @@
                 <configuration>
                     <destFile>${sonar.jacoco.reportPath}</destFile>
                     <append>true</append>
-                    <excludes>
-                        <exclude>com/rbkmoney/hooker/constant/**/*</exclude>
-                        <exclude>com/rbkmoney/hooker/model/**/*</exclude>
-                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
