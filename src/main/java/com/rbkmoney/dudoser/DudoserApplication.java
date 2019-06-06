@@ -7,9 +7,9 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @ServletComponentScan
 @EnableCaching
-@SpringBootApplication(scanBasePackages = {"com.rbkmoney.dudoser", "com.rbkmoney.dbinit"})
+@SpringBootApplication(scanBasePackages = {"com.rbkmoney.dudoser"})
 public class DudoserApplication {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(DudoserApplication.class, args);
     }
 }
