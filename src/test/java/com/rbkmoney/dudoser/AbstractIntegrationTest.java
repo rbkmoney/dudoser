@@ -34,9 +34,6 @@ public abstract class AbstractIntegrationTest {
 
     private static final String CONFLUENT_PLATFORM_VERSION = "5.0.1";
 
-    @ClassRule
-    public static KafkaContainer kafka = new KafkaContainer(CONFLUENT_PLATFORM_VERSION).withEmbeddedZookeeper();
-
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
@@ -47,30 +44,9 @@ public abstract class AbstractIntegrationTest {
                     "spring.datasource.password=" + postgres.getPassword(),
                     "flyway.url=" + postgres.getJdbcUrl(),
                     "flyway.user=" + postgres.getUsername(),
-                    "flyway.password=" + postgres.getPassword(),
-                    "spring.kafka.bootstrap-servers=" + kafka.getBootstrapServers(),
-                    "spring.kafka.properties.security.protocol=PLAINTEXT",
-                    "spring.kafka.consumer.group-id=TestListener",
-                    "spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer",
-                    "spring.kafka.consumer.value-deserializer=com.rbkmoney.dudoser.serde.SinkEventDeserializer",
-                    "spring.kafka.consumer.enable-auto-commit=false",
-                    "spring.kafka.consumer.auto-offset-reset=earliest",
-                    "spring.kafka.consumer.client-id=test",
-                    "spring.kafka.listener.type=batch",
-                    "spring.kafka.listener.ack-mode=manual",
-                    "spring.kafka.listener.concurrency=1",
-                    "spring.kafka.listener.poll-timeout=1000",
-                    "spring.kafka.listener.no-poll-threshold=5.0",
-                    "spring.kafka.listener.log-container-config=true",
-                    "spring.kafka.listener.monitor-interval=10s",
-                    "spring.kafka.client-id=test",
-                    "kafka.invoice.topic=test-topic"
+                    "flyway.password=" + postgres.getPassword()
             ).applyTo(configurableApplicationContext);
-/*            Flyway flyway = Flyway.configure()
-                    .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
-                    .schemas("dudos")
-                    .load();
-            flyway.migrate();*/
+
         }
     }
     @Value("${local.server.port}")
