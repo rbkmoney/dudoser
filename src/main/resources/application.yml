@@ -3,36 +3,31 @@ spring:
     name: @name@
     description: @description@
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    #    bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
-    #    ssl:
-    #      trust-store-location: "classpath:cert/truststore.p12"
-    #      trust-store-password: "kenny12"
-    #      key-store-location: "classpath:cert/kenny-k.struzhkin.p12"
-    #      key-store-password: "kenny"
-    #      key-password: "kenny"
-    #      key-store-type: PKCS12
-    #      trust-store-type: PKCS12
-    consumer:
-      group-id: "DudoserListener"
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: com.rbkmoney.dudoser.serde.SinkEventDeserializer
-      enable-auto-commit: false
-      auto-offset-reset: earliest
-      client-id: test
-    listener:
-      type: batch
-      ack-mode: manual
-      concurrency: 1
-      poll-timeout: 1000 #ms
-      no-poll-threshold: 5.0 # * poll-timeout value = when consumer is dead
-      log-container-config: true
-      monitor-interval: 10s
-    client-id: test
-    properties:
-      security:
-        protocol: PLAINTEXT
+retry-policy:
+  maxAttempts: -1
+
+kafka:
+  bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
+  client-id: newway
+  ssl:
+    enabled: false
+    trust-store-location: "test"
+    trust-store-password: "test"
+    key-store-location: "test"
+    key-store-password: "test"
+    key-password: "test"
+    key-store-type: PKCS12
+    trust-store-type: PKCS12
+  consumer:
+    concurrency: 8
+    group-id: "NewwayListener"
+    enable-auto-commit: false
+    auto-offset-reset: earliest
+    max-poll-records: 20
+  topics:
+    invoice:
+      id: mg-invoice-100-2
+      enabled: false
 
 ---
 info:
