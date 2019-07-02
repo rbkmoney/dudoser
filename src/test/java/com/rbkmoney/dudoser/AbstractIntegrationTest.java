@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
