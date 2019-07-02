@@ -53,8 +53,8 @@ public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
     MachineEventParser eventParser;
 
     @Test
-    public void listenChanges() throws InterruptedException {
-        when(eventParser.parse(any())).thenReturn(EventPayload.invoice_changes(List.of(new InvoiceChange())));
+    public void listenEmptyChanges() throws InterruptedException {
+        when(eventParser.parse(any())).thenReturn(EventPayload.invoice_changes(List.of()));
 
         SinkEvent sinkEvent = new SinkEvent();
         sinkEvent.setEvent(createMessage());
@@ -79,7 +79,7 @@ public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
     }
 
     private void waitForTopicSync() throws InterruptedException {
-        Thread.sleep(2000L);
+        Thread.sleep(1000L);
     }
 
 
