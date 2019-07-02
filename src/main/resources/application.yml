@@ -8,7 +8,7 @@ retry-policy:
 
 kafka:
   bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
-  client-id: newway
+  client-id: dudoser
   ssl:
     enabled: false
     trust-store-location: "test"
@@ -46,10 +46,6 @@ server:
 
 retry-policy:
   maxAttempts: -1
-
-kafka:
-  invoice:
-    topic: mg-invoice-100-2
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
