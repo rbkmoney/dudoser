@@ -95,6 +95,3 @@ spring:
     hikari:
       maximum-pool-size: 3
       idle-timeout: 30000
-management:
-  security:
-    enabled: false

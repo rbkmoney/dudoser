@@ -1,6 +1,5 @@
 package com.rbkmoney.dudoser;
 
-import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
@@ -14,8 +13,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.time.Duration;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -27,12 +27,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public abstract class AbstractIntegrationTest {
 
     @ClassRule
-    public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:9.6");
-
-    public static final String SOURCE_ID = "source_id";
-    public static final String SOURCE_NS = "source_ns";
-
-    private static final String CONFLUENT_PLATFORM_VERSION = "5.0.1";
+    public static PostgreSQLContainer postgres = (PostgreSQLContainer) new PostgreSQLContainer("postgres:9.6")
+            .withStartupTimeout(Duration.ofMinutes(5));
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
@@ -46,7 +42,10 @@ public abstract class AbstractIntegrationTest {
                     "flyway.user=" + postgres.getUsername(),
                     "flyway.password=" + postgres.getPassword()
             ).applyTo(configurableApplicationContext);
-
+            Flyway flyway = Flyway.configure()
+                    .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
+                    .load();
+            flyway.migrate();
         }
     }
     @Value("${local.server.port}")
