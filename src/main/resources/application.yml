@@ -31,11 +31,20 @@ kafka:
     group-id: "DudoserListener"
     enable-auto-commit: false
     auto-offset-reset: latest
-    max-poll-records: 200
+    max-poll-records: 20
   topics:
     invoice:
       id: mg-invoice-100-2
       enabled: false
+
+bm:
+  pooling:
+    url: http://localhost:8023/repo
+    maxPoolSize: 1
+    delay: 5000
+    retryDelay: 5000
+    housekeeperTimeout: 15000
+    workersCount: 5
 
 ---
 info:
