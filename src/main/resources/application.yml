@@ -30,7 +30,7 @@ kafka:
     concurrency: 8
     group-id: "DudoserListener"
     enable-auto-commit: false
-    auto-offset-reset: latests
+    auto-offset-reset: latest
     max-poll-records: 200
   topics:
     invoice:

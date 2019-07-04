@@ -23,4 +23,9 @@ public class DaoConfiguration {
     public PaymentPayerDao paymentPayerDao(DataSource dataSource) {
         return new PaymentPayerDaoImpl(dataSource);
     }
+
+    @Bean
+    public MessageDao messageDao(DataSource dataSource) {
+        return new MessageDaoImpl(dataSource);
+    }
 }

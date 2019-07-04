@@ -10,15 +10,19 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
 public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements MessageDao {
+
+    public MessageDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
 
     @Override
     public boolean store(String receiver, String subject, String text) {
@@ -58,7 +62,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
     }
 
     @Override
-    public boolean deleteSentMessages(Instant before) {
+    public boolean deleteSentMessages(LocalDateTime before) {
         final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("before_date", before);

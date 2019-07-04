@@ -2,7 +2,7 @@ package com.rbkmoney.dudoser.dao.model;
 
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 public class MessageToSend {
@@ -10,7 +10,7 @@ public class MessageToSend {
     String subject;
     String receiver;
     String body;
-    Instant dateCreated;
+    LocalDateTime dateCreated;
     Boolean sent;
 
 }
