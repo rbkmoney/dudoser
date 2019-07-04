@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
 import org.junit.Before;
 import org.junit.Test;

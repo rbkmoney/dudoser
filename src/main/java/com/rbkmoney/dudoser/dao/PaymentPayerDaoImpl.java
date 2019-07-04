@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.geck.common.util.TypeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;

@@ -1,13 +1,15 @@
 package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
-import com.rbkmoney.dudoser.dao.*;
-import com.rbkmoney.dudoser.exception.MailNotSendException;
-import com.rbkmoney.dudoser.service.MailSenderService;
+import com.rbkmoney.dudoser.dao.EventTypeCode;
+import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
+import com.rbkmoney.dudoser.dao.Template;
+import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
+import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,16 +19,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class InvoicePaymentStatusChangedHandler implements PollingEventHandler {
 
-    @Value("${notification.payment.paid.from}")
-    private String from;
-
     private final TemplateDao templateDao;
 
     private final TemplateService templateService;
 
     protected final PaymentPayerDaoImpl paymentPayerDaoImpl;
 
-    private final MailSenderService mailSenderService;
+    private final ScheduledMailHandlerService mailHandlerService;
 
     @Override
     public void handle(InvoiceChange ic, String sourceId) {
@@ -54,13 +53,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                     log.info("Not found active template for partyId={}, shopId={}", partyId, shopId);
                 } else {
                     String text = templateService.getFilledContent(template.getBody(), model);
-                    try {
-                        log.info("Mail send from {} to {}. Subject: {}", from, payment.getToReceiver(), subject);
-                        mailSenderService.send(from, new String[]{payment.getToReceiver()}, subject, text, null);
-                        log.info("Mail has been sent to {}", payment.getToReceiver());
-                    } catch (MailNotSendException e) {
-                        log.warn("Mail not send to {}", payment.getToReceiver(), e);
-                    }
+                    mailHandlerService.storeMessage(payment.getToReceiver(), subject, text);
                 }
             }
         } else {

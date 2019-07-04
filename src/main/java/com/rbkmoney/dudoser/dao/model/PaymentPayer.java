@@ -1,4 +1,4 @@
-package com.rbkmoney.dudoser.dao;
+package com.rbkmoney.dudoser.dao.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class PaymentPayer{
+public class PaymentPayer {
 
     private BigDecimal amount;
     private BigDecimal refundAmount;

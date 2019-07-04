@@ -6,6 +6,14 @@ spring:
 retry-policy:
   maxAttempts: -1
 
+message:
+  store:
+    days: 3
+  schedule:
+    clear: 86400 # every day
+    send: 15000 # 15 seconds
+
+
 kafka:
   bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
   client-id: dudoser
@@ -22,7 +30,7 @@ kafka:
     concurrency: 8
     group-id: "DudoserListener"
     enable-auto-commit: false
-    auto-offset-reset: earliest
+    auto-offset-reset: latests
     max-poll-records: 200
   topics:
     invoice:
@@ -32,20 +40,13 @@ kafka:
 ---
 info:
   version: @version@
-  responsible: Anatoly Cherkasov
   stage: dev
   damsel:
     version: @damsel.version@
 ---
-#logging:
-#  file: /tmp/@artifactId@.json
----
 server:
   port: @server.port@
 ---
-
-retry-policy:
-  maxAttempts: -1
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
@@ -68,7 +69,7 @@ test:
   mail:
     to: i.arsanukaev@rbkmoney.com
   server:
-    port:7778
+    port: 7778
 
 notification:
   payment:

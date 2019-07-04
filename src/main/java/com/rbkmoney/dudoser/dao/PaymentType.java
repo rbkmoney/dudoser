@@ -6,5 +6,5 @@ package com.rbkmoney.dudoser.dao;
 public enum PaymentType {
     INVOICE,
     PAYMENT,
-    REFUND;
+    REFUND
 }

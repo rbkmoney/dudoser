@@ -1,5 +1,7 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
+
 import java.util.Optional;
 
 public interface PaymentPayerDao {
