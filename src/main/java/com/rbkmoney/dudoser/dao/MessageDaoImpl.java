@@ -5,15 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException;
-import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.retry.annotation.Retryable;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 .addValue("subject", subject)
                 .addValue("receiver", receiver)
                 .addValue("body", text)
-                .addValue("dateCreated", Instant.now())
+                .addValue("date_created", new Timestamp(Instant.now().toEpochMilli()))
                 .addValue("sent", false);
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
@@ -41,7 +41,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 return false;
             }
         } catch (NestedRuntimeException e) {
-            throw new DaoException("MessageDaoImpl.store error with subject {}" + subject, e);
+            throw new DaoException("MessageDaoImpl.store error with subject " + subject, e);
         }
         log.debug("Mail with subject: {}, to receiver: {} added to table", subject, receiver);
         return true;
@@ -49,10 +49,10 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
 
     @Override
     public List<MessageToSend> getUnsentMessages() {
-        final String sql = "SELECT * FROM dudos.mailing_list WHERE sent = false;";
+        final String sql = "SELECT subject, receiver, body, date_created, sent FROM dudos.mailing_list WHERE sent = false;";
         try {
             return getNamedParameterJdbcTemplate()
-                    .queryForList(sql, EmptySqlParameterSource.INSTANCE, MessageToSend.class);
+                    .query(sql, new BeanPropertyRowMapper<>(MessageToSend.class, true));
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
@@ -62,10 +62,10 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
     }
 
     @Override
-    public boolean deleteSentMessages(LocalDateTime before) {
+    public boolean deleteSentMessages(Instant before) {
         final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("before_date", before);
+                .addValue("before_date", new Timestamp(before.toEpochMilli()));
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount < 1) {

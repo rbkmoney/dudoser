@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,7 +64,7 @@ public class ScheduledMailHandlerService {
 
     @Scheduled(fixedDelayString = "${message.schedule.clear}")
     public void clear() {
-        messageDao.deleteSentMessages(LocalDateTime.now().minus(storeDays, ChronoUnit.DAYS));
+        messageDao.deleteSentMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS));
     }
 
 }

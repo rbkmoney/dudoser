@@ -27,7 +27,7 @@ public class EventStockPollerConfig {
     @Value("${bm.pooling.retryDelay}")
     int retryDelay;
 
-    @Value("${bm.epooling.maxPoolSize}")
+    @Value("${bm.pooling.maxPoolSize}")
     int maxPoolSize;
 
     @Value("${bm.pooling.housekeeperTimeout}")
