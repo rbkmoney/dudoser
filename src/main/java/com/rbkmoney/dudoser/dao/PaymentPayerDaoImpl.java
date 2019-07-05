@@ -27,7 +27,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addPayment(final PaymentPayer payment) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)" +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type) " +
                 "ON CONFLICT DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", payment.getInvoiceId())
@@ -57,7 +57,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addInvoice(String invoiceId, String partyId, String shopId, String shopUrl) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type))" +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type)) " +
                 "ON CONFLICT DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", invoiceId)
@@ -80,7 +80,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addRefund(PaymentPayer refund) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, refund_amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))" +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
                 "ON CONFLICT DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", refund.getInvoiceId())
