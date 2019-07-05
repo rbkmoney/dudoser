@@ -26,7 +26,9 @@ public class SchedulingTest {
     MessageDao messageDao;
 
     @Test
-    public void test() {
+    public void test() throws InterruptedException {
+        Thread.sleep(1000);
+
         verify(messageDao, atLeastOnce()).getUnsentMessages();
         verify(messageDao, atLeastOnce()).deleteSentMessages(any());
     }
