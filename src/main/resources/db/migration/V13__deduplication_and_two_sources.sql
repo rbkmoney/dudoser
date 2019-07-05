@@ -6,3 +6,7 @@ CREATE TABLE dudos.mailing_list
   date_created timestamp,
   sent boolean
 );
+
+ALTER TABLE dudos.payment_payer
+  ADD CONSTRAINT invoice_payment_refund_unique
+  UNIQUE (invoice_id, payment_id, refund_id);
