@@ -1,9 +1,7 @@
 package com.rbkmoney.dudoser.handler.sender;
 
 import com.rbkmoney.damsel.message_sender.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,12 +9,11 @@ import java.util.List;
 /**
  * Created by inal on 24.11.2016.
  */
+@RequiredArgsConstructor
 @Component
 public class MessageSendHandler {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private List<MessageHandler> messageHandlers;
+    private final List<MessageHandler> messageHandlers;
 
     public void handleEvent(Message message) throws Exception {
         for (MessageHandler messageHandler : messageHandlers) {

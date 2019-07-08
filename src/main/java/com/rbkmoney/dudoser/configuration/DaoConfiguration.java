@@ -3,7 +3,6 @@ package com.rbkmoney.dudoser.configuration;
 import com.rbkmoney.dudoser.dao.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import javax.sql.DataSource;
 
@@ -23,5 +22,10 @@ public class DaoConfiguration {
     @Bean
     public PaymentPayerDao paymentPayerDao(DataSource dataSource) {
         return new PaymentPayerDaoImpl(dataSource);
+    }
+
+    @Bean
+    public MessageDao messageDao(DataSource dataSource) {
+        return new MessageDaoImpl(dataSource);
     }
 }

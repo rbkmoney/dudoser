@@ -2,8 +2,12 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
-import com.rbkmoney.dudoser.dao.PaymentPayer;
+import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
+import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
+import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
+import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
 import org.springframework.stereotype.Component;
@@ -12,6 +16,10 @@ import java.util.Optional;
 
 @Component
 public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentStatusChangedHandler {
+
+    public InvoicePaymentStatusChangedProcessedHandler(TemplateDao templateDao, TemplateService templateService, PaymentPayerDaoImpl paymentPayerDaoImpl, ScheduledMailHandlerService handlerService) {
+        super(templateDao, templateService, paymentPayerDaoImpl, handlerService);
+    }
 
     @Override
     public ChangeType getChangeType() {

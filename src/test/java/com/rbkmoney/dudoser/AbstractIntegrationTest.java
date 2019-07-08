@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
@@ -19,12 +20,12 @@ import java.time.Duration;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ContextConfiguration(classes = DudoserApplication.class, initializers = AbstractIntegrationTest.Initializer.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractIntegrationTest {
-    private static Logger log = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     @ClassRule
     public static PostgreSQLContainer postgres = (PostgreSQLContainer) new PostgreSQLContainer("postgres:9.6")

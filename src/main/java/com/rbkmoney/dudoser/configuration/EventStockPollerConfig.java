@@ -1,9 +1,9 @@
 package com.rbkmoney.dudoser.configuration;
 
+import com.rbkmoney.dudoser.dao.LastEventDao;
 import com.rbkmoney.dudoser.handler.poller.EventStockHandler;
 import com.rbkmoney.dudoser.handler.poller.PollingEventHandler;
-import com.rbkmoney.eventstock.client.*;
-import com.rbkmoney.eventstock.client.poll.EventFlowFilter;
+import com.rbkmoney.eventstock.client.EventPublisher;
 import com.rbkmoney.eventstock.client.poll.PollingEventPublisherBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,10 +54,11 @@ public class EventStockPollerConfig {
     }
 
     @Bean
-    public List<EventStockHandler> eventStockHandlers(@Value("${bm.pooling.workersCount}") int workersCount) {
+    public List<EventStockHandler> eventStockHandlers(@Value("${bm.pooling.workersCount}") int workersCount,
+                                                      LastEventDao lastEventDao) {
         List<EventStockHandler> eventStockHandlers = new ArrayList<>();
         for (int i = 0; i < workersCount; ++i) {
-            eventStockHandlers.add(new EventStockHandler(pollingEventHandlers, workersCount, i));
+            eventStockHandlers.add(new EventStockHandler(pollingEventHandlers, lastEventDao, workersCount, i));
         }
         return eventStockHandlers;
     }

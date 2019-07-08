@@ -2,21 +2,41 @@ spring:
   application:
     name: @name@
     description: @description@
----
-info:
-  version: @version@
-  responsible: Anatoly Cherkasov
-  stage: dev
-  damsel:
-    version: @damsel.version@
----
-#logging:
-#  file: /tmp/@artifactId@.json
----
-server:
-  port: @server.port@
----
-# bm poller
+
+retry-policy:
+  maxAttempts: -1
+
+message:
+  store:
+    days: 3
+  schedule:
+    clear: 86400 # every day
+    send: 15000 # 15 seconds
+
+
+kafka:
+  bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
+  client-id: dudoser
+  ssl:
+    enabled: false
+#    trust-store-location: "test"
+#    trust-store-password: "test"
+#    key-store-location: "test"
+#    key-store-password: "test"
+#    key-password: "test"
+#    key-store-type: PKCS12
+#    trust-store-type: PKCS12
+  consumer:
+    concurrency: 8
+    group-id: "DudoserListener"
+    enable-auto-commit: false
+    auto-offset-reset: latest
+    max-poll-records: 20
+  topics:
+    invoice:
+      id: mg-invoice-100-2
+      enabled: false
+
 bm:
   pooling:
     url: http://localhost:8023/repo
@@ -25,6 +45,17 @@ bm:
     retryDelay: 5000
     housekeeperTimeout: 15000
     workersCount: 5
+
+---
+info:
+  version: @version@
+  stage: dev
+  damsel:
+    version: @damsel.version@
+---
+server:
+  port: @server.port@
+---
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
@@ -47,7 +78,7 @@ test:
   mail:
     to: i.arsanukaev@rbkmoney.com
   server:
-    port:7778
+    port: 7778
 
 notification:
   payment:

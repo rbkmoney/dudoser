@@ -5,14 +5,15 @@ import com.rbkmoney.woody.api.event.CompositeServiceEventListener;
 import com.rbkmoney.woody.thrift.impl.http.THServiceBuilder;
 import com.rbkmoney.woody.thrift.impl.http.event.HttpServiceEventLogListener;
 import com.rbkmoney.woody.thrift.impl.http.event.ServiceEventLogListener;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 @WebServlet("/dudos")
 public class DudoserServlet extends GenericServlet {
 
@@ -20,8 +21,7 @@ public class DudoserServlet extends GenericServlet {
 
     private Servlet thriftServlet;
 
-    @Autowired
-    private MessageSenderSrv.Iface requestHandler;
+    private final MessageSenderSrv.Iface requestHandler;
 
     @Override
     public void init(ServletConfig config) throws ServletException {

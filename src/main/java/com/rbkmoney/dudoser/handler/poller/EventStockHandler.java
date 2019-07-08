@@ -3,6 +3,7 @@ package com.rbkmoney.dudoser.handler.poller;
 import com.rbkmoney.damsel.event_stock.StockEvent;
 import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
+import com.rbkmoney.dudoser.dao.LastEventDao;
 import com.rbkmoney.dudoser.utils.HashUtil;
 import com.rbkmoney.eventstock.client.EventAction;
 import com.rbkmoney.eventstock.client.EventHandler;
@@ -16,11 +17,13 @@ public class EventStockHandler implements EventHandler<StockEvent> {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final List<PollingEventHandler> pollingEventHandlers;
+    private final LastEventDao lastEventDao;
     private final int divider;
     private final int mod;
 
-    public EventStockHandler(List<PollingEventHandler> pollingEventHandlers, int divider, int mod) {
+    public EventStockHandler(List<PollingEventHandler> pollingEventHandlers, LastEventDao lastEventDao, int divider, int mod) {
         this.pollingEventHandlers = pollingEventHandlers;
+        this.lastEventDao = lastEventDao;
         this.divider = divider;
         this.mod = mod;
     }
@@ -43,7 +46,8 @@ public class EventStockHandler implements EventHandler<StockEvent> {
                     for (PollingEventHandler pollingEventHandler : pollingEventHandlers) {
                         if (pollingEventHandler.accept(ic)) {
                             try {
-                                pollingEventHandler.handle(ic, stockEvent, mod);
+                                pollingEventHandler.handle(ic, processingEvent.getSource().getInvoiceId());
+                                lastEventDao.set(processingEvent.getId(), mod);
                             } catch (RuntimeException e) {
                                 log.error("Error when poller handling", e);
                                 return EventAction.DELAYED_RETRY;

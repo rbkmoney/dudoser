@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>dudoser</artifactId>
-    <version>1.2.23-SNAPSHOT</version>
+    <version>1.2.24-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>dudoser</name>
@@ -27,22 +27,18 @@
         <server.port>8022</server.port>
         <exposed.ports>${server.port}</exposed.ports>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql.jdbc.version>42.2.5</postgresql.jdbc.version>
-        <custom.flyway.version>5.2.4</custom.flyway.version>
-        <dockerfile.base.service.tag>bc95d0d6dc13c693acd2b274531a7d604b877bf3</dockerfile.base.service.tag>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
+        <dockerfile.base.service.tag>c0d0900ec19c907d866f8360031a836049985110</dockerfile.base.service.tag>
         <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
         <db.schema>dud</db.schema>
+        <geck.version>0.6.9</geck.version>
+        <kafka.common.lib.version>0.0.9</kafka.common.lib.version>
     </properties>
 
     <dependencies>
         <!--Thirdparty libs-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -58,6 +54,24 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>2.2.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>eventstock-client</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
@@ -68,11 +82,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
+            <version>${hikaricp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.jdbc.version}</version>
+            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,7 +96,12 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${custom.flyway.version}</version>
+            <version>5.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/dnsjava/dnsjava -->
         <dependency>
@@ -98,7 +118,6 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.28</version>
         </dependency>
         <dependency>
             <groupId>no.api.freemarker</groupId>
@@ -112,14 +131,39 @@
         </dependency>
         <!--RBK libs-->
         <dependency>
-            <groupId>com.rbkmoney.logback</groupId>
-            <artifactId>nop-rolling</artifactId>
-            <version>1.0.3</version>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>sink-common-lib</artifactId>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
-            <artifactId>eventstock-client</artifactId>
-            <version>1.2.1</version>
+            <artifactId>kafka-common-lib</artifactId>
+            <version>${kafka.common.lib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney.woody</groupId>
+            <artifactId>woody-thrift</artifactId>
+            <version>1.1.15</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney.geck</groupId>
+            <artifactId>common</artifactId>
+            <version>${geck.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney.geck</groupId>
+            <artifactId>filter</artifactId>
+            <version>${geck.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>machinegun-proto</artifactId>
+            <version>1.12-ebae56f</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney.logback</groupId>
+            <artifactId>nop-rolling</artifactId>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -133,15 +177,15 @@
         </dependency>
         <!--Test libs-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>easyway</artifactId>
+            <version>0.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -159,6 +203,18 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>1.10.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams-test-utils</artifactId>
+            <version>2.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -230,6 +286,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

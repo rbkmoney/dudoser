@@ -1,27 +1,24 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.geck.common.util.TypeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.rbkmoney.dudoser.dao.PaymentType.*;
 
 
+@Slf4j
 @Component
 public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements PaymentPayerDao {
-    Logger log = LoggerFactory.getLogger(this.getClass());
 
     public PaymentPayerDaoImpl(DataSource dataSource) {
         setDataSource(dataSource);

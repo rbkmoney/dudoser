@@ -2,18 +2,16 @@ package com.rbkmoney.dudoser.service;
 
 import com.rbkmoney.dudoser.dao.DaoException;
 import com.rbkmoney.dudoser.dao.LastEventDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class EventService {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    LastEventDao lastEventDao;
+    private final LastEventDao lastEventDao;
 
     public Long getLastEventId(int id) {
         Long lastEventId = lastEventDao.get(id);

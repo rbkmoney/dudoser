@@ -3,24 +3,23 @@ package com.rbkmoney.dudoser.handler.sender;
 import com.rbkmoney.damsel.base.InvalidRequest;
 import com.rbkmoney.damsel.message_sender.Message;
 import com.rbkmoney.damsel.message_sender.MessageSenderSrv;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by inal on 18.11.2016.
  */
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class DudoserHandler implements MessageSenderSrv.Iface {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private MessageSendHandler messageSendHandler;
+    private final MessageSendHandler messageSendHandler;
 
     @Override
-    public void send(Message message) throws InvalidRequest, TException {
+    public void send(Message message) throws TException {
         try {
             log.info("Start mail sending from {} to {}", message.getMessageMail().getFromEmail(), message.getMessageMail().getToEmails());
             messageSendHandler.handleEvent(message);

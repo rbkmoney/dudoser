@@ -1,22 +1,17 @@
 package com.rbkmoney.dudoser.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by inal on 28.11.2016.
  */
+@Slf4j
 public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements TemplateDao {
-    Logger log = LoggerFactory.getLogger(this.getClass());
 
     public TemplateDaoImpl(DataSource ds) {
         this.setDataSource(ds);
@@ -52,16 +47,11 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
         params.addValue("shop_id", shopId);
 
         try {
-            Template result = getNamedParameterJdbcTemplate().queryForObject(sql, params, new RowMapper<Template>() {
-                @Override
-                public Template mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return new Template(rs.getString("body"), rs.getBoolean("is_active"));
-                }
-            });
-            return result;
+            return getNamedParameterJdbcTemplate().queryForObject(sql, params, (rs, rowNum) ->
+                    new Template(rs.getString("body"), rs.getBoolean("is_active")));
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't find template", e);
-            throw new DaoException("Couldn't find template with typeCode = " + typeCode + "; merchId = " + merchId + "; shopId = " + shopId);
+            throw new DaoException(String.format("Couldn't find template with typeCode = %s; merchId = %s; shopId = %s", typeCode, merchId, shopId));
         }
     }
 }

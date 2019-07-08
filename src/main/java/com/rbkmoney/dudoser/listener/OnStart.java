@@ -2,25 +2,25 @@ package com.rbkmoney.dudoser.listener;
 
 import com.rbkmoney.dudoser.handler.poller.EventStockHandler;
 import com.rbkmoney.dudoser.service.EventService;
-import com.rbkmoney.eventstock.client.*;
+import com.rbkmoney.eventstock.client.DefaultSubscriberConfig;
+import com.rbkmoney.eventstock.client.EventConstraint;
+import com.rbkmoney.eventstock.client.EventPublisher;
+import com.rbkmoney.eventstock.client.SubscriberConfig;
 import com.rbkmoney.eventstock.client.poll.EventFlowFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class OnStart implements ApplicationListener<ApplicationReadyEvent> {
 
-    @Autowired
-    List<EventPublisher> eventPublishers;
-    @Autowired
-    List<EventStockHandler> eventStockHandlers;
-    @Autowired
-    EventService eventService;
+    private final List<EventPublisher> eventPublishers;
+    private final List<EventStockHandler> eventStockHandlers;
+    private final EventService eventService;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {

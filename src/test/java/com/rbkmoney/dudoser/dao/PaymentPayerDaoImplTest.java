@@ -1,8 +1,9 @@
 package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
-import com.rbkmoney.dudoser.utils.Converter;
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
+import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

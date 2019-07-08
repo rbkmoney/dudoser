@@ -3,45 +3,35 @@ package com.rbkmoney.dudoser.handler.poller;
 import com.rbkmoney.damsel.domain.Cash;
 import com.rbkmoney.damsel.domain.FinalCashFlowPosting;
 import com.rbkmoney.damsel.domain.InvoicePaymentRefund;
-import com.rbkmoney.damsel.event_stock.StockEvent;
-import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.damsel.payment_processing.InvoicePaymentRefundCreated;
-import com.rbkmoney.dudoser.dao.PaymentPayer;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
+import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
-import com.rbkmoney.dudoser.service.EventService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class RefundStartedHandler implements PollingEventHandler{
-    Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    EventService eventService;
-
-    @Autowired
-    PaymentPayerDaoImpl paymentPayerDaoImpl;
+    private final PaymentPayerDaoImpl paymentPayerDaoImpl;
 
     @Override
-    public void handle(InvoiceChange ic, StockEvent value, int mod) {
-        Event event = value.getSourceEvent().getProcessingEvent();
-        long eventId = event.getId();
-        String invoiceId = event.getSource().getInvoiceId();
+    public void handle(InvoiceChange ic, String sourceId) {
         String paymentId = ic.getInvoicePaymentChange().getId();
         InvoicePaymentRefundCreated invoicePaymentRefundCreated = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getPayload().getInvoicePaymentRefundCreated();
         InvoicePaymentRefund refund = invoicePaymentRefundCreated.getRefund();
         String refundId = refund.getId();
-        log.info("Start RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
-        Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getPayment(invoiceId, paymentId);
+        log.info("Start RefundStartedHandler: refund {}.{}.{}", sourceId, paymentId, refundId);
+        Optional<PaymentPayer> paymentPayerOptional = paymentPayerDaoImpl.getPayment(sourceId, paymentId);
         if (paymentPayerOptional.isPresent()) {
             PaymentPayer paymentPayer = paymentPayerOptional.get();
             List<FinalCashFlowPosting> cashFlow = invoicePaymentRefundCreated.getCashFlow();
@@ -57,13 +47,12 @@ public class RefundStartedHandler implements PollingEventHandler{
             paymentPayer.setRefundId(refundId);
             paymentPayer.setDate(TypeUtil.stringToLocalDateTime(refund.getCreatedAt()));
             if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
-                log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", invoiceId, paymentId, refundId);
+                log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", sourceId, paymentId, refundId);
             }
-            eventService.setLastEventId(eventId, mod);
         } else {
-            log.warn("RefundStartedHandler: payment {}.{} not found in repository", invoiceId, paymentId);
+            log.warn("RefundStartedHandler: payment {}.{} not found in repository", sourceId, paymentId);
         }
-        log.info("End RefundStartedHandler: event_id {}, refund {}.{}.{}", eventId, invoiceId, paymentId, refundId);
+        log.info("End RefundStartedHandler: refund {}.{}.{}", sourceId, paymentId, refundId);
     }
     public static long getAmount(List<FinalCashFlowPosting> finalCashFlow) {
         return finalCashFlow.stream()
