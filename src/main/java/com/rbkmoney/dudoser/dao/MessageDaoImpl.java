@@ -13,6 +13,8 @@ import org.springframework.retry.annotation.Retryable;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
     public boolean deleteSentMessages(Instant before) {
         final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("before_date", new Timestamp(before.toEpochMilli()));
+                .addValue("before_date", LocalDateTime.ofInstant(before, ZoneId.of("UTC")));
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount < 1) {
