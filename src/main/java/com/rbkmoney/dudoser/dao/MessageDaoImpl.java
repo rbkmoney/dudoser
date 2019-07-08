@@ -13,7 +13,7 @@ import org.springframework.retry.annotation.Retryable;
 import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 .addValue("subject", subject)
                 .addValue("receiver", receiver)
                 .addValue("body", text)
-                .addValue("date_created", LocalDateTime.now(ZoneId.of("UTC")))
+                .addValue("date_created", LocalDateTime.now(ZoneOffset.UTC))
                 .addValue("sent", false);
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
@@ -65,7 +65,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
     public boolean deleteSentMessages(Instant before) {
         final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("before_date", LocalDateTime.ofInstant(before, ZoneId.of("UTC")));
+                .addValue("before_date", LocalDateTime.ofInstant(before, ZoneOffset.UTC));
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
             if (updateCount < 1) {
