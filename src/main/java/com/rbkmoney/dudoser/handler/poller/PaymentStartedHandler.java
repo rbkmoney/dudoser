@@ -67,8 +67,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
         } else {
             log.warn("ContactInfo for payment {}.{} not found", sourceId, paymentId);
         }
-
-        log.info("End PaymentStartedHandler: event_id {}, payment {}.{}", sourceId, paymentId);
+        log.info("End PaymentStartedHandler: payment {}.{}", sourceId, paymentId);
     }
     @Override
     public ChangeType getChangeType() {

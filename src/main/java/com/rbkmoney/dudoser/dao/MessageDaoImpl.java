@@ -3,7 +3,6 @@ package com.rbkmoney.dudoser.dao;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -53,12 +52,12 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
         try {
             return getNamedParameterJdbcTemplate()
                     .query(sql, new BeanPropertyRowMapper<>(MessageToSend.class, true));
-        } catch (EmptyResultDataAccessException e) {
-            //do nothing
         } catch (NestedRuntimeException e) {
             throw new DaoException("Can't fetch messages for sending", e);
+        } catch (Exception e) {
+            log.error("Error while fetching messages", e);
+            return List.of();
         }
-        return List.of();
     }
 
     @Override
@@ -93,7 +92,6 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
             if (rowsPerBatchAffected.length != params.size()) {
                 throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, params.size(), rowsPerBatchAffected.length);
             }
-
             for (int rowsAffected : rowsPerBatchAffected) {
                 if (rowsAffected != 1) {
                     throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, 1, rowsAffected);

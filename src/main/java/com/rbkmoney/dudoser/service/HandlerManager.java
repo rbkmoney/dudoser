@@ -14,6 +14,8 @@ public class HandlerManager {
     private final List<Handler> handlers;
 
     public <C> Optional<Handler> getHandler(C change) {
-        return handlers.stream().filter(handler -> handler.accept(change)).findFirst();
+        return handlers.stream()
+                .filter(handler -> handler.accept(change))
+                .findFirst();
     }
 }

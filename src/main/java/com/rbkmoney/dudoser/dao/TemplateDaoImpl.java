@@ -47,10 +47,11 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
         params.addValue("shop_id", shopId);
 
         try {
-            return getNamedParameterJdbcTemplate().queryForObject(sql, params, (rs, rowNum) -> new Template(rs.getString("body"), rs.getBoolean("is_active")));
+            return getNamedParameterJdbcTemplate().queryForObject(sql, params, (rs, rowNum) ->
+                    new Template(rs.getString("body"), rs.getBoolean("is_active")));
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't find template", e);
-            throw new DaoException("Couldn't find template with typeCode = " + typeCode + "; merchId = " + merchId + "; shopId = " + shopId);
+            throw new DaoException(String.format("Couldn't find template with typeCode = %s; merchId = %s; shopId = %s", typeCode, merchId, shopId));
         }
     }
 }

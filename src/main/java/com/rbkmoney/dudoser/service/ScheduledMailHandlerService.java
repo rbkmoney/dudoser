@@ -39,27 +39,29 @@ public class ScheduledMailHandlerService {
     public void send() {
         List<MessageToSend> sentMessages = messageDao.getUnsentMessages()
                 .stream()
-                .filter(messageToSend -> {
-                    try {
-                        mailSenderService.send(from,
-                                new String[]{messageToSend.getReceiver()},
-                                messageToSend.getSubject(),
-                                messageToSend.getBody(),
-                                null);
-                        return true;
-                    } catch (MailNotSendException e) {
-                        log.error("Mail wasn't send, subject: {}, receiver: {}",
-                                messageToSend.getSubject(), messageToSend.getReceiver(), e);
-                        return false;
-                    } catch (Exception e) {
-                        log.error("Unexpected exception while sending message, subject: {}, receiver: {}",
-                                messageToSend.getSubject(), messageToSend.getReceiver(), e);
-                        return false;
-                    }
-                })
+                .filter(this::sendSucceeded)
                 .collect(Collectors.toList());
 
         messageDao.markAsSent(sentMessages);
+    }
+
+    private boolean sendSucceeded(MessageToSend messageToSend) {
+        try {
+            mailSenderService.send(from,
+                    new String[]{messageToSend.getReceiver()},
+                    messageToSend.getSubject(),
+                    messageToSend.getBody(),
+                    null);
+            return true;
+        } catch (MailNotSendException e) {
+            log.error("Mail wasn't send, subject: {}, receiver: {}",
+                    messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            return false;
+        } catch (Exception e) {
+            log.error("Unexpected exception while sending message, subject: {}, receiver: {}",
+                    messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            return false;
+        }
     }
 
     @Scheduled(fixedDelayString = "${message.schedule.clear}")

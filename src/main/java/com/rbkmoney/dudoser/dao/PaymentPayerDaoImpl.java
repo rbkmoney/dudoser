@@ -43,7 +43,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("type", PAYMENT.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1 && updateCount != 0) {
+            if (updateCount != 1) {
                 return false;
             }
         } catch (NestedRuntimeException e) {
@@ -65,7 +65,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("type", INVOICE.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1 && updateCount != 0) {
+            if (updateCount != 1) {
                 return false;
             }
         } catch (NestedRuntimeException e) {
@@ -96,7 +96,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("type", REFUND.name());
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1 && updateCount != 0) {
+            if (updateCount != 1) {
                 return false;
             }
         } catch (NestedRuntimeException e) {
