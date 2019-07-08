@@ -6,6 +6,14 @@ spring:
 retry-policy:
   maxAttempts: -1
 
+management:
+  metrics:
+    export:
+      statsd:
+        flavor: etsy
+        enabled: false
+
+
 message:
   store:
     days: 3
