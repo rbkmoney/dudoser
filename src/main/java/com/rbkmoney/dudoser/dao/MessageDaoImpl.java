@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.retry.annotation.Retryable;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -34,7 +33,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 .addValue("subject", subject)
                 .addValue("receiver", receiver)
                 .addValue("body", text)
-                .addValue("date_created", new Timestamp(Instant.now().toEpochMilli()))
+                .addValue("date_created", LocalDateTime.now(ZoneId.of("UTC")))
                 .addValue("sent", false);
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
