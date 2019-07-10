@@ -5,13 +5,16 @@ import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -28,6 +31,9 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     TemplateDao templateDao;
     @Autowired
     TemplateService templateService;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Test
     public void test() throws Exception {
         String invoiceId = "invId1";
@@ -36,6 +42,11 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String shopId = "1";
         //--------add invoice-------------
         assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+        assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('INVOICE' AS dudos.payment_type)");
+        Assert.assertEquals(1, list.size());
+
         //--------prepare payment info----
         PaymentPayer paymentPayer = paymentPayerDao.getInvoice(invoiceId).get();
         paymentPayer.setCardType("visa");
@@ -50,6 +61,11 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentId = "paymId2";
         paymentPayer.setPaymentId(paymentId);
         assertTrue(paymentPayerDao.addPayment(paymentPayer));
+        assertTrue(paymentPayerDao.addPayment(paymentPayer));
+
+        list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('PAYMENT' AS dudos.payment_type)");
+        Assert.assertEquals(2, list.size());
+
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getCardType(), "visa");
@@ -69,6 +85,11 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         refundInfo.setRefundId(refundId);
         refundInfo.setDate(TypeUtil.stringToLocalDateTime("2017-08-26T20:12:34.983390Z"));
         paymentPayerDao.addRefund(refundInfo);
+        paymentPayerDao.addRefund(refundInfo);
+
+        list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('REFUND' AS dudos.payment_type)");
+        Assert.assertEquals(1, list.size());
+
         //----------- get refund ------------
         PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
         assertEquals(refundInfoGet.getRefundId(), refundId);

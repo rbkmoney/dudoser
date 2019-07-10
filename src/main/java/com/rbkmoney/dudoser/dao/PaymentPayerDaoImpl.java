@@ -27,7 +27,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addPayment(final PaymentPayer payment) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
+                "ON CONFLICT (invoice_id, payment_id) WHERE payment_id is not null and refund_id is null DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", payment.getInvoiceId())
                 .addValue("party_id", payment.getPartyId())
@@ -56,7 +57,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addInvoice(String invoiceId, String partyId, String shopId, String shopUrl) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type))";
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type)) " +
+                "ON CONFLICT (invoice_id) WHERE payment_id is null and refund_id is null DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", invoiceId)
                 .addValue("party_id", partyId)
@@ -78,7 +80,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     @Override
     public boolean addRefund(PaymentPayer refund) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, refund_amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type))";
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
+                "ON CONFLICT (invoice_id, payment_id, refund_id) WHERE payment_id is not null and refund_id is not null  DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", refund.getInvoiceId())
                 .addValue("party_id", refund.getPartyId())
