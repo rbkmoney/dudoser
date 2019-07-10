@@ -62,6 +62,7 @@ public abstract class AbstractKafkaTest extends AbstractTestUtils {
     private static Consumer<EnvironmentProperties> getEnvironmentPropertiesConsumer() {
         return environmentProperties -> {
             environmentProperties.put("kafka.topics.invoice.enabled", "true");
+            environmentProperties.put("kafka.consumer.auto-offset-reset", "earliest");
             environmentProperties.put("bm.pollingEnabled", "false");
             environmentProperties.put("dmt.polling.enable", "false");
         };

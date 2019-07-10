@@ -56,8 +56,8 @@ public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
 
         waitForTopicSync();
 
-        Mockito.verify(eventParser, Mockito.timeout(100000).times(1)).parse(any());
-        Mockito.verify(handlerManager, Mockito.timeout(100000).times(1)).getHandler(any());
+        Mockito.verify(eventParser, Mockito.times(1)).parse(any());
+        Mockito.verify(handlerManager, Mockito.times(1)).getHandler(any());
     }
 
     private void writeToTopic(SinkEvent sinkEvent) {
@@ -72,7 +72,7 @@ public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
     }
 
     private void waitForTopicSync() throws InterruptedException {
-        Thread.sleep(5000L);
+        Thread.sleep(1000L);
     }
 
 
