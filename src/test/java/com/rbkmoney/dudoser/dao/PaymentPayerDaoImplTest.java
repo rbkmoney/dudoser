@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     JdbcTemplate jdbcTemplate;
 
     @Test
+    @Rollback
     public void test() throws Exception {
         String invoiceId = "invId1";
         String paymentId = "paymId1";
@@ -103,6 +105,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     }
 
     @Test
+    @Rollback
     public void testPaymentTerminalTool() throws Exception {
 
         String invoiceId = "invId2";
