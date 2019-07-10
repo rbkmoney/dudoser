@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     @Autowired
     PaymentPayerDao paymentPayerDao;
@@ -36,7 +37,6 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     JdbcTemplate jdbcTemplate;
 
     @Test
-    @Rollback
     public void test() throws Exception {
         String invoiceId = "invId1";
         String paymentId = "paymId1";
@@ -47,7 +47,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
 
         List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('INVOICE' AS dudos.payment_type)");
-        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(1, list.size()); //invoice constraint
 
         //--------prepare payment info----
         PaymentPayer paymentPayer = paymentPayerDao.getInvoice(invoiceId).get();
@@ -66,7 +66,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         assertTrue(paymentPayerDao.addPayment(paymentPayer));
 
         list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('PAYMENT' AS dudos.payment_type)");
-        Assert.assertEquals(2, list.size());
+        Assert.assertEquals(2, list.size()); //payment constraint
 
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
@@ -90,7 +90,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayerDao.addRefund(refundInfo);
 
         list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('REFUND' AS dudos.payment_type)");
-        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(1, list.size()); //refund constraint
 
         //----------- get refund ------------
         PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
@@ -105,7 +105,6 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     }
 
     @Test
-    @Rollback
     public void testPaymentTerminalTool() throws Exception {
 
         String invoiceId = "invId2";
