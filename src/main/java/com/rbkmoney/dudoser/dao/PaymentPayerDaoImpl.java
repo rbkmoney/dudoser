@@ -25,10 +25,10 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
-    public boolean addPayment(final PaymentPayer payment) {
+    public void addPayment(final PaymentPayer payment) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
                 "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
-                "ON CONFLICT (invoice_id, payment_id) WHERE payment_id is not null and refund_id is null DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
+                "ON CONFLICT (invoice_id, payment_id) WHERE payment_id is not null and refund_id is null DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", payment.getInvoiceId())
                 .addValue("party_id", payment.getPartyId())
@@ -43,22 +43,19 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("to_receiver", payment.getToReceiver())
                 .addValue("type", PAYMENT.name());
         try {
-            int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1) {
-                return false;
-            }
+            getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
+            log.warn("Couldn't save payment info: {}.{}", payment.getInvoiceId(), payment.getPaymentId());
             throw new DaoException("PaymentPayerDaoImpl.addPayment error with invoiceId "+ payment.getInvoiceId(), e);
         }
-        log.debug("Payment {}.{} added to table", payment.getInvoiceId(), payment.getPaymentId());
-        return true;
+        log.info("Payment {}.{} added to table", payment.getInvoiceId(), payment.getPaymentId());
     }
 
     @Override
-    public boolean addInvoice(String invoiceId, String partyId, String shopId, String shopUrl) {
+    public void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, type) " +
                 "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type)) " +
-                "ON CONFLICT (invoice_id) WHERE payment_id is null and refund_id is null DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
+                "ON CONFLICT (invoice_id) WHERE payment_id is null and refund_id is null DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", invoiceId)
                 .addValue("party_id", partyId)
@@ -66,22 +63,19 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("shop_url", shopUrl)
                 .addValue("type", INVOICE.name());
         try {
-            int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1) {
-                return false;
-            }
+            getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
+            log.warn("Couldn't save invoice info: {}", invoiceId);
             throw new DaoException("PaymentPayerDaoImpl.addInvoice error with invoiceId "+ invoiceId, e);
         }
-        log.debug("Payment info with invoiceId {} added to table", invoiceId);
-        return true;
+        log.info("Payment info with invoiceId {} added to table", invoiceId);
     }
 
     @Override
-    public boolean addRefund(PaymentPayer refund) {
+    public void addRefund(PaymentPayer refund) {
         final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, refund_id, amount, refund_amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
                 "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :refund_id, :amount, :refund_amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
-                "ON CONFLICT (invoice_id, payment_id, refund_id) WHERE payment_id is not null and refund_id is not null  DO UPDATE SET invoice_id=EXCLUDED.invoice_id";
+                "ON CONFLICT (invoice_id, payment_id, refund_id) WHERE payment_id is not null and refund_id is not null DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", refund.getInvoiceId())
                 .addValue("party_id", refund.getPartyId())
@@ -98,15 +92,12 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("to_receiver", refund.getToReceiver())
                 .addValue("type", REFUND.name());
         try {
-            int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            if (updateCount != 1) {
-                return false;
-            }
+            getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
+            log.warn("Couldn't save refund info: {}.{}.{}", refund.getInvoiceId(), refund.getPaymentId(), refund.getRefundId());
             throw new DaoException("PaymentPayerDaoImpl.addRefund error with invoiceId "+ refund.getInvoiceId(), e);
         }
-        log.debug("Refund with invoiceId {} added to table", refund.getInvoiceId());
-        return true;
+        log.info("Refund with invoiceId {} added to table", refund.getInvoiceId());
     }
 
     @Override

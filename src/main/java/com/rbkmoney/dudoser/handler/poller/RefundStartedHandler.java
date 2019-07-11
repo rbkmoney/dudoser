@@ -46,9 +46,7 @@ public class RefundStartedHandler implements PollingEventHandler{
 
             paymentPayer.setRefundId(refundId);
             paymentPayer.setDate(TypeUtil.stringToLocalDateTime(refund.getCreatedAt()));
-            if (!paymentPayerDaoImpl.addRefund(paymentPayer)) {
-                log.warn("RefundStartedHandler: couldn't save refund info: {}.{}.{}", sourceId, paymentId, refundId);
-            }
+            paymentPayerDaoImpl.addRefund(paymentPayer);
         } else {
             log.warn("RefundStartedHandler: payment {}.{} not found in repository", sourceId, paymentId);
         }

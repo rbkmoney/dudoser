@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface PaymentPayerDao {
 
-    boolean addPayment(PaymentPayer paymentPayer) throws Exception;
+    void addPayment(PaymentPayer paymentPayer) throws Exception;
 
-    boolean addInvoice(String invoiceId, String partyId, String shopId, String shopUrl);
+    void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl);
 
-    boolean addRefund(PaymentPayer paymentPayer);
+    void addRefund(PaymentPayer paymentPayer);
 
     Optional<PaymentPayer> getPayment(String invoiceId, String paymentId);
 
