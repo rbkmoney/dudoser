@@ -29,6 +29,12 @@ public class InvoicingKafkaListener {
                                     () -> log.debug("Handler for invoiceChange {} wasn't found (machineEvent {})", invoiceChange, sinkEvent.getEvent()));
                 } catch (Exception ex) {
                     log.error("Failed to handle invoice change, invoiceChange='{}'", invoiceChange, ex);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        log.error("Interrupted while sleeping when handle invoice change, invoiceChange='{}'", invoiceChange);
+                        Thread.currentThread().interrupt();
+                    }
                     throw ex;
                 }
             }

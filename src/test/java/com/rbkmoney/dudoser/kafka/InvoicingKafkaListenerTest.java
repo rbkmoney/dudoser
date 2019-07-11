@@ -72,7 +72,7 @@ public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
     }
 
     private void waitForTopicSync() throws InterruptedException {
-        Thread.sleep(1000L);
+        Thread.sleep(3000L);
     }
 
 

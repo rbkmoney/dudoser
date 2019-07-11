@@ -5,13 +5,17 @@ import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -21,6 +25,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     @Autowired
     PaymentPayerDao paymentPayerDao;
@@ -28,6 +33,9 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     TemplateDao templateDao;
     @Autowired
     TemplateService templateService;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Test
     public void test() throws Exception {
         String invoiceId = "invId1";
@@ -35,7 +43,12 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String partyId = "dsgsgr";
         String shopId = "1";
         //--------add invoice-------------
-        assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
+
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('INVOICE' AS dudos.payment_type)");
+        Assert.assertEquals(1, list.size()); //invoice constraint
+
         //--------prepare payment info----
         PaymentPayer paymentPayer = paymentPayerDao.getInvoice(invoiceId).get();
         paymentPayer.setCardType("visa");
@@ -46,10 +59,15 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ add payment info------
-        assertTrue(paymentPayerDao.addPayment(paymentPayer));
+        paymentPayerDao.addPayment(paymentPayer);
         paymentId = "paymId2";
         paymentPayer.setPaymentId(paymentId);
-        assertTrue(paymentPayerDao.addPayment(paymentPayer));
+        paymentPayerDao.addPayment(paymentPayer);
+        paymentPayerDao.addPayment(paymentPayer);
+
+        list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('PAYMENT' AS dudos.payment_type)");
+        Assert.assertEquals(2, list.size()); //payment constraint
+
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getCardType(), "visa");
@@ -69,6 +87,11 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         refundInfo.setRefundId(refundId);
         refundInfo.setDate(TypeUtil.stringToLocalDateTime("2017-08-26T20:12:34.983390Z"));
         paymentPayerDao.addRefund(refundInfo);
+        paymentPayerDao.addRefund(refundInfo);
+
+        list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('REFUND' AS dudos.payment_type)");
+        Assert.assertEquals(1, list.size()); //refund constraint
+
         //----------- get refund ------------
         PaymentPayer refundInfoGet = paymentPayerDao.getRefund(invoiceId, paymentId, refundId).get();
         assertEquals(refundInfoGet.getRefundId(), refundId);
@@ -89,7 +112,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String partyId = "dsgsgr4";
         String shopId = "1";
         //--------add invoice-------------
-        assertTrue(paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru"));
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
         //--------prepare payment info----
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCurrency("RUB");
@@ -99,7 +122,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         //------ update payment info------
-        assertTrue(paymentPayerDao.addPayment(paymentPayer));
+        paymentPayerDao.addPayment(paymentPayer);
         //-------- get payment info-------
         PaymentPayer paymentPayerGet = paymentPayerDao.getPayment(invoiceId, paymentId).get();
         assertEquals(paymentPayerGet.getToReceiver(), "i.ars@rbk.com");
