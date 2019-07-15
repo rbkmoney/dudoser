@@ -18,8 +18,8 @@ message:
   store:
     days: 3
   schedule:
-    clear: 86400 # every day
-    send: 15000 # 15 seconds
+    clear: 86400000 # every day
+    send: 5000 # 5 seconds
 
 
 kafka:

@@ -49,7 +49,10 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
 
     @Override
     public List<MessageToSend> getUnsentMessages() {
-        final String sql = "SELECT subject, receiver, body, date_created, sent FROM dudos.mailing_list WHERE sent = false;";
+        final String sql = "SELECT subject, receiver, body, date_created, sent " +
+                "FROM dudos.mailing_list " +
+                "WHERE sent = false " +
+                "LIMIT 100;";
         try {
             return getNamedParameterJdbcTemplate()
                     .query(sql, new BeanPropertyRowMapper<>(MessageToSend.class, true));
@@ -61,6 +64,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
         }
     }
 
+    //todo удалять старые неотправленные
     @Override
     public boolean deleteSentMessages(Instant before) {
         final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";

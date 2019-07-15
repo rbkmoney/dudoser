@@ -35,11 +35,12 @@ public class ScheduledMailHandlerService {
         }
     }
 
-    @Scheduled(fixedDelayString = "${message.schedule.send}")
+    @Scheduled(fixedRateString = "${message.schedule.send}")
     public void send() {
-        log.info("Mail sending started...");
-        List<MessageToSend> sentMessages = messageDao.getUnsentMessages()
-                .stream()
+        List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
+        log.info("Mail sending started... Messages to send: {}", unsentMessages.size());
+        List<MessageToSend> sentMessages = unsentMessages
+                .parallelStream()
                 .filter(this::sendSucceeded)
                 .collect(Collectors.toList());
 
