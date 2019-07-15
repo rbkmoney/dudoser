@@ -9,14 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class MessageDaoImplTest extends AbstractIntegrationTest {
 
     @Autowired
@@ -44,5 +47,13 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
         Assert.assertEquals(0, list.size()); //delete works
     }
 
+    @Test
+    public void selectIsLimited() {
+        for (int i = 0; i < 200; i++) {
+            messageDao.store("inal@toxic.ru", UUID.randomUUID().toString(), "text!".repeat(255));
+        }
+        List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
+        Assert.assertEquals(100L, unsentMessages.size());
+    }
 
 }
