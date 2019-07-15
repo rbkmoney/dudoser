@@ -68,6 +68,7 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 .addValue("before_date", LocalDateTime.ofInstant(before, ZoneOffset.UTC));
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
+            log.info("Deleted {} sent messages", updateCount);
             if (updateCount < 1) {
                 return false;
             }

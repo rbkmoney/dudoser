@@ -37,12 +37,14 @@ public class ScheduledMailHandlerService {
 
     @Scheduled(fixedDelayString = "${message.schedule.send}")
     public void send() {
+        log.info("Mail sending started...");
         List<MessageToSend> sentMessages = messageDao.getUnsentMessages()
                 .stream()
                 .filter(this::sendSucceeded)
                 .collect(Collectors.toList());
 
         messageDao.markAsSent(sentMessages);
+        log.info("Sent {} messages", sentMessages.size());
     }
 
     private boolean sendSucceeded(MessageToSend messageToSend) {
@@ -66,6 +68,7 @@ public class ScheduledMailHandlerService {
 
     @Scheduled(fixedDelayString = "${message.schedule.clear}")
     public void clear() {
+        log.info("Message clearing started.");
         messageDao.deleteSentMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS));
     }
 
