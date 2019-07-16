@@ -17,7 +17,9 @@ import static org.mockito.Mockito.*;
         "message.store.days=1",
         "notification.payment.paid.from=test",
         "message.schedule.send=100",
-        "message.schedule.clear=100"
+        "message.schedule.clear.sent=100",
+        "message.schedule.clear.failed=100",
+        "message.fail.minutes=5"
 })
 @EnableScheduling
 public class SchedulingTest {
@@ -30,7 +32,8 @@ public class SchedulingTest {
         Thread.sleep(1000);
 
         verify(messageDao, atLeastOnce()).getUnsentMessages();
-        verify(messageDao, atLeastOnce()).deleteSentMessages(any());
+        verify(messageDao, atLeastOnce()).deleteMessages(any(), eq(true));
+        verify(messageDao, atLeastOnce()).deleteMessages(any(), eq(false));
     }
 
 }

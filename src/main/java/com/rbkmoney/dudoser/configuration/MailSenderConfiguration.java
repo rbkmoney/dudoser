@@ -10,6 +10,8 @@ import org.xbill.DNS.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -26,6 +28,11 @@ public class MailSenderConfiguration {
         javaMailProperties.put("mail.smtp.connectiontimeout", timeout);
         javaMailProperties.put("mail.smtp.timeout", timeout);
         return javaMailProperties;
+    }
+
+    @Bean
+    public ExecutorService mailSendingExecutorService(@Value("${message.sending.concurrency:8}") Integer concurrency) {
+        return Executors.newFixedThreadPool(concurrency);
     }
 
     @Bean

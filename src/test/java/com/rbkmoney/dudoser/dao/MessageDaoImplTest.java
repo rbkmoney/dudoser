@@ -42,7 +42,22 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
         unsentMessages = messageDao.getUnsentMessages();
         Assert.assertEquals(0, unsentMessages.size()); // test mark as sent
 
-        messageDao.deleteSentMessages(Instant.now().plus(10, ChronoUnit.DAYS));
+        messageDao.deleteMessages(Instant.now().plus(10, ChronoUnit.DAYS), true);
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.mailing_list");
+        Assert.assertEquals(0, list.size()); //delete works
+    }
+
+    @Test
+    public void messageClearingTest() {
+        messageDao.store("inal@toxic.ru", "Today is a toxic day", "text!".repeat(255));
+        List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
+        Assert.assertEquals(1, unsentMessages.size()); // subject primary key test
+
+        messageDao.deleteMessages(Instant.now().plus(1, ChronoUnit.MINUTES), false);
+
+        unsentMessages = messageDao.getUnsentMessages();
+        Assert.assertEquals(0, unsentMessages.size()); // deleted unsent messages
+
         List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.mailing_list");
         Assert.assertEquals(0, list.size()); //delete works
     }
