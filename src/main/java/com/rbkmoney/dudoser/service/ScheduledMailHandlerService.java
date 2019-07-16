@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,8 +29,12 @@ public class ScheduledMailHandlerService {
     @Value("${message.store.days}")
     private Integer storeDays;
 
+    @Value("${message.fail.minutes}")
+    private Integer failTime;
+
     private final MessageDao messageDao;
     private final MailSenderService mailSenderService;
+    private final ExecutorService mailSendingExecutorService;
 
     public void storeMessage(String receiver, String subject, String text) {
         if (!messageDao.store(receiver, subject, text)) {
@@ -39,11 +46,21 @@ public class ScheduledMailHandlerService {
     public void send() {
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         log.info("Mail sending started... Messages to send: {}", unsentMessages.size());
-        List<MessageToSend> sentMessages = unsentMessages
+
+        Map<MessageToSend, Boolean> messageSendResults = unsentMessages
                 .stream()
-                .filter(this::sendSucceeded)
+                .map(messageToSend -> Map.entry(messageToSend,
+                        CompletableFuture.supplyAsync(() -> sendSucceeded(messageToSend), mailSendingExecutorService)))
+                .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().join()));
+
+        List<MessageToSend> sentMessages = messageSendResults.entrySet()
+                .stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+
         messageDao.markAsSent(sentMessages);
+
         log.info("Sent {} messages", sentMessages.size());
     }
 
@@ -66,10 +83,16 @@ public class ScheduledMailHandlerService {
         }
     }
 
-    @Scheduled(fixedDelayString = "${message.schedule.clear}")
-    public void clear() {
+    @Scheduled(fixedDelayString = "${message.schedule.clear.sent}")
+    public void clearSentMessages() {
         log.info("Message clearing started.");
-        messageDao.deleteSentMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS));
+        messageDao.deleteMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS), true);
+    }
+
+    @Scheduled(fixedDelayString = "${message.schedule.clear.failed}")
+    public void clearFailedMessages() {
+        log.info("Message clearing started.");
+        messageDao.deleteMessages(Instant.now().minus(failTime, ChronoUnit.MINUTES), false);
     }
 
 }

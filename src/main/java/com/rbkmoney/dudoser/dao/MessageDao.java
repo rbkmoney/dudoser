@@ -11,7 +11,7 @@ public interface MessageDao {
 
     List<MessageToSend> getUnsentMessages();
 
-    boolean deleteSentMessages(Instant before);
+    void deleteMessages(Instant before, Boolean sent);
 
     void markAsSent(List<MessageToSend> messages);
 }

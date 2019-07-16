@@ -64,23 +64,18 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
         }
     }
 
-    //todo удалять старые неотправленные
     @Override
-    public boolean deleteSentMessages(Instant before) {
-        final String sql = "DELETE FROM dudos.mailing_list WHERE sent = true AND date_created < :before_date;";
+    public void deleteMessages(Instant before, Boolean sent) {
+        final String sql = "DELETE FROM dudos.mailing_list WHERE sent = :sent AND date_created < :before_date;";
         MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("sent", sent)
                 .addValue("before_date", LocalDateTime.ofInstant(before, ZoneOffset.UTC));
         try {
             int updateCount = getNamedParameterJdbcTemplate().update(sql, params);
-            log.info("Deleted {} sent messages", updateCount);
-            if (updateCount < 1) {
-                return false;
-            }
+            log.info("Deleted {} messages with status sent={}", updateCount, sent);
         } catch (NestedRuntimeException e) {
             log.error("Can't delete messages", e);
-            return false;
         }
-        return true;
     }
 
     @Override
@@ -98,13 +93,8 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
             if (rowsPerBatchAffected.length != params.size()) {
                 throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, params.size(), rowsPerBatchAffected.length);
             }
-            for (int rowsAffected : rowsPerBatchAffected) {
-                if (rowsAffected != 1) {
-                    throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, 1, rowsAffected);
-                }
-            }
         } catch (NestedRuntimeException e) {
-            throw new DaoException("Can't mark as sent messages {}" + messages, e);
+            throw new DaoException("Can't mark as sent messages " + messages, e);
         }
     }
 }

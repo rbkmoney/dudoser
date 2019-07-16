@@ -14,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -23,8 +24,10 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(properties = {
         "message.store.days=1",
         "notification.payment.paid.from=test",
-        "message.schedule.send=1000",
-        "message.schedule.clear=1000"
+        "message.schedule.send=2000",
+        "message.schedule.clear.sent=2000",
+        "message.schedule.clear.failed=2000",
+        "message.fail.minutes=5"
 })
 public class ScheduledMailHandlerServiceTest {
 
@@ -55,17 +58,27 @@ public class ScheduledMailHandlerServiceTest {
 
     @Test
     public void sendSuccess() {
-        List<MessageToSend> value = List.of(new MessageToSend(), new MessageToSend());
+        MessageToSend msg1 = new MessageToSend();
+        msg1.setSubject("1");
+        MessageToSend msg2 = new MessageToSend();
+        msg2.setSubject("2");
+        List<MessageToSend> value = List.of(msg1, msg2);
         when(messageDao.getUnsentMessages()).thenReturn(value);
 
         service.send();
 
-        verify(messageDao, times(1)).markAsSent(value);
+        verify(messageDao, times(1)).markAsSent(anyList());
     }
 
     @Test
     public void sendException() throws Exception {
-        List<MessageToSend> value = List.of(new MessageToSend(), new MessageToSend(), new MessageToSend());
+        MessageToSend msg1 = new MessageToSend();
+        msg1.setSubject("1");
+        MessageToSend msg2 = new MessageToSend();
+        msg2.setSubject("2");
+        MessageToSend msg3 = new MessageToSend();
+        msg3.setSubject("3");
+        List<MessageToSend> value = List.of(msg1, msg2, msg3);
         when(messageDao.getUnsentMessages()).thenReturn(value);
 
         Mockito.doThrow(MailNotSendException.class, RuntimeException.class)
@@ -92,7 +105,7 @@ public class ScheduledMailHandlerServiceTest {
 
         @Bean
         public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService) {
-            return new ScheduledMailHandlerService(messageDao, mailSenderService);
+            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor());
         }
 
     }
