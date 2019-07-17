@@ -4,22 +4,18 @@ import com.rbkmoney.dudoser.dao.MessageDao;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.MessageStoreException;
-import com.sun.mail.smtp.SMTPAddressFailedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.hamcrest.MockitoHamcrest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.mail.SendFailedException;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -71,8 +67,7 @@ public class ScheduledMailHandlerServiceTest {
 
         service.send();
 
-        verify(messageDao, times(1))
-                .markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(msg1, msg2)));
+        verify(messageDao, times(1)).markAsSent(anyList());
     }
 
     @Test
@@ -83,23 +78,17 @@ public class ScheduledMailHandlerServiceTest {
         msg2.setSubject("2");
         MessageToSend msg3 = new MessageToSend();
         msg3.setSubject("3");
-        MessageToSend msg4 = new MessageToSend();
-        msg4.setSubject("4");
-        List<MessageToSend> value = List.of(msg1, msg2, msg3, msg4);
+        List<MessageToSend> value = List.of(msg1, msg2, msg3);
         when(messageDao.getUnsentMessages()).thenReturn(value);
 
-        Mockito.doThrow(new MailNotSendException(
-                        "test", new SendFailedException(
-                        "test", new SMTPAddressFailedException(null, null, 0, "err"))))
-                .doThrow(RuntimeException.class)
-                .doThrow(MailNotSendException.class)
+        Mockito.doThrow(MailNotSendException.class, RuntimeException.class)
                 .doNothing()
                 .when(mailSenderService).send(any(), any(), any(), any(), any());
 
         service.send();
 
         verify(messageDao, atLeastOnce()).getUnsentMessages();
-        verify(messageDao, atLeastOnce()).markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(value.get(0), value.get(3))));
+        verify(messageDao, atLeastOnce()).markAsSent(List.of(value.get(2)));
     }
 
     static class Config {
