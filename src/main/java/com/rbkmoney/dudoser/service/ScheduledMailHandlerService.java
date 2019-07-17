@@ -73,6 +73,7 @@ public class ScheduledMailHandlerService {
                     messageToSend.getSubject(),
                     messageToSend.getBody(),
                     null);
+            log.info("Message to {} sent", messageToSend.getReceiver());
             return true;
         } catch (MailNotSendException e) {
             if (NestedExceptionUtils.getMostSpecificCause(e) instanceof SMTPAddressFailedException) {
