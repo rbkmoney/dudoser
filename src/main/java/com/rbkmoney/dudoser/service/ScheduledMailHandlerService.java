@@ -4,9 +4,11 @@ import com.rbkmoney.dudoser.dao.MessageDao;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.MessageStoreException;
+import com.sun.mail.smtp.SMTPAddressFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +75,10 @@ public class ScheduledMailHandlerService {
                     null);
             return true;
         } catch (MailNotSendException e) {
+            if (NestedExceptionUtils.getMostSpecificCause(e) instanceof SMTPAddressFailedException) {
+                log.info("Can't find email address, receiver: {}", messageToSend.getReceiver());
+                return true; //we don't need to retry it
+            }
             log.error("Mail wasn't send, subject: {}, receiver: {}",
                     messageToSend.getSubject(), messageToSend.getReceiver(), e);
             return false;
