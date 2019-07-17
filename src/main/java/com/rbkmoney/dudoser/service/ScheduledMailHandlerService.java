@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.mail.MailSendException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +77,14 @@ public class ScheduledMailHandlerService {
             log.info("Message with subject {} was sent to {}", messageToSend.getSubject(), messageToSend.getReceiver());
             return true;
         } catch (MailNotSendException e) {
-            if (NestedExceptionUtils.getMostSpecificCause(e) instanceof SMTPAddressFailedException) {
+            Throwable mostSpecificCause = NestedExceptionUtils.getMostSpecificCause(e);
+            if (mostSpecificCause instanceof MailSendException
+                    && ((MailSendException) mostSpecificCause)
+                        .getFailedMessages()
+                        .values()
+                        .stream()
+                        .anyMatch(err ->
+                                NestedExceptionUtils.getMostSpecificCause(err) instanceof SMTPAddressFailedException)) {
                 log.info("Can't find email address, receiver: {}", messageToSend.getReceiver());
                 return true; //we don't need to retry it
             }
