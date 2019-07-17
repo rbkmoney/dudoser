@@ -11,12 +11,14 @@ import org.mockito.Mockito;
 import org.mockito.hamcrest.MockitoHamcrest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.MailSendException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.SendFailedException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -89,8 +91,8 @@ public class ScheduledMailHandlerServiceTest {
         when(messageDao.getUnsentMessages()).thenReturn(value);
 
         Mockito.doThrow(new MailNotSendException(
-                        "test", new SendFailedException(
-                        "test", new SMTPAddressFailedException(null, null, 0, "err"))))
+                        "test", new MailSendException(
+                        "test", null, Map.of("no comments...", new SendFailedException("kek", new SMTPAddressFailedException(null, null, 0, "err"))))))
                 .doThrow(RuntimeException.class)
                 .doThrow(MailNotSendException.class)
                 .doNothing()
@@ -99,7 +101,7 @@ public class ScheduledMailHandlerServiceTest {
         service.send();
 
         verify(messageDao, atLeastOnce()).getUnsentMessages();
-        verify(messageDao, atLeastOnce()).markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(value.get(0), value.get(3))));
+        verify(messageDao, atLeastOnce()).markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(msg1, msg4)));
     }
 
     static class Config {
