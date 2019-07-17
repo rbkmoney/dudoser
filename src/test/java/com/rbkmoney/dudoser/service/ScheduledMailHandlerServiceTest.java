@@ -5,6 +5,7 @@ import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.MessageStoreException;
 import com.sun.mail.smtp.SMTPAddressFailedException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.*;
         "message.schedule.clear.failed=2000",
         "message.fail.minutes=5"
 })
+@Ignore
 public class ScheduledMailHandlerServiceTest {
 
     @Autowired

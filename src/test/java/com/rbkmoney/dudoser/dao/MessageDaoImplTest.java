@@ -3,6 +3,7 @@ package com.rbkmoney.dudoser.dao;
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@Ignore
 public class MessageDaoImplTest extends AbstractIntegrationTest {
 
     @Autowired

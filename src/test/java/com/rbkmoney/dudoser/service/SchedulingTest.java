@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.service;
 
 import com.rbkmoney.dudoser.dao.MessageDao;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.*;
         "message.fail.minutes=5"
 })
 @EnableScheduling
+@Ignore
 public class SchedulingTest {
 
     @Autowired

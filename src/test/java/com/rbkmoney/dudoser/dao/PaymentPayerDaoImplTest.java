@@ -6,6 +6,7 @@ import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@Ignore
 public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
     @Autowired
     PaymentPayerDao paymentPayerDao;

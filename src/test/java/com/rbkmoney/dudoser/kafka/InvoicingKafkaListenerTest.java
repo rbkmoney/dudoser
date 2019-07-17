@@ -16,6 +16,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @ContextConfiguration(classes = {KafkaConfig.class, InvoicingKafkaListener.class})
+@Ignore
 public class InvoicingKafkaListenerTest extends AbstractKafkaTest {
 
     @org.springframework.beans.factory.annotation.Value("${kafka.topics.invoice.id}")
