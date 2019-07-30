@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -37,6 +38,7 @@ public class ScheduledMailHandlerService {
     private final MessageDao messageDao;
     private final MailSenderService mailSenderService;
     private final ExecutorService mailSendingExecutorService;
+    private final TransactionTemplate transactionTemplate;
 
     public void storeMessage(String receiver, String subject, String text) {
         if (!messageDao.store(receiver, subject, text)) {
@@ -44,8 +46,15 @@ public class ScheduledMailHandlerService {
         }
     }
 
-    @Scheduled(fixedDelayString = "${message.schedule.send}")
+    @Scheduled(fixedRateString = "${message.schedule.send}")
     public void send() {
+        transactionTemplate.execute(status -> {
+            sendInternal();
+            return null;
+        });
+    }
+
+    private void sendInternal() {
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         log.info("Mail sending started... Messages to send: {}", unsentMessages.size());
 
@@ -90,13 +99,13 @@ public class ScheduledMailHandlerService {
         }
     }
 
-    @Scheduled(fixedDelayString = "${message.schedule.clear.sent}")
+    @Scheduled(fixedRateString = "${message.schedule.clear.sent}")
     public void clearSentMessages() {
         log.info("Message clearing started.");
         messageDao.deleteMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS), true);
     }
 
-    @Scheduled(fixedDelayString = "${message.schedule.clear.failed}")
+    @Scheduled(fixedRateString = "${message.schedule.clear.failed}")
     public void clearFailedMessages() {
         log.info("Message clearing started.");
         messageDao.deleteMessages(Instant.now().minus(failTime, ChronoUnit.MINUTES), false);

@@ -10,10 +10,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.hamcrest.MockitoHamcrest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.mail.SendFailedException;
 import java.util.List;
@@ -115,8 +119,17 @@ public class ScheduledMailHandlerServiceTest {
         }
 
         @Bean
-        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService) {
-            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor());
+        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService, TransactionTemplate transactionTemplate) {
+            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor(), transactionTemplate);
+        }
+
+        @Bean
+        public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager,
+                                                       @Value("${db.jdbc.tr_timeout}") int transactionTimeout) {
+            TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+            transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+            transactionTemplate.setTimeout(transactionTimeout);
+            return transactionTemplate;
         }
 
     }

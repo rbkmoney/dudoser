@@ -13,6 +13,10 @@ management:
         flavor: etsy
         enabled: false
 
+db:
+  jdbc:
+    tr_timeout: 300000
+
 
 message:
   fail:

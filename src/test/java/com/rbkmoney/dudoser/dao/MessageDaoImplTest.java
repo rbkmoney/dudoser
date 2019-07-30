@@ -2,14 +2,17 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
+import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +22,7 @@ import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
+@ComponentScan(excludeFilters = @ComponentScan.Filter(classes = ScheduledMailHandlerService.class))
 public class MessageDaoImplTest extends AbstractIntegrationTest {
 
     @Autowired
@@ -28,11 +31,15 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    TransactionTemplate transactionTemplate;
+
     @Test
+    @Transactional
     public void messageDaoTest() {
-        messageDao.store("inal@toxic.ru", "Today is a non-toxic day", "text!".repeat(255));
-        messageDao.store("inal@toxic.ru", "Today is a non-toxic day", "text!".repeat(255));
-        messageDao.store("inal@toxic.ru", "Today is a toxic day", "text!".repeat(255));
+        messageDao.store("jenya@toxic.ru", "Today is a non-toxic day", "text!".repeat(255));
+        messageDao.store("jenya@toxic.ru", "Today is a non-toxic day", "text!".repeat(255));
+        messageDao.store("jenya@toxic.ru", "Today is a toxic day", "text!".repeat(255));
 
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         Assert.assertEquals(2, unsentMessages.size()); // subject primary key test
@@ -48,8 +55,9 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void messageClearingTest() {
-        messageDao.store("inal@toxic.ru", "Today is a toxic day", "text!".repeat(255));
+        messageDao.store("jenya@toxic.ru", "Today is a toxic day", "text!".repeat(255));
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         Assert.assertEquals(1, unsentMessages.size()); // subject primary key test
 
@@ -63,12 +71,44 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void selectIsLimited() {
         for (int i = 0; i < 200; i++) {
-            messageDao.store("inal@toxic.ru", UUID.randomUUID().toString(), "text!".repeat(255));
+            messageDao.store("jenya@toxic.ru", UUID.randomUUID().toString(), "text!".repeat(255));
         }
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         Assert.assertEquals(100L, unsentMessages.size());
+    }
+
+    @Test
+    public void selectIsLockedForUpdate() {
+        for (int i = 0; i < 50; i++) {
+            messageDao.store("jenya@toxic.ru", UUID.randomUUID().toString(), "text!".repeat(255));
+        }
+        new Thread(() -> transactionTemplate.execute(status -> {
+            List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
+            Assert.assertEquals(50L, unsentMessages.size());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        })).start();
+
+        //waiting for thread init
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //checking locked rows
+        transactionTemplate.execute(status -> {
+            List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
+            Assert.assertEquals(0L, unsentMessages.size());
+            return null;
+        });
     }
 
 }
