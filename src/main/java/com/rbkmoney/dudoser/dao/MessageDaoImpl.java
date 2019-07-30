@@ -52,7 +52,8 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
         final String sql = "SELECT subject, receiver, body, date_created, sent " +
                 "FROM dudos.mailing_list " +
                 "WHERE sent = false " +
-                "LIMIT 100;";
+                "LIMIT 100 " +
+                "FOR UPDATE SKIP LOCKED;";
         try {
             return getNamedParameterJdbcTemplate()
                     .query(sql, new BeanPropertyRowMapper<>(MessageToSend.class, true));

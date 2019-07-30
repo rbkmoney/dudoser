@@ -15,6 +15,9 @@ import org.springframework.mail.MailSendException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.mail.SendFailedException;
 import java.util.List;
@@ -117,8 +120,16 @@ public class ScheduledMailHandlerServiceTest {
         }
 
         @Bean
-        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService) {
-            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor());
+        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService, TransactionTemplate transactionTemplate) {
+            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor(), transactionTemplate);
+        }
+
+        @Bean
+        public TransactionTemplate transactionTemplate() {
+            TransactionTemplate transactionTemplate = new TransactionTemplate(mock(PlatformTransactionManager.class));
+            transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+            transactionTemplate.setTimeout(10);
+            return transactionTemplate;
         }
 
     }

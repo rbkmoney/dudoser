@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.xbill.DNS.*;
 
 import java.util.Arrays;
@@ -33,6 +34,13 @@ public class MailSenderConfiguration {
     @Bean
     public ExecutorService mailSendingExecutorService(@Value("${message.sending.concurrency:8}") Integer concurrency) {
         return Executors.newFixedThreadPool(concurrency);
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler taskScheduler() {
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(10);
+        return  taskScheduler;
     }
 
     @Bean

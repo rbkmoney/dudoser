@@ -27,6 +27,7 @@ public class SchedulingTest {
     @Autowired
     MessageDao messageDao;
 
+
     @Test
     public void test() throws InterruptedException {
         Thread.sleep(1000);
