@@ -2,14 +2,13 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
-import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -22,7 +21,12 @@ import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ComponentScan(excludeFilters = @ComponentScan.Filter(classes = ScheduledMailHandlerService.class))
+@TestPropertySource(properties = {
+        //schedulers in context ):
+        "message.schedule.send=20000",
+        "message.schedule.clear.sent=20000",
+        "message.schedule.clear.failed=20000",
+})
 public class MessageDaoImplTest extends AbstractIntegrationTest {
 
     @Autowired
