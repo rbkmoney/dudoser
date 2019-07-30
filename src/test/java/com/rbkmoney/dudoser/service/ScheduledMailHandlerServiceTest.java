@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.hamcrest.MockitoHamcrest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -124,11 +123,10 @@ public class ScheduledMailHandlerServiceTest {
         }
 
         @Bean
-        public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager,
-                                                       @Value("${db.jdbc.tr_timeout}") int transactionTimeout) {
-            TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        public TransactionTemplate transactionTemplate() {
+            TransactionTemplate transactionTemplate = new TransactionTemplate(mock(PlatformTransactionManager.class));
             transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
-            transactionTemplate.setTimeout(transactionTimeout);
+            transactionTemplate.setTimeout(10);
             return transactionTemplate;
         }
 
