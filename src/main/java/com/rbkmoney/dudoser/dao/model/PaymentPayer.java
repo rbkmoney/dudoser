@@ -1,6 +1,5 @@
 package com.rbkmoney.dudoser.dao.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;

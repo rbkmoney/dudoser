@@ -2,15 +2,11 @@ package com.rbkmoney.dudoser.dao.mapper;
 
 import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
-import com.rbkmoney.geck.common.util.TypeUtil;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 
 public class PaymentPayerRowMapper implements RowMapper<PaymentPayer> {
 
@@ -34,9 +30,7 @@ public class PaymentPayerRowMapper implements RowMapper<PaymentPayer> {
         }
         paymentPayer.setToReceiver(rs.getString("to_receiver"));
 
-        Content content = new Content();
-        content.setType(rs.getString("content_type"));
-        content.setData(rs.getBytes("content_data"));
+        Content content = new Content(rs.getString("content_type"), rs.getBytes("content_data"));
         paymentPayer.setMetadata(content);
 
         return paymentPayer;

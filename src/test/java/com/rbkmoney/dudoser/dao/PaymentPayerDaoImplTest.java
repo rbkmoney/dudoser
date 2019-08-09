@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
+import com.rbkmoney.dudoser.TestData;
 import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
@@ -61,9 +62,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setPaymentId(paymentId);
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-03-22T06:12:27Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
-        Content content = new Content();
-        content.setType("test");
-        content.setData("{testField: 'testValue'}".getBytes(StandardCharsets.UTF_8));
+        Content content = new Content("test", TestData.kebMetadata());
         paymentPayer.setMetadata(content);
         //------ add payment info------
         paymentPayerDao.addPayment(paymentPayer);

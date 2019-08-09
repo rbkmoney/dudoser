@@ -34,9 +34,7 @@ public class TemplateTest extends AbstractIntegrationTest {
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         paymentPayer.setShopUrl("https://keb.test");
-        Content content = new Content();
-        content.setType("test");
-        content.setData(TestData.kebMetadata());
+        Content content = new Content("test", TestData.kebMetadata());
         paymentPayer.setMetadata(content);
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
