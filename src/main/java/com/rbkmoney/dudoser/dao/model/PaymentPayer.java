@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,4 +22,6 @@ public class PaymentPayer {
     private String shopUrl;
     private LocalDateTime date;
     private String toReceiver;
+    private Content metadata;
+
 }

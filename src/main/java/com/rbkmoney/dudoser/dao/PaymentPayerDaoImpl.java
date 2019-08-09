@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.mapper.PaymentPayerRowMapper;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.geck.common.util.TypeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,8 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
 
     @Override
     public void addPayment(final PaymentPayer payment) {
-        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type)) " +
+        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, payment_id, amount, currency, card_type, card_mask_pan, date, to_receiver, type, content_type, content_data) " +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, :payment_id, :amount, :currency, :card_type, :card_mask_pan, :date, :to_receiver, CAST(:type AS dudos.payment_type), :content_type, :content_data) " +
                 "ON CONFLICT (invoice_id, payment_id) WHERE payment_id is not null and refund_id is null DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", payment.getInvoiceId())
@@ -41,12 +42,14 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
                 .addValue("card_mask_pan", payment.getCardMaskPan())
                 .addValue("date", payment.getDate())
                 .addValue("to_receiver", payment.getToReceiver())
-                .addValue("type", PAYMENT.name());
+                .addValue("type", PAYMENT.name())
+                .addValue("content_type", payment.getMetadata() != null ? payment.getMetadata().getType() : null)
+                .addValue("content_data", payment.getMetadata() != null ? payment.getMetadata().getData() : null);
         try {
             getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't save payment info: {}.{}", payment.getInvoiceId(), payment.getPaymentId());
-            throw new DaoException("PaymentPayerDaoImpl.addPayment error with invoiceId "+ payment.getInvoiceId(), e);
+            throw new DaoException("PaymentPayerDaoImpl.addPayment error with invoiceId " + payment.getInvoiceId(), e);
         }
         log.info("Payment {}.{} added to table", payment.getInvoiceId(), payment.getPaymentId());
     }
@@ -66,7 +69,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
             getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't save invoice info: {}", invoiceId);
-            throw new DaoException("PaymentPayerDaoImpl.addInvoice error with invoiceId "+ invoiceId, e);
+            throw new DaoException("PaymentPayerDaoImpl.addInvoice error with invoiceId " + invoiceId, e);
         }
         log.info("Payment info with invoiceId {} added to table", invoiceId);
     }
@@ -95,7 +98,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
             getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't save refund info: {}.{}.{}", refund.getInvoiceId(), refund.getPaymentId(), refund.getRefundId());
-            throw new DaoException("PaymentPayerDaoImpl.addRefund error with invoiceId "+ refund.getInvoiceId(), e);
+            throw new DaoException("PaymentPayerDaoImpl.addRefund error with invoiceId " + refund.getInvoiceId(), e);
         }
         log.info("Refund with invoiceId {} added to table", refund.getInvoiceId());
     }
@@ -109,7 +112,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         PaymentPayer paymentPayer = null;
         try {
             paymentPayer = (PaymentPayer) getNamedParameterJdbcTemplate()
-                    .queryForObject(sql, params, new BeanPropertyRowMapper(PaymentPayer.class));
+                    .queryForObject(sql, params, new PaymentPayerRowMapper());
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
@@ -126,26 +129,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         PaymentPayer paymentPayer = null;
         try {
             paymentPayer = getNamedParameterJdbcTemplate()
-                    .queryForObject(sql, params, (resultSet, i) -> {
-                        PaymentPayer pp = new PaymentPayer();
-                        pp.setAmount(resultSet.getBigDecimal("amount"));
-                        pp.setRefundAmount(resultSet.getBigDecimal("refund_amount"));
-                        pp.setCurrency(resultSet.getString("currency"));
-                        pp.setCardType(resultSet.getString("card_type"));
-                        pp.setCardMaskPan(resultSet.getString("card_mask_pan"));
-                        pp.setInvoiceId(resultSet.getString("invoice_id"));
-                        pp.setPaymentId(resultSet.getString("payment_id"));
-                        pp.setRefundId(resultSet.getString("refund_id"));
-                        pp.setPartyId(resultSet.getString("party_id"));
-                        pp.setShopId(resultSet.getString("shop_id"));
-                        pp.setShopUrl(resultSet.getString("shop_url"));
-                        String sDate = resultSet.getString("date");
-                        if (sDate != null) {
-                            pp.setDate(TypeUtil.stringToLocalDateTime(sDate));
-                        }
-                        pp.setToReceiver(resultSet.getString("to_receiver"));
-                        return pp;
-                    });
+                    .queryForObject(sql, params, new PaymentPayerRowMapper());
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
@@ -164,7 +148,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
         PaymentPayer paymentPayer = null;
         try {
             paymentPayer = (PaymentPayer) getNamedParameterJdbcTemplate()
-                    .queryForObject(sql, params, new BeanPropertyRowMapper(PaymentPayer.class));
+                    .queryForObject(sql, params, new PaymentPayerRowMapper());
         } catch (EmptyResultDataAccessException e) {
             //do nothing
         } catch (NestedRuntimeException e) {
