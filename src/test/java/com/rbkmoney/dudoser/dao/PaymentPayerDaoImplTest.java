@@ -1,6 +1,8 @@
 package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.AbstractIntegrationTest;
+import com.rbkmoney.dudoser.TestData;
+import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
@@ -14,6 +16,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +60,10 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setCurrency("RUB");
         paymentPayer.setAmount(Converter.longToBigDecimal(111L));
         paymentPayer.setPaymentId(paymentId);
-        paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
+        paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-03-22T06:12:27Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
+        Content content = new Content("test", TestData.kebMetadata());
+        paymentPayer.setMetadata(content);
         //------ add payment info------
         paymentPayerDao.addPayment(paymentPayer);
         paymentId = "paymId2";

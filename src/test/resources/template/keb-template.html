@@ -1,0 +1,366 @@
+<!doctype html>
+<#assign kebMetadata = paymentPayer.metadata.getDataValue()?eval>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RBKmoney: Успешный платеж<#if paymentPayer.shopUrl??> на сайте ${paymentPayer.shopUrl}</#if></title>
+    <style type="text/css">
+        html,
+        body {
+            background-color: #685bff;
+            min-height: 100%;
+            min-width: 400px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            font-family: 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Verdana', 'Tahoma', sans-serif;
+        }
+
+        .overlay_container {
+            background-color: #685bff;
+            min-height: 100%;
+            min-width: 400px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            border-spacing: 0;
+        }
+
+        .main_container {
+            max-width: 340px;
+            margin: auto;
+            padding: 18px 5px 18px 5px;
+        }
+
+        .main_logo_container {
+            padding-left: 20px;
+        }
+
+        .content_table {
+            background-color: #ffffff;
+            border-radius: 7px;
+            width: 100%;
+            border-spacing: 0;
+            padding: 15px 20px;
+        }
+
+        .content_main_header {
+            color: #38cd8f;
+            font-size: 26px;
+            padding-top: 18px;
+            height: 38px;
+            margin: auto;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .content_main_description {
+            color: #353535;
+            font-size: 11px;
+            line-height: 11px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .content_main_description_link {
+            padding-top: 5px;
+            height: 40px;
+        }
+
+        .content_divider {
+            border-top: 1px solid #c3c3c3;
+            width: 100%;
+            height: 15px;
+        }
+
+        .content_inner_table {
+            height: 50px;
+            border-spacing: 0;
+        }
+
+        .content_small_header {
+            padding: 0;
+            vertical-align: bottom;
+            color: #c3c3c3;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            width: 70%;
+        }
+
+        .content_small_header_right {
+            width: 30%;
+        }
+
+        .content_small_text {
+            padding: 0;
+            vertical-align: top;
+            color: #353535;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .content_small_label {
+            border-radius: 3px;
+            border: 1px solid #c3c3c3;
+            color: #c3c3c3;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .support_text {
+            font-size: 9px;
+            color: #a7b9f9;
+            padding: 0 5px;
+        }
+
+        .support_link {
+            color: #a7b9f9;
+            text-decoration: none;
+        }
+
+        .support_email_link {
+            color: #a7b9f9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .w_100 {
+            width: 100%;
+        }
+
+        .link {
+            color: #685bff;
+            text-decoration: none;
+        }
+
+        .amount {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<table class="overlay_container">
+    <tr>
+        <td>
+            <center>
+                <table class="main_container">
+                    <tr>
+                        <td class="main_logo_container">
+                            <img height="34px" width=="67px" src="http://rbk.money/mail/img/logo.png" class="main_logo" alt="RBK.money logo">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="content_table">
+                                <tr>
+                                    <td align="center">
+                                        <h3 class="content_main_header">Успешный платеж</h3>
+                                        <h5 class="content_main_description">Благодарим за оплату заказа на сайте</h5>
+                                        <#if paymentPayer.shopUrl??>
+                                        <h5 class="content_main_description content_main_description_link">
+                                            <a href="${paymentPayer.shopUrl}" class="link">${paymentPayer.shopUrl}</a>
+                                        </h5>
+                                    </#if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table class="content_divider">
+                                            <tr>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Сумма</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text amount">${formattedAmount}</td>
+                                                <td class="content_small_header_right right">
+                                                    <span class="content_small_label">&nbsp;&nbsp;Оплачено&nbsp;&nbsp;</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Номер извещения</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">${paymentPayer.invoiceId}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Дата</td>
+                                                <!-- <td class="content_small_header_right content_small_header right">Time</td> -->
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">${paymentPayer.date.format('dd.MM.yyyy')}</td>
+                                                <!-- <td class="content_small_header_right content_small_text right">21:38</td> -->
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Наменование операции</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">
+                                                    Перевод для пополнения банковского счета В АО "Кредит Европа Банк"
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <#if kebMetadata.customerInitials??>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Плательщик</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">
+                                                    ${kebMetadata.customerInitials}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </#if>
+                                <#if kebMetadata.account??>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Номер счета получателя</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">${kebMetadata.account}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </#if>
+                                <#if kebMetadata.commission == 1>
+                                <tr>
+                                     <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Комиссиия</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">#{kebMetadata.commissionAmount; m2} ${paymentPayer.currency}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </#if>
+                                <#if kebMetadata.sum??>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Сумма перевода</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">#{kebMetadata.sum/100; m2} ${paymentPayer.currency}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </#if>
+                                <tr>
+                                    <td>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Email</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">
+                                                    <a class="link" href="mailto:${paymentPayer.toReceiver}">${paymentPayer.toReceiver}</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <#if paymentPayer.cardType??>
+                                        <table class="content_inner_table w_100">
+                                            <tr>
+                                                <td class="content_small_header">Способ оплаты</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="content_small_text">
+                                                    <#if paymentPayer.cardType??> Карта ${paymentPayer.cardType}
+                                                    <br> **** ${paymentPayer.cardMaskPan}
+                                                </#if>
+                                                </td>
+                                                <td class="content_small_header_right right">
+                                                    <#if paymentPayer.cardType??>
+                                                    <img height="32px" width=56px" src="http://rbk.money/mail/img/icons/${paymentPayer.cardType}.png" alt="Payment system logo" class="payment_system ">
+                                                </#if>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </#if>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="support_container ">
+                            <p class="support_text">
+                                Небанковская кредитная организация "Электронный платежный сервис" (Общество с ограниченной отвественность)
+                                адрес местонахождения: 115093? Москва, ул. Павловская, д.7, стр.1, ИНН 7750005700, БИК 044525313,
+                                осуществляет свою деятельность на основании лицензии Банка России № 3509-К от 11.02.2013г,
+                                сайт
+                                <a href="https://rbk.money" class="support_link">https://rbk.money</a>.
+                            </p>
+                            <p class="support_text">
+                                Если операция совершена не вами, напишите соответствующее заявление на нашу электронную почту
+                                <a href="mailto:support@rbk.money " class="support_email_link ">support@rbk.money</a>.
+                            </p>
+                            <p class="support_text">
+                                Телефон для справок по вопросам проведения платежей 8 800 200-88-20
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -21,4 +21,6 @@ public class PaymentPayer {
     private String shopUrl;
     private LocalDateTime date;
     private String toReceiver;
+    private Content metadata;
+
 }

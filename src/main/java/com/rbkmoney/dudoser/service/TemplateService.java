@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.service;
 
 import com.rbkmoney.dudoser.exception.UnknownException;
+import com.rbkmoney.dudoser.service.template.JsonParseMethod;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -35,6 +36,7 @@ public class TemplateService {
 
     public String getFilledContent(String templateString, Map<String, Object> model) {
         try {
+            model.put("jsonParse", new JsonParseMethod());
             Template t = new Template(UNUSED_TEMPLATE_NAME, new StringReader(templateString), freemarkerConfiguration);
             Writer out = new StringWriter();
             t.process(model, out);

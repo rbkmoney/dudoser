@@ -6,6 +6,7 @@ import com.rbkmoney.damsel.domain.Payer;
 import com.rbkmoney.damsel.domain.PaymentTool;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
+import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.utils.Converter;
@@ -55,6 +56,9 @@ public class PaymentStartedHandler implements PollingEventHandler{
                 paymentPayer.setInvoiceId(sourceId);
                 paymentPayer.setDate(TypeUtil.stringToLocalDateTime(invoicePayment.getCreatedAt()));
                 paymentPayer.setToReceiver(contactInfo.getEmail());
+
+                Content metadata = new Content(invoicePayment.getContext().getType() ,invoicePayment.getContext().getData());
+                paymentPayer.setMetadata(metadata);
 
                 paymentPayerDaoImpl.addPayment(paymentPayer);
                 log.info("PaymentStartedHandler: saved payment info, payment {}.{}", sourceId, paymentId);
