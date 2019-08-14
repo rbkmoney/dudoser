@@ -57,8 +57,10 @@ public class PaymentStartedHandler implements PollingEventHandler{
                 paymentPayer.setDate(TypeUtil.stringToLocalDateTime(invoicePayment.getCreatedAt()));
                 paymentPayer.setToReceiver(contactInfo.getEmail());
 
-                Content metadata = new Content(invoicePayment.getContext().getType() ,invoicePayment.getContext().getData());
-                paymentPayer.setMetadata(metadata);
+                if (invoicePayment.isSetContext()) {
+                    Content metadata = new Content(invoicePayment.getContext().getType(), invoicePayment.getContext().getData());
+                    paymentPayer.setMetadata(metadata);
+                }
 
                 paymentPayerDaoImpl.addPayment(paymentPayer);
                 log.info("PaymentStartedHandler: saved payment info, payment {}.{}", sourceId, paymentId);
