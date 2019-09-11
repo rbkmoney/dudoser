@@ -42,7 +42,7 @@ public class TemplateTest extends AbstractIntegrationTest {
         String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
         Assert.assertTrue(filledContent.contains("https://keb.test"));
         Assert.assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
-        Assert.assertTrue(filledContent.contains("0.01 RUB") || filledContent.contains("0,01 RUB"));
+        Assert.assertTrue(filledContent.contains("70.00 RUB") || filledContent.contains("70,00 RUB"));
         Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
     }
 
