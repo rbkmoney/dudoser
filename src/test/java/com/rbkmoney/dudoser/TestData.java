@@ -12,8 +12,8 @@ import java.util.Objects;
 public class TestData {
 
     public static byte[] kebMetadata() {
-        return ("{\"txnId\":\"12345678901234567890\",\"checkResultCode\":1,\"customerInitials\":\"Говнов Петр Сергеевич\"," +
-                "\"commission\":1,\"account\":\"40817810059900010245\",\"sum\":1000000,\"commissionAmount\":0.01}")
+        return ("{\"customer_initials\":\"Говнов Петр Сергеевич\"," +
+                "\"fee_type\":1,\"account\":\"40817810059900010245\",\"original_amount\":1000000,\"fee_amount\":7000}")
                 .getBytes(StandardCharsets.UTF_8);
     }
 
