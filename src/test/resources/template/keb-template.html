@@ -240,7 +240,7 @@
                                         </table>
                                     </td>
                                 </tr>
-                                <#if kebMetadata.customerInitials??>
+                                <#if kebMetadata.customer_initials??>
                                 <tr>
                                     <td>
                                         <table class="content_inner_table w_100">
@@ -249,7 +249,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="content_small_text">
-                                                    ${kebMetadata.customerInitials}
+                                                    ${kebMetadata.customer_initials}
                                                 </td>
                                             </tr>
                                         </table>
@@ -270,7 +270,7 @@
                                     </td>
                                 </tr>
                                 </#if>
-                                <#if kebMetadata.commission == 1>
+                                <#if kebMetadata.fee_type == 1>
                                 <tr>
                                      <td>
                                         <table class="content_inner_table w_100">
@@ -278,13 +278,13 @@
                                                 <td class="content_small_header">Комиссиия</td>
                                             </tr>
                                             <tr>
-                                                <td class="content_small_text">#{kebMetadata.commissionAmount; m2} ${paymentPayer.currency}</td>
+                                                <td class="content_small_text">#{kebMetadata.fee_amount; m2} ${paymentPayer.currency}</td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
                                 </#if>
-                                <#if kebMetadata.sum??>
+                                <#if kebMetadata.original_amount??>
                                 <tr>
                                     <td>
                                         <table class="content_inner_table w_100">
@@ -292,7 +292,7 @@
                                                 <td class="content_small_header">Сумма перевода</td>
                                             </tr>
                                             <tr>
-                                                <td class="content_small_text">#{kebMetadata.sum/100; m2} ${paymentPayer.currency}</td>
+                                                <td class="content_small_text">#{kebMetadata.original_amount/100; m2} ${paymentPayer.currency}</td>
                                             </tr>
                                         </table>
                                     </td>
