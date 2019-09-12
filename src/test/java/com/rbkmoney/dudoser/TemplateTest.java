@@ -27,7 +27,7 @@ public class TemplateTest extends AbstractIntegrationTest {
     public void cebTemplateTest() {
         PaymentPayer paymentPayer = buildPaymentPayer();
         Content content = new Content("test", TestData.kebMetadata());
-        paymentPayer.setMetadata(content);
+        paymentPayer.setInvoiceMetadata(content);
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
@@ -43,7 +43,7 @@ public class TemplateTest extends AbstractIntegrationTest {
     public void cebTemplateEmptyTest() {
         PaymentPayer paymentPayer = buildPaymentPayer();
         Content content = new Content("test", "".getBytes());
-        paymentPayer.setMetadata(content);
+        paymentPayer.setInvoiceMetadata(content);
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
