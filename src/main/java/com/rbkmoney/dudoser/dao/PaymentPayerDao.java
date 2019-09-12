@@ -1,5 +1,6 @@
 package com.rbkmoney.dudoser.dao;
 
+import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 
 import java.util.Optional;
@@ -8,7 +9,7 @@ public interface PaymentPayerDao {
 
     void addPayment(PaymentPayer paymentPayer) throws Exception;
 
-    void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl);
+    void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl, Content context);
 
     void addRefund(PaymentPayer paymentPayer);
 
