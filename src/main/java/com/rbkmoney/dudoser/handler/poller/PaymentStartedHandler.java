@@ -59,7 +59,7 @@ public class PaymentStartedHandler implements PollingEventHandler{
 
                 if (invoicePayment.isSetContext()) {
                     Content metadata = new Content(invoicePayment.getContext().getType(), invoicePayment.getContext().getData());
-                    paymentPayer.setMetadata(metadata);
+                    paymentPayer.setInvoiceMetadata(metadata);
                 }
 
                 paymentPayerDaoImpl.addPayment(paymentPayer);

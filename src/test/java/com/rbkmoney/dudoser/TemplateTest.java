@@ -2,6 +2,7 @@ package com.rbkmoney.dudoser;
 
 import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
+import com.rbkmoney.dudoser.exception.FillTemplateException;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
@@ -24,6 +25,35 @@ public class TemplateTest extends AbstractIntegrationTest {
 
     @Test
     public void cebTemplateTest() {
+        PaymentPayer paymentPayer = buildPaymentPayer();
+        Content content = new Content("test", TestData.kebMetadata());
+        paymentPayer.setInvoiceMetadata(content);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("paymentPayer", paymentPayer);
+        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
+        String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
+        Assert.assertTrue(filledContent.contains("https://keb.test"));
+        Assert.assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
+        Assert.assertTrue(filledContent.contains("10.00 RUB") || filledContent.contains("10,00 RUB"));
+        Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
+    }
+
+    @Test
+    public void cebTemplateEmptyTest() {
+        PaymentPayer paymentPayer = buildPaymentPayer();
+        Content content = new Content("test", "".getBytes());
+        paymentPayer.setInvoiceMetadata(content);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("paymentPayer", paymentPayer);
+        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
+        String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
+        Assert.assertTrue(filledContent.contains("https://keb.test"));
+        Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
+    }
+
+    private PaymentPayer buildPaymentPayer() {
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
@@ -34,16 +64,8 @@ public class TemplateTest extends AbstractIntegrationTest {
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
         paymentPayer.setShopUrl("https://keb.test");
-        Content content = new Content("test", TestData.kebMetadata());
-        paymentPayer.setMetadata(content);
-        Map<String, Object> model = new HashMap<>();
-        model.put("paymentPayer", paymentPayer);
-        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
-        String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
-        Assert.assertTrue(filledContent.contains("https://keb.test"));
-        Assert.assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
-        Assert.assertTrue(filledContent.contains("70.00 RUB") || filledContent.contains("70,00 RUB"));
-        Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
+
+        return paymentPayer;
     }
 
 }

@@ -6,6 +6,7 @@ import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.Template;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
+import com.rbkmoney.dudoser.exception.FillTemplateException;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +50,16 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
                 String partyId = payment.getPartyId();
                 String shopId = payment.getShopId();
                 Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
+
                 if (!template.isActive()) {
                     log.info("Not found active template for partyId={}, shopId={}", partyId, shopId);
                 } else {
-                    String text = templateService.getFilledContent(template.getBody(), model);
-                    mailHandlerService.storeMessage(payment.getToReceiver(), subject, text);
+                    try {
+                        String text = templateService.getFilledContent(template.getBody(), model);
+                        mailHandlerService.storeMessage(payment.getToReceiver(), subject, text);
+                    } catch (FillTemplateException e) {
+                        log.error("Html creation failed for partyId={}, shopId={}", partyId, shopId, e);
+                    }
                 }
             }
         } else {

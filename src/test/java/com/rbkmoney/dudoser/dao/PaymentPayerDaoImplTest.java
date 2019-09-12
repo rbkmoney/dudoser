@@ -16,8 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +44,10 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String paymentId = "paymId1";
         String partyId = "dsgsgr";
         String shopId = "1";
+        Content invoiceMetadata = new Content("test", TestData.kebMetadata());
         //--------add invoice-------------
-        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
-        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru", invoiceMetadata);
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru", invoiceMetadata);
 
         List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.payment_payer where type=CAST('INVOICE' AS dudos.payment_type)");
         Assert.assertEquals(1, list.size()); //invoice constraint
@@ -62,8 +61,6 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         paymentPayer.setPaymentId(paymentId);
         paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-03-22T06:12:27Z"));
         paymentPayer.setToReceiver("i.ars@rbk.com");
-        Content content = new Content("test", TestData.kebMetadata());
-        paymentPayer.setMetadata(content);
         //------ add payment info------
         paymentPayerDao.addPayment(paymentPayer);
         paymentId = "paymId2";
@@ -118,7 +115,7 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         String partyId = "dsgsgr4";
         String shopId = "1";
         //--------add invoice-------------
-        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru");
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.2ch.ru", null);
         //--------prepare payment info----
         PaymentPayer paymentPayer = new PaymentPayer();
         paymentPayer.setCurrency("RUB");

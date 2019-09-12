@@ -1,6 +1,7 @@
 package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.dao.mapper.PaymentPayerRowMapper;
+import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
@@ -53,16 +54,18 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
-    public void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl) {
-        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, type) " +
-                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type)) " +
+    public void addInvoice(String invoiceId, String partyId, String shopId, String shopUrl, Content context) {
+        final String sql = "INSERT INTO dudos.payment_payer(invoice_id, party_id, shop_id, shop_url, type, invoice_content_type, invoice_content_data) " +
+                "VALUES (:invoice_id, :party_id, :shop_id, :shop_url, CAST(:type AS dudos.payment_type), :invoice_content_type, :invoice_content_data) " +
                 "ON CONFLICT (invoice_id) WHERE payment_id is null and refund_id is null DO NOTHING";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("invoice_id", invoiceId)
                 .addValue("party_id", partyId)
                 .addValue("shop_id", shopId)
                 .addValue("shop_url", shopUrl)
-                .addValue("type", INVOICE.name());
+                .addValue("type", INVOICE.name())
+                .addValue("invoice_content_type", context != null ? context.getType() : null)
+                .addValue("invoice_content_data", context != null ? context.getData() : null);
         try {
             getNamedParameterJdbcTemplate().update(sql, params);
         } catch (NestedRuntimeException e) {

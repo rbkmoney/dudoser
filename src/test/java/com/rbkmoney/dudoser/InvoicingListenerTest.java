@@ -100,7 +100,6 @@ public class InvoicingListenerTest {
         Mockito.verify(ack, Mockito.times(1)).acknowledge();
     }
 
-
     private static SinkEvent createSinkEvent() {
         MachineEvent message = new MachineEvent();
         Value data = new Value();

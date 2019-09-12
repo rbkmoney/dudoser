@@ -33,6 +33,9 @@ public class PaymentPayerRowMapper implements RowMapper<PaymentPayer> {
         Content content = new Content(rs.getString("content_type"), rs.getBytes("content_data"));
         paymentPayer.setMetadata(content);
 
+        Content invoiceContent = new Content(rs.getString("invoice_content_type"), rs.getBytes("invoice_content_data"));
+        paymentPayer.setInvoiceMetadata(invoiceContent);
+
         return paymentPayer;
     }
 

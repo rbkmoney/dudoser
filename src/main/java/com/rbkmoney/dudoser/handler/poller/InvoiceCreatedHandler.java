@@ -4,6 +4,7 @@ import com.rbkmoney.damsel.domain.Invoice;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.DaoException;
 import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
+import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.PartyManagementService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,11 @@ public class InvoiceCreatedHandler implements PollingEventHandler {
         }
 
         log.info("Start creating invoice with id {}", invoice.getId());
-        paymentDao.addInvoice(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl);
+        Content content = null;
+        if (invoice.isSetContext()) {
+            content = new Content(invoice.getContext().getType(), invoice.getContext().getData());
+        }
+        paymentDao.addInvoice(invoice.getId(), invoice.getOwnerId(), invoice.getShopId(), shopUrl, content);
         log.info("End creating invoice with id {}", invoice.getId());
     }
 

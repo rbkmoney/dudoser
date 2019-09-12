@@ -1,6 +1,6 @@
 package com.rbkmoney.dudoser.dao.model;
 
-import lombok.*;
+import lombok.Data;
 
 import java.nio.charset.StandardCharsets;
 

@@ -1,10 +1,9 @@
 package com.rbkmoney.dudoser.service;
 
-import com.rbkmoney.dudoser.exception.UnknownException;
+import com.rbkmoney.dudoser.exception.FillTemplateException;
 import com.rbkmoney.dudoser.service.template.JsonParseMethod;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.api.freemarker.java8.Java8ObjectWrapper;
@@ -41,9 +40,9 @@ public class TemplateService {
             Writer out = new StringWriter();
             t.process(model, out);
             return out.toString();
-        } catch (IOException | TemplateException e) {
+        } catch (IOException | freemarker.template.TemplateException e) {
             log.error("Throwing unknown exception while template processing", e);
-            throw new UnknownException(e);
+            throw new FillTemplateException(e);
         }
     }
 }
