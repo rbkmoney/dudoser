@@ -1,5 +1,5 @@
 <!doctype html>
-<#assign metadata = paymentPayer.metadata.getDataValue()>
+<#assign metadata = paymentPayer.invoiceMetadata.getDataValue()>
 <#if metadata?has_content>
     <#assign kebMetadata=metadata?eval/>
 <#else>
