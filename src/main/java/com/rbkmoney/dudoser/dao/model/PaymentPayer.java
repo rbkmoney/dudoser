@@ -22,5 +22,6 @@ public class PaymentPayer {
     private LocalDateTime date;
     private String toReceiver;
     private Content metadata;
+    private Content invoiceMetadata;
 
 }
