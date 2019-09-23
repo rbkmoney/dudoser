@@ -106,7 +106,7 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
 
     @Override
     public Optional<PaymentPayer> getPaymentWithInvoiceData(String invoiceId, String paymentId) {
-        final String sql = "SELECT p.invoice_id, p.amount, p.currency, p.card_type, p.card_mask_pan, p.\"date\", p.to_receiver, p.party_id, p.shop_id, p.shop_url, p.payment_id, p.\"type\", p.content_type, p.content_data, i2.invoice_content_type, i2.invoice_content_data\n" +
+        final String sql = "SELECT p.invoice_id, p.amount, p.currency, p.card_type, p.card_mask_pan, p.\"date\", p.to_receiver, p.party_id, p.shop_id, p.shop_url, p.payment_id, p.refund_id, p.\"type\", p.refund_amount, p.content_type, p.content_data, i2.invoice_content_type, i2.invoice_content_data\n" +
                 "FROM dudos.payment_payer p,\n" +
                 "   (SELECT i.invoice_content_type, i.invoice_content_data\n" +
                 "   FROM dudos.payment_payer i\n" +
