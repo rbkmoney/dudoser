@@ -13,7 +13,7 @@ public class TestData {
 
     public static byte[] kebMetadata() {
         return ("{\"transaction_id\":\"12345678901234567890\",\"customer_initials\":\"Говнов Петр Сергеевич\"," +
-                "\"fee_type\":\"1\",\"account\":\"40817810059900010245\",\"original_amount\":1000000,\"fee_amount\":1000}")
+                "\"fee_type\":\"1\",\"account\":\"40817810059900010245\",\"original_amount\":\"1000000\",\"fee_amount\":\"1000\"}")
                 .getBytes(StandardCharsets.UTF_8);
     }
 
