@@ -105,6 +105,29 @@ public class PaymentPayerDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
+    public Optional<PaymentPayer> getPaymentWithInvoiceData(String invoiceId, String paymentId) {
+        final String sql = "SELECT p.invoice_id, p.amount, p.currency, p.card_type, p.card_mask_pan, p.\"date\", p.to_receiver, p.party_id, p.shop_id, p.shop_url, p.payment_id, p.refund_id, p.\"type\", p.refund_amount, p.content_type, p.content_data, i2.invoice_content_type, i2.invoice_content_data\n" +
+                "FROM dudos.payment_payer p,\n" +
+                "   (SELECT i.invoice_content_type, i.invoice_content_data\n" +
+                "   FROM dudos.payment_payer i\n" +
+                "   WHERE i.invoice_id=:invoice_id AND i.type=CAST(:invoice_type AS dudos.payment_type)) i2\n" +
+                "WHERE p.invoice_id=:invoice_id AND p.payment_id=:payment_id AND p.type=CAST(:payment_type AS dudos.payment_type)\n";
+        MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
+                .addValue("payment_id", paymentId)
+                .addValue("payment_type", PAYMENT.name())
+                .addValue("invoice_type", INVOICE.name());
+        PaymentPayer paymentPayer;
+        try {
+            paymentPayer = getNamedParameterJdbcTemplate().queryForObject(sql, params, new PaymentPayerRowMapper());
+        } catch (NestedRuntimeException e) {
+            throw new DaoException("PaymentPayerDaoImpl.getPaymentWithInvoiceData error with id " + invoiceId + "." + paymentId, e);
+        }
+
+        return Optional.ofNullable(paymentPayer);
+    }
+
+
+    @Override
     public Optional<PaymentPayer> getPayment(String invoiceId, String paymentId) {
         final String sql = "SELECT * FROM dudos.payment_payer WHERE invoice_id =:invoice_id AND payment_id=:payment_id AND type=CAST(:type AS dudos.payment_type) ORDER BY ID DESC LIMIT 1";
         MapSqlParameterSource params = new MapSqlParameterSource("invoice_id", invoiceId)
