@@ -13,6 +13,8 @@ public interface PaymentPayerDao {
 
     void addRefund(PaymentPayer paymentPayer);
 
+    Optional<PaymentPayer> getPaymentWithInvoiceData(String invoiceId, String paymentId);
+
     Optional<PaymentPayer> getPayment(String invoiceId, String paymentId);
 
     Optional<PaymentPayer> getInvoice(String invoiceId);

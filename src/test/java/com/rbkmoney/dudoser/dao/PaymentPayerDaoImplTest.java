@@ -16,9 +16,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -136,5 +138,31 @@ public class PaymentPayerDaoImplTest extends AbstractIntegrationTest{
         model.put("formattedAmount", Converter.getFormattedAmount(paymentPayerGet.getAmount(), paymentPayerGet.getCurrency()));
         String filledFreeMarkerTemplateContent = templateService.getFilledContent(freeMarkerTemplateContent, model);
         assertFalse(filledFreeMarkerTemplateContent.contains("Номер карты"));
+    }
+
+    @Test
+    public void paymentWithInvoiceDataTest() throws Exception {
+        String invoiceId = "testInvoiceId";
+        String paymentId = "testPaymentId";
+        String partyId = "testPartyId";
+        String shopId = "testShopId";
+        String invoiceMetadata = "{\"invoiceTestKey\": \"testValue\"}";
+        paymentPayerDao.addInvoice(invoiceId, partyId, shopId, "www.test.com",
+                new Content("application/json", invoiceMetadata.getBytes(StandardCharsets.UTF_8)));
+        PaymentPayer paymentPayer = new PaymentPayer();
+        paymentPayer.setCurrency("RUB");
+        paymentPayer.setAmount(Converter.longToBigDecimal(123L));
+        paymentPayer.setInvoiceId(invoiceId);
+        paymentPayer.setPaymentId(paymentId);
+        paymentPayer.setDate(TypeUtil.stringToLocalDateTime("2016-10-26T20:12:47.983390Z"));
+        paymentPayer.setToReceiver("i.ars@rbk.com");
+
+        String paymentMetadata = "{\"paymentTestKey\": \"testValue\"}";
+        paymentPayer.setMetadata(new Content("application/json", paymentMetadata.getBytes(StandardCharsets.UTF_8)));
+
+        paymentPayerDao.addPayment(paymentPayer);
+        Optional<PaymentPayer> paymentWithInvoiceData = paymentPayerDao.getPaymentWithInvoiceData(invoiceId, paymentId);
+        Assert.assertEquals(paymentMetadata, paymentWithInvoiceData.get().getMetadata().getDataValue());
+        Assert.assertEquals(invoiceMetadata, paymentWithInvoiceData.get().getInvoiceMetadata().getDataValue());
     }
 }
