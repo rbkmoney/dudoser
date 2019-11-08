@@ -54,7 +54,8 @@ message:
       sent: 86400000 # every day
       failed: 300000 # every 5 minutes
     send: 500 # 500 ms after completion of prev. execution
-  sending.concurrency: 8
+  sending:
+    concurrency: 8
 
 kafka:
   bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
