@@ -4,7 +4,7 @@ import com.rbkmoney.damsel.payment_processing.Event;
 import com.rbkmoney.damsel.payment_processing.EventPayload;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.exception.ParseException;
-import com.rbkmoney.dudoser.handler.poller.InvoicePaymentStatusChangedProcessedHandler;
+import com.rbkmoney.dudoser.handler.poller.InvoiceCreatedHandler;
 import com.rbkmoney.dudoser.listener.InvoicingKafkaListener;
 import com.rbkmoney.dudoser.service.HandlerManager;
 import com.rbkmoney.machinegun.eventsink.MachineEvent;
@@ -35,7 +35,7 @@ public class InvoicingListenerTest {
     @Mock
     private Acknowledgment ack;
     @Mock
-    private InvoicePaymentStatusChangedProcessedHandler handler;
+    private InvoiceCreatedHandler handler;
 
     private InvoicingKafkaListener listener;
 

@@ -1,13 +1,11 @@
 package com.rbkmoney.dudoser.dao.model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class PaymentPayer {
 
     private BigDecimal amount;

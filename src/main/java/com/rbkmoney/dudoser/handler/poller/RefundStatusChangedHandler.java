@@ -1,13 +1,11 @@
 package com.rbkmoney.dudoser.handler.poller;
 
-import com.rbkmoney.damsel.payment_processing.Invoice;
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
+import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
-import com.rbkmoney.dudoser.service.InvoicingService;
-import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
@@ -19,13 +17,8 @@ import java.util.Optional;
 @Component
 public class RefundStatusChangedHandler extends InvoicePaymentStatusChangedHandler {
 
-    private final InvoicingService invoicingService;
-    private final PaymentPayerService paymentPayerService;
-
-    public RefundStatusChangedHandler(TemplateDao templateDao, TemplateService templateService, ScheduledMailHandlerService mailHandlerService, InvoicingService invoicingService, PaymentPayerService paymentPayerService) {
-        super(templateDao, templateService, mailHandlerService);
-        this.invoicingService = invoicingService;
-        this.paymentPayerService = paymentPayerService;
+    public RefundStatusChangedHandler(TemplateDao templateDao, TemplateService templateService, PaymentPayerDaoImpl paymentPayerDaoImpl, ScheduledMailHandlerService handlerService) {
+        super(templateDao, templateService, paymentPayerDaoImpl, handlerService);
     }
 
     @Override
@@ -39,15 +32,10 @@ public class RefundStatusChangedHandler extends InvoicePaymentStatusChangedHandl
     }
 
     @Override
-    protected Optional<PaymentPayer> getPaymentPayer(InvoiceChange ic, String invoiceId, Long sequenceId) {
+    protected Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic) {
         String paymentId = ic.getInvoicePaymentChange().getId();
         String refundId = ic.getInvoicePaymentChange().getPayload().getInvoicePaymentRefundChange().getId();
-
-        Invoice invoice = invoicingService.get(invoiceId, sequenceId);
-
-        PaymentPayer paymentPayer = paymentPayerService.convert(invoice, invoiceId, paymentId, refundId);
-
-        return Optional.ofNullable(paymentPayer);
+        return paymentPayerDaoImpl.getRefund(invoiceId, paymentId, refundId);
     }
 
     @Override
