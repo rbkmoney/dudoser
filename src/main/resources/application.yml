@@ -1,7 +1,30 @@
+info:
+  version: @version@
+  stage: dev
+  scheduler-pool-size: 10
+  damsel:
+    version: @damsel.version@
+
+server:
+  port: @server.port@
+
 spring:
   application:
     name: @name@
     description: @description@
+  freemarker:
+    template-loader-path: classpath:templates/
+    prefer-file-system-access: true
+    charset: UTF-8
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: @db.url@
+    username: @db.user@
+    password: @db.password@
+    hikari:
+      maximum-pool-size: 3
+      idle-timeout: 30000
 
 retry-policy:
   maxAttempts: -1
@@ -57,15 +80,6 @@ kafka:
       enabled: false
 
 ---
-info:
-  version: @version@
-  stage: dev
-  damsel:
-    version: @damsel.version@
----
-server:
-  port: @server.port@
----
 
 hellgate:
   url: http://hellgate:8022/v1/processing/partymgmt
@@ -99,19 +113,3 @@ notification:
     invoice:
       from: no-reply@rbkmoney.com
       fileNameTemplate: create_invoice.ftl
-
-spring:
-  freemarker:
-    template-loader-path: classpath:templates/
-    prefer-file-system-access: true
-    charset: UTF-8
-
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: org.postgresql.Driver
-    url: @db.url@
-    username: @db.user@
-    password: @db.password@
-    hikari:
-      maximum-pool-size: 3
-      idle-timeout: 30000

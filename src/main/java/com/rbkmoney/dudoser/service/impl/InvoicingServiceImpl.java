@@ -16,25 +16,28 @@ public class InvoicingServiceImpl implements InvoicingService {
 
     private final InvoicingSrv.Iface invoicingClient;
 
-    private final UserInfo userInfo;
-
     @Override
     public Invoice get(String invoiceId, Long sequenceId) {
         try {
             log.info("Trying to get invoice, invoiceId='{}'", invoiceId);
-            Invoice invoice = invoicingClient.get(userInfo, invoiceId, getEventRange(sequenceId));
+            Invoice invoice = invoicingClient.get(getUserInfo(), invoiceId, getEventRange(sequenceId));
             log.info("Shop has been found, invoiceId='{}'", invoiceId);
             return invoice;
         } catch (InvoiceNotFound invoiceNotFound) {
-            throw new NotFoundException("Invoice not found", invoiceNotFound);
+            throw new NotFoundException(String.format("Invoice not found invoiceId=%s, sequenceId=%s", invoiceId, sequenceId), invoiceNotFound);
         } catch (TException e) {
-            throw new InvoicingClientException("Error receiving the invoice", e);
+            throw new InvoicingClientException(String.format("Error receiving the invoice invoiceId=%s, sequenceId=%s", invoiceId, sequenceId), e);
         }
     }
 
     private EventRange getEventRange(Long sequenceId) {
-        EventRange eventRange = new EventRange();
-        eventRange.setLimit(sequenceId.intValue());
-        return eventRange;
+        return new EventRange().setLimit(sequenceId.intValue());
+    }
+
+    private UserInfo getUserInfo() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId("someId");
+        userInfo.setType(UserType.service_user(new ServiceUser()));
+        return userInfo;
     }
 }

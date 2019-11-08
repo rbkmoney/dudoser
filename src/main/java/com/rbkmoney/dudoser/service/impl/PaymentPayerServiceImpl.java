@@ -28,7 +28,7 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
     public PaymentPayer convert(Invoice invoiceWrapper, String invoiceId, String paymentId) {
         var invoice = invoiceWrapper.getInvoice();
 
-        var invoicePayment = getInvoicePayment(invoiceWrapper, paymentId);
+        var invoicePayment = getInvoicePayment(invoiceWrapper, invoiceId, paymentId);
 
         ContactInfo contactInfo;
         PaymentTool paymentTool;
@@ -72,32 +72,9 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
 
     @Override
     public PaymentPayer convert(Invoice invoiceWrapper, String invoiceId, String paymentId, String refundId) {
-        var invoice = invoiceWrapper.getInvoice();
+        PaymentPayer paymentPayer = convert(invoiceWrapper, invoiceId, paymentId);
 
-        var invoicePayment = getInvoicePayment(invoiceWrapper, paymentId);
-
-        var invoicePaymentRefund = getInvoicePaymentRefund(invoiceWrapper, paymentId, refundId);
-
-        ContactInfo contactInfo;
-        PaymentTool paymentTool;
-        Payer payer = invoicePayment.getPayer();
-        if (payer.isSetCustomer()) {
-            contactInfo = payer.getCustomer().getContactInfo();
-            paymentTool = payer.getCustomer().getPaymentTool();
-        } else if (payer.isSetPaymentResource()) {
-            contactInfo = payer.getPaymentResource().getContactInfo();
-            paymentTool = payer.getPaymentResource().getResource().getPaymentTool();
-        } else {
-            contactInfo = payer.getRecurrent().getContactInfo();
-            paymentTool = payer.getRecurrent().getPaymentTool();
-        }
-
-        String maskedPan = null;
-        String cardType = null;
-        if (paymentTool.isSetBankCard()) {
-            maskedPan = paymentTool.getBankCard().getMaskedPan();
-            cardType = paymentTool.getBankCard().getPaymentSystem().name();
-        }
+        var invoicePaymentRefund = getInvoicePaymentRefund(invoiceWrapper, invoiceId, paymentId, refundId);
 
         BigDecimal refundAmount;
         String currency;
@@ -105,42 +82,31 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
             refundAmount = getAmount(invoicePaymentRefund.getCash());
             currency = getSymbolicCode(invoicePaymentRefund.getCash());
         } else {
-            refundAmount = getAmount(invoicePayment.getCost());
-            currency = getSymbolicCode(invoicePayment.getCost());
+            refundAmount = paymentPayer.getAmount();
+            currency = paymentPayer.getCurrency();
         }
 
-        return PaymentPayer.builder()
-                .amount(getAmount(invoicePayment.getCost()))
-                .refundAmount(refundAmount)
-                .currency(currency)
-                .cardType(cardType)
-                .cardMaskPan(maskedPan)
-                .invoiceId(invoiceId)
-                .paymentId(paymentId)
-                .refundId(refundId)
-                .partyId(invoice.getOwnerId())
-                .shopId(invoice.getShopId())
-                .shopUrl(getShopUrl(invoice))
-                .date(stringToLocalDateTime(invoicePaymentRefund.getCreatedAt()))
-                .toReceiver(contactInfo.getEmail())
-                .metadata(getMetadata(invoicePayment))
-                .invoiceMetadata(getInvoiceMetadata(invoice))
-                .build();
+        paymentPayer.setRefundId(refundId);
+        paymentPayer.setDate(stringToLocalDateTime(invoicePaymentRefund.getCreatedAt()));
+        paymentPayer.setRefundAmount(refundAmount);
+        paymentPayer.setCurrency(currency);
+
+        return paymentPayer;
     }
 
-    private com.rbkmoney.damsel.domain.InvoicePayment getInvoicePayment(Invoice invoice, String paymentId) {
+    private com.rbkmoney.damsel.domain.InvoicePayment getInvoicePayment(Invoice invoice, String invoiceId, String paymentId) {
         return invoice.getPayments().stream()
                 .filter(invoicePayment -> paymentId.equals(invoicePayment.getPayment().getId()))
                 .findFirst()
                 .map(InvoicePayment::getPayment)
                 .orElseThrow(
                         () -> {
-                            throw new NotFoundException(getNotFoundMessage(invoice, paymentId));
+                            throw new NotFoundException(getNotFoundMessage(invoiceId, paymentId));
                         }
                 );
     }
 
-    private InvoicePaymentRefund getInvoicePaymentRefund(Invoice invoice, String paymentId, String refundId) {
+    private InvoicePaymentRefund getInvoicePaymentRefund(Invoice invoice, String invoiceId, String paymentId, String refundId) {
         return invoice.getPayments().stream()
                 .filter(invoicePayment -> paymentId.equals(invoicePayment.getPayment().getId()))
                 .findFirst()
@@ -152,17 +118,17 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
                 )
                 .orElseThrow(
                         () -> {
-                            throw new NotFoundException(getNotFoundMessage(invoice, paymentId, refundId));
+                            throw new NotFoundException(getNotFoundMessage(invoiceId, paymentId, refundId));
                         }
                 );
     }
 
-    private String getNotFoundMessage(Invoice invoice, String paymentId) {
-        return String.format("InvoicePayment not found, invoiceId='%s', paymentId='%s'", invoice.getInvoice().getId(), paymentId);
+    private String getNotFoundMessage(String invoiceId, String paymentId) {
+        return String.format("InvoicePayment not found, invoiceId='%s', paymentId='%s'", invoiceId, paymentId);
     }
 
-    private String getNotFoundMessage(Invoice invoice, String paymentId, String refundId) {
-        return String.format("InvoicePaymentRefund not found, invoiceId='%s', paymentId='%s', refundId='%s'", invoice.getInvoice().getId(), paymentId, refundId);
+    private String getNotFoundMessage(String invoiceId, String paymentId, String refundId) {
+        return String.format("InvoicePaymentRefund not found, invoiceId='%s', paymentId='%s', refundId='%s'", invoiceId, paymentId, refundId);
     }
 
     private String getShopUrl(com.rbkmoney.damsel.domain.Invoice invoice) {
