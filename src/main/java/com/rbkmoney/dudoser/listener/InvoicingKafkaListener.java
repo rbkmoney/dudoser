@@ -25,8 +25,10 @@ public class InvoicingKafkaListener {
             for (InvoiceChange invoiceChange : payload.getInvoiceChanges()) {
                 try {
                     handlerManager.getHandler(invoiceChange)
-                            .ifPresentOrElse(handler -> handler.handle(invoiceChange, sinkEvent.getEvent().getSourceId()),
-                                    () -> log.debug("Handler for invoiceChange {} wasn't found (machineEvent {})", invoiceChange, sinkEvent.getEvent()));
+                            .ifPresentOrElse(
+                                    handler -> handler.handle(invoiceChange, sinkEvent.getEvent().getSourceId(), sinkEvent.getEvent().getEventId()),
+                                    () -> log.debug("Handler for invoiceChange {} wasn't found (machineEvent {})", invoiceChange, sinkEvent.getEvent())
+                            );
                 } catch (Exception ex) {
                     log.error("Failed to handle invoice change, invoiceChange='{}'", invoiceChange, ex);
                     try {
