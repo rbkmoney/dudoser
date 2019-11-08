@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 @AllArgsConstructor
 public class Content {
 
-    public String type;
-    public byte[] data;
+    private String type;
+    private byte[] data;
 
     public String getDataValue() {
         if (data != null) {

@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 public class InvoicingServiceImpl implements InvoicingService {
 
     private final InvoicingSrv.Iface invoicingClient;
+    private final UserInfo userInfo = getUserInfo();
 
     @Override
     public Invoice get(String invoiceId, Long sequenceId) {
         try {
             log.info("Trying to get invoice, invoiceId='{}'", invoiceId);
-            Invoice invoice = invoicingClient.get(getUserInfo(), invoiceId, getEventRange(sequenceId));
+            Invoice invoice = invoicingClient.get(userInfo, invoiceId, getEventRange(sequenceId));
             log.info("Shop has been found, invoiceId='{}'", invoiceId);
             return invoice;
         } catch (InvoiceNotFound invoiceNotFound) {
