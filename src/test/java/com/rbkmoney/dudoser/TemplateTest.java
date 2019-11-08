@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser;
 
 import com.rbkmoney.dudoser.dao.model.Content;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
-import com.rbkmoney.dudoser.exception.FillTemplateException;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
@@ -54,7 +53,7 @@ public class TemplateTest extends AbstractIntegrationTest {
     }
 
     private PaymentPayer buildPaymentPayer() {
-        PaymentPayer paymentPayer = new PaymentPayer();
+        PaymentPayer paymentPayer = PaymentPayer.builder().build();
         paymentPayer.setCardType("visa");
         paymentPayer.setCardMaskPan("5555");
         paymentPayer.setCurrency("RUB");

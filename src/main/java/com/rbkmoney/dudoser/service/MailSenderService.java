@@ -18,10 +18,6 @@ public class MailSenderService {
 
     private final List<JavaMailSender> mailSenders;
 
-    private JavaMailSender getRandomMailSender() {
-        return mailSenders.get(new Random().nextInt(mailSenders.size()));
-    }
-
     public void send(String from, String[] to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach) throws MailNotSendException {
         try {
             JavaMailSender mailSender = getRandomMailSender();
@@ -40,6 +36,10 @@ public class MailSenderService {
         } catch (Exception e) {
             throw new MailNotSendException("Couldn't send mail", e);
         }
+    }
+
+    private JavaMailSender getRandomMailSender() {
+        return mailSenders.get(new Random().nextInt(mailSenders.size()));
     }
 }
 

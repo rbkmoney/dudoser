@@ -9,10 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-/**
- * @since 20.06.17
- **/
-
 @RequiredArgsConstructor
 @Service
 public class PartyManagementService {

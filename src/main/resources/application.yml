@@ -17,6 +17,9 @@ db:
   jdbc:
     tr_timeout: 300000
 
+invoicing-service:
+  url: http://invoicing:8023/v1/invoicing
+  networkTimeout: 120000
 
 message:
   fail:
@@ -52,15 +55,6 @@ kafka:
     invoice:
       id: mg-invoice-100-2
       enabled: false
-
-bm:
-  pooling:
-    url: http://localhost:8023/repo
-    maxPoolSize: 1
-    delay: 5000
-    retryDelay: 5000
-    housekeeperTimeout: 15000
-    workersCount: 5
 
 ---
 info:
