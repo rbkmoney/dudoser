@@ -49,40 +49,24 @@ public class ScheduledMailHandlerService {
 
     @Scheduled(fixedRateString = "${message.schedule.send}")
     public void send() {
-        transactionTemplate.execute(
-                status -> {
-                    sendInternal();
-                    return null;
-                }
-        );
-    }
-
-    @Scheduled(fixedRateString = "${message.schedule.clear.sent}")
-    public void clearSentMessages() {
-        log.info("Sent message clearing started.");
-        messageDao.deleteMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS), true);
-    }
-
-    @Scheduled(fixedRateString = "${message.schedule.clear.failed}")
-    public void clearFailedMessages() {
-        log.info("Failed message clearing started.");
-        messageDao.deleteMessages(Instant.now().minus(failTime, ChronoUnit.MINUTES), false);
+        transactionTemplate.execute(status -> {
+            sendInternal();
+            return null;
+        });
     }
 
     private void sendInternal() {
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
         log.info("Mail sending started... Messages to send: {}", unsentMessages.size());
 
-        Map<MessageToSend, Boolean> messageSendResults = unsentMessages.stream()
-                .map(
-                        messageToSend -> Map.entry(
-                                messageToSend,
-                                CompletableFuture.supplyAsync(() -> sendSucceeded(messageToSend), mailSendingExecutorService)
-                        )
-                )
+        Map<MessageToSend, Boolean> messageSendResults = unsentMessages
+                .stream()
+                .map(messageToSend -> Map.entry(messageToSend,
+                        CompletableFuture.supplyAsync(() -> sendSucceeded(messageToSend), mailSendingExecutorService)))
                 .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().join()));
 
-        List<MessageToSend> sentMessages = messageSendResults.entrySet().stream()
+        List<MessageToSend> sentMessages = messageSendResults.entrySet()
+                .stream()
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
@@ -94,32 +78,45 @@ public class ScheduledMailHandlerService {
 
     private boolean sendSucceeded(MessageToSend messageToSend) {
         try {
-            mailSenderService.send(
-                    from,
+            mailSenderService.send(from,
                     new String[]{messageToSend.getReceiver()},
                     messageToSend.getSubject(),
                     messageToSend.getBody(),
-                    null
-            );
+                    null);
             log.info("Message with subject {} was sent to {}", messageToSend.getSubject(), messageToSend.getReceiver());
             return true;
         } catch (MailNotSendException e) {
             Throwable mostSpecificCause = NestedExceptionUtils.getMostSpecificCause(e);
             if (mostSpecificCause instanceof MailSendException
-                    && isEmailAddressNotExist((MailSendException) mostSpecificCause)) {
+                    && ((MailSendException) mostSpecificCause)
+                        .getFailedMessages()
+                        .values()
+                        .stream()
+                        .anyMatch(err ->
+                                NestedExceptionUtils.getMostSpecificCause(err) instanceof SMTPAddressFailedException)) {
                 log.info("Can't find email address, receiver: {}", messageToSend.getReceiver());
                 return true; //we don't need to retry it
             }
-            log.error("Mail wasn't send, subject: {}, receiver: {}", messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            log.error("Mail wasn't send, subject: {}, receiver: {}",
+                    messageToSend.getSubject(), messageToSend.getReceiver(), e);
             return false;
         } catch (Exception e) {
-            log.error("Unexpected exception while sending message, subject: {}, receiver: {}", messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            log.error("Unexpected exception while sending message, subject: {}, receiver: {}",
+                    messageToSend.getSubject(), messageToSend.getReceiver(), e);
             return false;
         }
     }
 
-    private boolean isEmailAddressNotExist(MailSendException mostSpecificCause) {
-        return mostSpecificCause.getFailedMessages().values().stream()
-                .anyMatch(err -> NestedExceptionUtils.getMostSpecificCause(err) instanceof SMTPAddressFailedException);
+    @Scheduled(fixedRateString = "${message.schedule.clear.sent}")
+    public void clearSentMessages() {
+        log.info("Message clearing started.");
+        messageDao.deleteMessages(Instant.now().minus(storeDays, ChronoUnit.DAYS), true);
     }
+
+    @Scheduled(fixedRateString = "${message.schedule.clear.failed}")
+    public void clearFailedMessages() {
+        log.info("Message clearing started.");
+        messageDao.deleteMessages(Instant.now().minus(failTime, ChronoUnit.MINUTES), false);
+    }
+
 }

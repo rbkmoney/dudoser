@@ -1,0 +1,84 @@
+version: '2'
+services:
+  hellgate:
+    image: dr.rbkmoney.com/rbkmoney/hellgate:ee85cc90d487c2d7d870a6912171da4bbc41af4d
+    container_name: hellgate
+    volumes:
+      - ./hellgate/sys.config:/opt/hellgate/releases/0.1/sys.config
+    depends_on:
+      - machinegun
+      - capi
+    restart: on-failure:3
+
+  machinegun:
+    image: dr.rbkmoney.com/rbkmoney/machinegun:cc5985c4b1ea385eba141995c37ebc67093a1fe7
+    container_name: machinegun
+    volumes:
+      - ./machinegun/sys.config:/opt/machinegun/releases/0.1.0/sys.config
+    restart: on-failure:3
+
+  bustermaze:
+    image: dr.rbkmoney.com/rbkmoney/bustermaze:c205978e6ce9533eda06191da34883c71159ecc1
+    container_name: bustermaze
+    ports:
+      - "8081:8081"
+    command: |
+      --db.jdbc.url=jdbc:postgresql://bustermaze_psql:5432/bustermaze
+      --db.username=bustermaze
+      --db.password=bustermaze
+      --hg.pooling.url=http://hellgate:8022/v1/processing/eventsink
+    depends_on:
+      - hellgate
+      - bustermaze_psql
+    restart: on-failure:3
+
+  bustermaze_psql:
+    image: dr.rbkmoney.com/rbkmoney/postgres:9.6
+    container_name: bustermaze_psql
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DATABASE=bustermaze
+      - POSTGRES_USER=bustermaze
+      - POSTGRES_PASSWORD=bustermaze
+      - POSTGRES_ROOT_PASSWORD=bustermaze
+
+  capi:
+    image: dr.rbkmoney.com/rbkmoney/capi:e5b7ffabf6e6f935b1c3614037ca7fe95d2ba77a
+    container_name: capi
+    volumes:
+      - ./capi/sys.config:/opt/capi/releases/0.1.0/sys.config
+    depends_on:
+      - cds
+    restart: on-failure:3
+
+  cds:
+     image: dr.rbkmoney.com/rbkmoney/cds:dbbf05f7bcdb39a85ca12d290aeecea1bada89d1
+     ports:
+         - "8021:8022"
+     command: /opt/cds/bin/cds foreground
+     restart: on-failure:3
+
+  proxy_vtb:
+    depends_on:
+      - cds
+    image: dr.rbkmoney.com/rbkmoney/proxy_vtb:1d11da8c953163bfbc21d12796f70c41c85afdc7
+    ports:
+        - "8023:8022"
+    command: |
+      java
+      -Xmx256m
+      -jar /opt/proxy_vtb/proxy_vtb.jar
+      --server.port=8022
+      --cds.url.storage=http://cds:8021/v1/storage
+    working_dir: /opt/proxy_vtb
+    extra_hosts:
+      - mishop02.multicarta.ru:91.198.98.29
+    restart: on-failure:3
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "false"
