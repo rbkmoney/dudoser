@@ -2,7 +2,6 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
-import com.rbkmoney.dudoser.dao.PaymentPayerDaoImpl;
 import com.rbkmoney.dudoser.dao.Template;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
@@ -24,15 +23,13 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
     private final TemplateService templateService;
 
-    protected final PaymentPayerDaoImpl paymentPayerDaoImpl;
-
     private final ScheduledMailHandlerService mailHandlerService;
 
     @Override
-    public void handle(InvoiceChange ic, String sourceId) {
+    public void handle(InvoiceChange ic, String sourceId, Long sequenceId) {
         String paymentId = ic.getInvoicePaymentChange().getId();
         log.info("Start InvoicePaymentStatusChangedHandler: payment change {}.{}", sourceId, paymentId);
-        Optional<PaymentPayer> paymentPayer = getPaymentPayer(sourceId, ic);
+        Optional<PaymentPayer> paymentPayer = getPaymentPayer(ic, sourceId, sequenceId);
         if (paymentPayer.isPresent()) {
             PaymentPayer payment = paymentPayer.get();
             if (payment.getToReceiver() == null) {
@@ -70,7 +67,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
     protected abstract String getFormattedAmount(PaymentPayer payment);
 
-    protected abstract Optional<PaymentPayer> getPaymentPayer(String invoiceId, InvoiceChange ic);
+    protected abstract Optional<PaymentPayer> getPaymentPayer(InvoiceChange ic, String invoiceId, Long sequenceId);
 
     protected abstract String getMailSubject();
 

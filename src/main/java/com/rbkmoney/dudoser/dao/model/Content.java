@@ -1,13 +1,18 @@
 package com.rbkmoney.dudoser.dao.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Content {
-    public final String type;
-    public final byte[] data;
+
+    private String type;
+    private byte[] data;
 
     public String getDataValue() {
         if (data != null) {

@@ -13,7 +13,7 @@ public class PaymentPayerTest {
 
     @Before
     public void setUp() {
-        paymentPayer = new PaymentPayer();
+        paymentPayer = PaymentPayer.builder().build();
     }
 
     @Test

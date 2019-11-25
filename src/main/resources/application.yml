@@ -1,7 +1,30 @@
+info:
+  version: @version@
+  stage: dev
+  scheduler-pool-size: 4
+  damsel:
+    version: @damsel.version@
+
+server:
+  port: @server.port@
+
 spring:
   application:
     name: @name@
     description: @description@
+  freemarker:
+    template-loader-path: classpath:templates/
+    prefer-file-system-access: true
+    charset: UTF-8
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: @db.url@
+    username: @db.user@
+    password: @db.password@
+    hikari:
+      maximum-pool-size: 3
+      idle-timeout: 30000
 
 retry-policy:
   maxAttempts: -1
@@ -17,6 +40,9 @@ db:
   jdbc:
     tr_timeout: 300000
 
+invoicing-service:
+  url: http://invoicing:8023/v1/invoicing
+  networkTimeout: 120000
 
 message:
   fail:
@@ -28,7 +54,8 @@ message:
       sent: 86400000 # every day
       failed: 300000 # every 5 minutes
     send: 500 # 500 ms after completion of prev. execution
-  sending.concurrency: 8
+  sending:
+    concurrency: 8
 
 kafka:
   bootstrap-servers: kenny-kafka1.bst1.rbkmoney.net:9092
@@ -53,24 +80,6 @@ kafka:
       id: mg-invoice-100-2
       enabled: false
 
-bm:
-  pooling:
-    url: http://localhost:8023/repo
-    maxPoolSize: 1
-    delay: 5000
-    retryDelay: 5000
-    housekeeperTimeout: 15000
-    workersCount: 5
-
----
-info:
-  version: @version@
-  stage: dev
-  damsel:
-    version: @damsel.version@
----
-server:
-  port: @server.port@
 ---
 
 hellgate:
@@ -105,19 +114,3 @@ notification:
     invoice:
       from: no-reply@rbkmoney.com
       fileNameTemplate: create_invoice.ftl
-
-spring:
-  freemarker:
-    template-loader-path: classpath:templates/
-    prefer-file-system-access: true
-    charset: UTF-8
-
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: org.postgresql.Driver
-    url: @db.url@
-    username: @db.user@
-    password: @db.password@
-    hikari:
-      maximum-pool-size: 3
-      idle-timeout: 30000
