@@ -1,6 +1,9 @@
 package com.rbkmoney.dudoser.configuration;
 
-import com.rbkmoney.dudoser.dao.*;
+import com.rbkmoney.dudoser.dao.MessageDao;
+import com.rbkmoney.dudoser.dao.MessageDaoImpl;
+import com.rbkmoney.dudoser.dao.TemplateDao;
+import com.rbkmoney.dudoser.dao.TemplateDaoImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +16,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DaoConfiguration {
-
-    @Bean
-    public LastEventDao lastEventDao(DataSource dataSource) {
-        return new LastEventDaoImpl(dataSource);
-    }
 
     @Bean
     public TemplateDao templateDao(DataSource dataSource) {
