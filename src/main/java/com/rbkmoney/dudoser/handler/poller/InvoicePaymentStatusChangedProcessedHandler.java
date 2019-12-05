@@ -12,19 +12,24 @@ import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.dudoser.utils.mail.MailSubject;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentStatusChangedHandler {
 
     private final InvoicingService invoicingService;
     private final PaymentPayerService paymentPayerService;
 
-    public InvoicePaymentStatusChangedProcessedHandler(TemplateDao templateDao, TemplateService templateService, ScheduledMailHandlerService mailHandlerService, InvoicingService invoicingService, InvoicingService invoicingService1, PaymentPayerService paymentPayerService) {
+    public InvoicePaymentStatusChangedProcessedHandler(
+            TemplateDao templateDao,
+            TemplateService templateService,
+            ScheduledMailHandlerService mailHandlerService,
+            InvoicingService invoicingService,
+            PaymentPayerService paymentPayerService) {
         super(templateDao, templateService, mailHandlerService);
-        this.invoicingService = invoicingService1;
+        this.invoicingService = invoicingService;
         this.paymentPayerService = paymentPayerService;
     }
 
@@ -39,11 +44,12 @@ public class InvoicePaymentStatusChangedProcessedHandler extends InvoicePaymentS
     }
 
     @Override
-    protected Optional<PaymentPayer> getPaymentPayer(InvoiceChange ic, String invoiceId, Long sequenceId) {
-        String paymentId = ic.getInvoicePaymentChange().getId();
-
+    protected Optional<PaymentPayer> getPaymentPayer(
+            InvoiceChange invoiceChange,
+            String invoiceId,
+            Long sequenceId) {
+        String paymentId = invoiceChange.getInvoicePaymentChange().getId();
         Invoice invoice = invoicingService.get(invoiceId, sequenceId);
-
         PaymentPayer paymentPayer = paymentPayerService.convert(invoice, invoiceId, paymentId);
 
         return Optional.ofNullable(paymentPayer);
