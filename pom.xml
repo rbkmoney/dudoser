@@ -175,6 +175,11 @@
             <artifactId>shared-resources</artifactId>
             <version>${shared.resources.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>custom-actuator-endpoints</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <!--Test libs-->
         <dependency>
             <groupId>com.rbkmoney</groupId>
