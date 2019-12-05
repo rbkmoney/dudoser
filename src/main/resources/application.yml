@@ -35,6 +35,9 @@ management:
       statsd:
         flavor: etsy
         enabled: false
+  endpoint:
+    health:
+      show-details: always
 
 db:
   jdbc:
@@ -62,13 +65,13 @@ kafka:
   client-id: dudoser
   ssl:
     enabled: false
-#    trust-store-location: "test"
-#    trust-store-password: "test"
-#    key-store-location: "test"
-#    key-store-password: "test"
-#    key-password: "test"
-#    key-store-type: PKCS12
-#    trust-store-type: PKCS12
+  #    trust-store-location: "test"
+  #    trust-store-password: "test"
+  #    key-store-location: "test"
+  #    key-store-password: "test"
+  #    key-password: "test"
+  #    key-store-type: PKCS12
+  #    trust-store-type: PKCS12
   consumer:
     concurrency: 8
     group-id: "DudoserListener"
