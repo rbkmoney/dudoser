@@ -112,7 +112,8 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
                 .findFirst()
                 .map(
                         invoicePayment -> invoicePayment.getRefunds().stream()
-                                .filter(invoicePaymentRefund -> refundId.equals(invoicePaymentRefund.getId()))
+                                .map(com.rbkmoney.damsel.payment_processing.InvoicePaymentRefund::getRefund)
+                                .filter(refund -> refundId.equals(refund.getId()))
                                 .findFirst()
                                 .orElse(null)
                 )
