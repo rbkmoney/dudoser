@@ -29,7 +29,7 @@ public class TemplateDaoImplTest extends AbstractIntegrationTest {
     public void setUp() {
         jdbcTemplate.update("update dudos.templates set subject=:subject where id=:id",
                 new MapSqlParameterSource().addValue("subject", SUBJECT)
-                        .addValue("id", 11));
+                        .addValue("id", 14));
     }
     @Test
     public void getTemplateBodyByMerchShopParams() {
