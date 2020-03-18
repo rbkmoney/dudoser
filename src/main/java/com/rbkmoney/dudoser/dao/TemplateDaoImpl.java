@@ -21,20 +21,20 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
     public Template getTemplateBodyByMerchShopParams(EventTypeCode typeCode, String merchId, String shopId) {
         log.debug("getTemplateBodyByMerchShopParams request. TypeCode = {}, merchId = {}, shopId = {}", typeCode, merchId, shopId);
         final String sql =
-                "select body, is_active from (" +
-                        "select 1 as id, t.body, msb.is_active " +
+                "select body, subject, is_active from (" +
+                        "select 1 as id, t.body, t.subject, msb.is_active " +
                         "from dudos.templates t, " +
                         "dudos.merchant_shop_template_types mstt, " +
                         "dudos.merchant_shop_bind msb " +
                         "where mstt.id=msb.type and msb.template_id=t.id and mstt.code=:code and msb.merch_id=:merch_id and msb.shop_id=:shop_id " +
                         "union all " +
-                        "select 2 as id, t.body, msb.is_active " +
+                        "select 2 as id, t.body, t.subject, msb.is_active " +
                         "from dudos.templates t, " +
                         "dudos.merchant_shop_template_types mstt, " +
                         "dudos.merchant_shop_bind msb " +
                         "where mstt.id=msb.type and msb.template_id=t.id and mstt.code=:code and msb.merch_id=:merch_id and msb.shop_id is null " +
                         "union all " +
-                        "select 3 as id, t.body, msb.is_active " +
+                        "select 3 as id, t.body, t.subject, msb.is_active " +
                         "from dudos.templates t, " +
                         "dudos.merchant_shop_template_types mstt, " +
                         "dudos.merchant_shop_bind msb " +
@@ -48,7 +48,7 @@ public class TemplateDaoImpl extends NamedParameterJdbcDaoSupport implements Tem
 
         try {
             return getNamedParameterJdbcTemplate().queryForObject(sql, params, (rs, rowNum) ->
-                    new Template(rs.getString("body"), rs.getBoolean("is_active")));
+                    new Template(rs.getString("body"), rs.getString("subject"), rs.getBoolean("is_active")));
         } catch (NestedRuntimeException e) {
             log.warn("Couldn't find template", e);
             throw new DaoException(String.format("Couldn't find template with typeCode = %s; merchId = %s; shopId = %s", typeCode, merchId, shopId));

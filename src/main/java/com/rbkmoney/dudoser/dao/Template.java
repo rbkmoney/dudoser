@@ -1,19 +1,12 @@
 package com.rbkmoney.dudoser.dao;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class Template {
     private String body;
+    private String subject;
     private boolean isActive;
-
-    public Template(String body, boolean isActive) {
-        this.body = body;
-        this.isActive = isActive;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
 }

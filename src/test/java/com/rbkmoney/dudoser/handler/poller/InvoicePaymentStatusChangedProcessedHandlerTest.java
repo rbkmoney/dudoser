@@ -66,7 +66,7 @@ public class InvoicePaymentStatusChangedProcessedHandlerTest {
         when(paymentPayerService.convert(any(), any(), any()))
                 .thenReturn(payment);
         when(templateDao.getTemplateBodyByMerchShopParams(any(), any(), any()))
-                .thenReturn(new Template("body", true));
+                .thenReturn(new Template("body", null, true));
         when(templateService.getFilledContent(any(), any()))
                 .thenReturn("content");
 
