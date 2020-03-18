@@ -48,10 +48,10 @@ public class TemplateDaoImplTest extends AbstractIntegrationTest {
         Assert.assertFalse(template.isActive());
         template = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "a1bc0bf1-5659-4e84-aad1-36d6ae7b9deb", "7900b13f-b79a-47a3-8eb9-357a24429efe");
         Assert.assertNotNull(template);
+        Assert.assertEquals(SUBJECT, template.getSubject());
         Assert.assertTrue(template.isActive());
         template = templateDao.getTemplateBodyByMerchShopParams(EventTypeCode.PAYMENT_STATUS_CHANGED_PROCESSED, "a1bc0bf1-5659-4e84-aad1-36d6ae7b9deb", "7f48d7bd-d48f-44a3-badb-6bba0939b554 ");
         Assert.assertNotNull(template);
-        Assert.assertEquals(SUBJECT, template.getSubject());
         Assert.assertTrue(template.isActive());
     }
 }
