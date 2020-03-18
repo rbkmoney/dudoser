@@ -10,6 +10,7 @@ import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.tools.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
             Template template) {
         try {
             String formattedAmount = getFormattedAmount(payment);
-            String subject = prepareSubject(payment, formattedAmount);
+            String subject = prepareSubject(payment, formattedAmount, template);
             String text = prepareText(payment, formattedAmount, template);
 
             mailHandlerService.storeMessage(payment.getToReceiver(), subject, text);
@@ -76,10 +77,10 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         }
     }
 
-    private String prepareSubject(PaymentPayer payment, String formattedAmount) {
+    private String prepareSubject(PaymentPayer payment, String formattedAmount, Template template) {
         String formattedDate = getFormattedDate(payment);
-
-        return String.format(getMailSubject(),
+        String subject = StringUtils.isEmpty(template.getSubject()) ? getMailSubject() : template.getSubject();
+        return String.format(subject,
                 payment.getInvoiceId(),
                 formattedDate,
                 formattedAmount);
