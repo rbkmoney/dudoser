@@ -47,7 +47,7 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
         String maskedPan = null;
         String cardType = null;
         if (paymentTool.isSetBankCard()) {
-            maskedPan = paymentTool.getBankCard().getMaskedPan();
+            maskedPan = paymentTool.getBankCard().getLastDigits();
             cardType = paymentTool.getBankCard().getPaymentSystem().name();
         }
 
