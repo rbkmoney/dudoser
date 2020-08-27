@@ -51,7 +51,7 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
         invoicePayment.setCreatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
 
         InvoicePayment invoicePaymentWrapper = random(InvoicePayment.class, "cash_flow", "target_status", "legacy_refunds",
-                "payment", "refunds", "adjustments", "sessions");
+                "payment", "refunds", "adjustments", "sessions", "chargebacks");
         invoicePaymentWrapper.setPayment(invoicePayment);
         invoicePaymentWrapper.setRefunds(List.of(new com.rbkmoney.damsel.payment_processing.InvoicePaymentRefund()
                 .setRefund(invoicePaymentRefund)));
@@ -61,7 +61,7 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
         invoice.setStatus(InvoiceStatus.paid(new InvoicePaid()));
         invoice.setDetails(random(InvoiceDetails.class, "cart"));
 
-        Invoice invoiceWrapper = random(Invoice.class, "invoice", "payments");
+        Invoice invoiceWrapper = random(Invoice.class, "invoice", "payments", "adjustments");
         invoiceWrapper.setInvoice(invoice);
         invoiceWrapper.setPayments(List.of(invoicePaymentWrapper));
 
