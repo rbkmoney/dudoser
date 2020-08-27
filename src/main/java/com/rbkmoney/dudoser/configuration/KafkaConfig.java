@@ -25,6 +25,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.ErrorHandler;
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.io.File;
 import java.util.HashMap;
@@ -103,7 +104,7 @@ public class KafkaConfig {
     }
 
     private ErrorHandler kafkaErrorHandler() {
-        return new SeekToCurrentErrorHandler(maxAttempts);
+        return new SeekToCurrentErrorHandler(new FixedBackOff(0, maxAttempts));
     }
 
     @Bean
