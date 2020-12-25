@@ -26,7 +26,7 @@
         <exposed.ports>${server.port}</exposed.ports>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
-        <dockerfile.base.service.tag>c0d0900ec19c907d866f8360031a836049985110</dockerfile.base.service.tag>
+        <dockerfile.base.service.tag>57e26d8ee999d7b0b50248c22afc63e6f926d276</dockerfile.base.service.tag>
         <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
