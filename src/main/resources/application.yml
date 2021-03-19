@@ -1,17 +1,17 @@
 info:
-  version: @version@
+  version: '@version@'
   stage: dev
   scheduler-pool-size: 4
   damsel:
-    version: @damsel.version@
+    version: '@damsel.version@'
 
 server:
-  port: @server.port@
+  port: '@server.port@'
 management:
   security:
     flag: false
   server:
-    port: @management.port@
+    port: '@management.port@'
   metrics:
     export:
       statsd:
@@ -33,7 +33,7 @@ management:
 
 spring:
   application:
-    name: @name@
+    name: '@name@'
     description: @description@
   freemarker:
     template-loader-path: classpath:templates/
@@ -42,9 +42,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
-    url: @db.url@
-    username: @db.user@
-    password: @db.password@
+    url: '@db.url@'
+    username: '@db.user@'
+    password: '@db.password@'
     hikari:
       maximum-pool-size: 3
       idle-timeout: 30000
@@ -130,3 +130,8 @@ notification:
     invoice:
       from: no-reply@rbkmoney.com
       fileNameTemplate: create_invoice.ftl
+
+subject:
+  timezone:
+    payment: Europe/Moscow
+    refund: Europe/Moscow
