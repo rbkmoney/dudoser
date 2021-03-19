@@ -11,9 +11,12 @@ import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.utils.Converter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static com.rbkmoney.geck.common.util.TypeUtil.stringToLocalDateTime;
 
@@ -21,6 +24,12 @@ import static com.rbkmoney.geck.common.util.TypeUtil.stringToLocalDateTime;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentPayerServiceImpl implements PaymentPayerService {
+
+    @Value("${subject.timezone.refund}")
+    private String refundZoneId;
+
+    @Value("${subject.timezone.payment}")
+    private String paymentZoneId;
 
     private final PartyManagementService partyManagementService;
 
@@ -63,7 +72,7 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
                 .partyId(invoice.getOwnerId())
                 .shopId(invoice.getShopId())
                 .shopUrl(getShopUrl(invoice))
-                .date(stringToLocalDateTime(invoicePayment.getCreatedAt()))
+                .date(getDateByTimeZone(invoicePayment.getCreatedAt(), paymentZoneId))
                 .toReceiver(contactInfo.getEmail())
                 .metadata(getMetadata(invoicePayment))
                 .invoiceMetadata(getInvoiceMetadata(invoice))
@@ -87,7 +96,7 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
         }
 
         paymentPayer.setRefundId(refundId);
-        paymentPayer.setDate(stringToLocalDateTime(invoicePaymentRefund.getCreatedAt()));
+        paymentPayer.setDate(getDateByTimeZone(invoicePaymentRefund.getCreatedAt(), refundZoneId));
         paymentPayer.setRefundAmount(refundAmount);
         paymentPayer.setCurrency(currency);
 
@@ -158,6 +167,10 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
             invoiceMetadata.setData(invoice.getContext().getData());
         }
         return invoiceMetadata;
+    }
+
+    private LocalDateTime getDateByTimeZone(String createdAt, String zoneId) {
+        return stringToLocalDateTime(createdAt, ZoneId.of(zoneId));
     }
 
     private BigDecimal getAmount(Cash cash) {
