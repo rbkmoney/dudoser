@@ -5,9 +5,9 @@ info:
   damsel:
     version: '@damsel.version@'
 
-server:
-  port: '@server.port@'
 management:
+  security:
+    flag: false
   server:
     port: '@management.port@'
   metrics:
@@ -16,7 +16,7 @@ management:
         flavor: etsy
         enabled: false
       prometheus:
-        enabled: true
+        enabled: false
   endpoint:
     health:
       show-details: always
