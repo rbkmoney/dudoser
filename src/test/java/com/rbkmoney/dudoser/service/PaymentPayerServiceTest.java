@@ -64,7 +64,11 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
 
         var invoice = random(com.rbkmoney.damsel.domain.Invoice.class, "status", "details", "context");
         invoice.setStatus(InvoiceStatus.paid(new InvoicePaid()));
-        invoice.setDetails(random(InvoiceDetails.class, "cart"));
+        InvoiceDetails invoiceDetails = new InvoiceDetails();
+        invoiceDetails.setProduct("product");
+        invoiceDetails.setDescription("desc");
+        invoiceDetails.setBankAccount(new InvoiceBankAccount());
+        invoice.setDetails(invoiceDetails);
 
         Invoice invoiceWrapper = random(Invoice.class, "invoice", "payments", "adjustments");
         invoiceWrapper.setInvoice(invoice);
