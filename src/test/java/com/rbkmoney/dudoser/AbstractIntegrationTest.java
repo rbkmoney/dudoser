@@ -34,7 +34,7 @@ public abstract class AbstractIntegrationTest {
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            log.info("Postgres URL: "+ postgres.getJdbcUrl());
+            log.info("Postgres URL: " + postgres.getJdbcUrl());
             TestPropertyValues.of(
                     "spring.datasource.url=" + postgres.getJdbcUrl(),
                     "spring.datasource.username=" + postgres.getUsername(),
@@ -49,6 +49,7 @@ public abstract class AbstractIntegrationTest {
             flyway.migrate();
         }
     }
+
     @Value("${local.server.port}")
     protected int port;
 }

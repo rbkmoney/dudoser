@@ -7,7 +7,8 @@ public class FillTemplateException extends RuntimeException {
         super(cause);
     }
 
-    protected FillTemplateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected FillTemplateException(String message, Throwable cause, boolean enableSuppression,
+                                    boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

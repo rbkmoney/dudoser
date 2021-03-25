@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.retry.annotation.Retryable;
 
 import javax.sql.DataSource;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -90,9 +91,11 @@ public class MessageDaoImpl extends NamedParameterJdbcDaoSupport implements Mess
                 .collect(Collectors.toList());
 
         try {
-            int[] rowsPerBatchAffected = getNamedParameterJdbcTemplate().batchUpdate(sql, params.toArray(new SqlParameterSource[0]));
+            int[] rowsPerBatchAffected =
+                    getNamedParameterJdbcTemplate().batchUpdate(sql, params.toArray(new SqlParameterSource[0]));
             if (rowsPerBatchAffected.length != params.size()) {
-                throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, params.size(), rowsPerBatchAffected.length);
+                throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(sql, params.size(),
+                        rowsPerBatchAffected.length);
             }
         } catch (NestedRuntimeException e) {
             throw new DaoException("Can't mark as sent messages " + messages, e);

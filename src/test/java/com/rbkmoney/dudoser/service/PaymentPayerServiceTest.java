@@ -37,21 +37,26 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
     public void paymentPayerServiceTest() throws Exception {
         Mockito.when(partyManagementService.getShopUrl(any(), any(), anyString())).thenReturn("8kun.net");
 
-        InvoicePaymentRefund invoicePaymentRefund = random(InvoicePaymentRefund.class, "status", "party_revision", "cart", "cash_flow");
+        InvoicePaymentRefund invoicePaymentRefund =
+                random(InvoicePaymentRefund.class, "status", "party_revision", "cart", "cash_flow");
         invoicePaymentRefund.setStatus(InvoicePaymentRefundStatus.succeeded(new InvoicePaymentRefundSucceeded()));
         invoicePaymentRefund.setCreatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
 
         CustomerPayer customerPayer = random(CustomerPayer.class, "payment_tool");
-        customerPayer.setPaymentTool(PaymentTool.payment_terminal(new PaymentTerminal(TerminalPaymentProvider.euroset)));
+        customerPayer
+                .setPaymentTool(PaymentTool.payment_terminal(new PaymentTerminal(TerminalPaymentProvider.euroset)));
 
-        var invoicePayment = random(com.rbkmoney.damsel.domain.InvoicePayment.class, "status", "context", "flow", "payer", "cash_flow");
+        var invoicePayment =
+                random(com.rbkmoney.damsel.domain.InvoicePayment.class, "status", "context", "flow", "payer",
+                        "cash_flow");
         invoicePayment.setStatus(InvoicePaymentStatus.processed(new InvoicePaymentProcessed()));
         invoicePayment.setFlow(InvoicePaymentFlow.instant(new InvoicePaymentFlowInstant()));
         invoicePayment.setPayer(Payer.customer(customerPayer));
         invoicePayment.setCreatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
 
-        InvoicePayment invoicePaymentWrapper = random(InvoicePayment.class, "cash_flow", "target_status", "legacy_refunds",
-                "payment", "refunds", "adjustments", "sessions", "chargebacks");
+        InvoicePayment invoicePaymentWrapper =
+                random(InvoicePayment.class, "cash_flow", "target_status", "legacy_refunds",
+                        "payment", "refunds", "adjustments", "sessions", "chargebacks");
         invoicePaymentWrapper.setPayment(invoicePayment);
         invoicePaymentWrapper.setRefunds(List.of(new com.rbkmoney.damsel.payment_processing.InvoicePaymentRefund()
                 .setRefund(invoicePaymentRefund)));
@@ -59,18 +64,26 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
 
         var invoice = random(com.rbkmoney.damsel.domain.Invoice.class, "status", "details", "context");
         invoice.setStatus(InvoiceStatus.paid(new InvoicePaid()));
-        invoice.setDetails(random(InvoiceDetails.class, "cart"));
+        InvoiceDetails invoiceDetails = new InvoiceDetails();
+        invoiceDetails.setProduct("product");
+        invoiceDetails.setDescription("desc");
+        invoiceDetails.setBankAccount(new InvoiceBankAccount());
+        invoice.setDetails(invoiceDetails);
 
         Invoice invoiceWrapper = random(Invoice.class, "invoice", "payments", "adjustments");
         invoiceWrapper.setInvoice(invoice);
         invoiceWrapper.setPayments(List.of(invoicePaymentWrapper));
 
-        PaymentPayer paymentPayer = paymentPayerService.convert(invoiceWrapper, invoiceWrapper.getInvoice().getId(), invoicePayment.getId());
+        PaymentPayer paymentPayer = paymentPayerService
+                .convert(invoiceWrapper, invoiceWrapper.getInvoice().getId(), invoicePayment.getId());
 
         assertEquals(Converter.longToBigDecimal(invoicePayment.getCost().getAmount()), paymentPayer.getAmount());
 
-        paymentPayer = paymentPayerService.convert(invoiceWrapper, invoiceWrapper.getInvoice().getId(), invoicePayment.getId(), invoicePaymentRefund.getId());
+        paymentPayer = paymentPayerService
+                .convert(invoiceWrapper, invoiceWrapper.getInvoice().getId(), invoicePayment.getId(),
+                        invoicePaymentRefund.getId());
 
-        assertEquals(Converter.longToBigDecimal(invoicePaymentRefund.getCash().getAmount()), paymentPayer.getRefundAmount());
+        assertEquals(Converter.longToBigDecimal(invoicePaymentRefund.getCash().getAmount()),
+                paymentPayer.getRefundAmount());
     }
 }

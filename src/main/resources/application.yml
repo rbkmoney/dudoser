@@ -8,8 +8,6 @@ info:
 server:
   port: '@server.port@'
 management:
-  security:
-    flag: false
   server:
     port: '@management.port@'
   metrics:
@@ -18,7 +16,7 @@ management:
         flavor: etsy
         enabled: false
       prometheus:
-        enabled: false
+        enabled: true
   endpoint:
     health:
       show-details: always

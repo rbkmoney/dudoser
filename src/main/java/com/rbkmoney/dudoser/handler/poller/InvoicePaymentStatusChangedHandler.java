@@ -37,7 +37,8 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
         Optional<PaymentPayer> paymentPayer = getPaymentPayer(invoiceChange, sourceId, sequenceId);
         if (paymentPayer.isEmpty()) {
-            log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", sourceId, paymentId);
+            log.warn("InvoicePaymentStatusChangedHandler: payment change {}.{} not found in repository", sourceId,
+                    paymentId);
             return;
         }
 
@@ -99,7 +100,8 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
     protected abstract String getFormattedAmount(PaymentPayer payment);
 
-    protected abstract Optional<PaymentPayer> getPaymentPayer(InvoiceChange invoiceChange, String invoiceId, Long sequenceId);
+    protected abstract Optional<PaymentPayer> getPaymentPayer(InvoiceChange invoiceChange, String invoiceId,
+                                                              Long sequenceId);
 
     protected abstract String getMailSubject();
 

@@ -24,7 +24,8 @@ public class PaymentPayerTest {
 
         paymentPayer.setAmount(Converter.longToBigDecimal(12145345L));
         paymentPayer.setCurrency("USD");
-        assertEquals("121453.45 USD", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
+        assertEquals("121453.45 USD",
+                Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
 
         paymentPayer.setAmount(Converter.longToBigDecimal(0L));
         paymentPayer.setCurrency("BYR");

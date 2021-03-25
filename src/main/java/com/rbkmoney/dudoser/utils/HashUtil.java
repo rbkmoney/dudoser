@@ -13,7 +13,7 @@ public class HashUtil {
     }
 
     /**
-     * @param str
+     * @param str - input string for generate hash
      * @return int value of first 7 digits of md5-hash of invoice_id
      */
     public static int getIntHash(String str) {

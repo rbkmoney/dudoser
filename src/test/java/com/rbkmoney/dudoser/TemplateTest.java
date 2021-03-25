@@ -30,7 +30,8 @@ public class TemplateTest extends AbstractIntegrationTest {
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
-        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
+        model.put("formattedAmount",
+                Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
         String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
         Assert.assertTrue(filledContent.contains("https://keb.test"));
         Assert.assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
@@ -46,7 +47,8 @@ public class TemplateTest extends AbstractIntegrationTest {
 
         Map<String, Object> model = new HashMap<>();
         model.put("paymentPayer", paymentPayer);
-        model.put("formattedAmount", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
+        model.put("formattedAmount",
+                Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
         String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
         Assert.assertTrue(filledContent.contains("https://keb.test"));
         Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));

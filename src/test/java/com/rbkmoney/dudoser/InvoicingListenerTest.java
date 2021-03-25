@@ -80,13 +80,13 @@ public class InvoicingListenerTest {
 
     @Test
     public void listenChanges() {
-        MachineEvent message = new MachineEvent();
         Event event = new Event();
         EventPayload payload = new EventPayload();
         ArrayList<InvoiceChange> invoiceChanges = new ArrayList<>();
         invoiceChanges.add(new InvoiceChange());
         payload.setInvoiceChanges(invoiceChanges);
         event.setPayload(payload);
+        MachineEvent message = new MachineEvent();
         Mockito.when(eventParser.parse(message)).thenReturn(payload);
 
         Mockito.when(handlerManager.getHandler(any())).thenReturn(Optional.of(handler));

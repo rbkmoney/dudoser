@@ -14,7 +14,8 @@ public class PartyManagementConfig {
 
     @Bean
     public PartyManagementSrv.Iface partyManagementSrv(@Value("${hellgate.url}") Resource resource,
-                                                       @Value("${hellgate.networkTimeout}") int networkTimeout) throws IOException {
+                                                       @Value("${hellgate.networkTimeout}") int networkTimeout)
+            throws IOException {
         return new THSpawnClientBuilder()
                 .withNetworkTimeout(networkTimeout)
                 .withAddress(resource.getURI()).build(PartyManagementSrv.Iface.class);

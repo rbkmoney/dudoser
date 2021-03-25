@@ -25,9 +25,12 @@ public class InvoicingServiceImpl implements InvoicingService {
             log.info("Shop has been found, invoiceId='{}'", invoiceId);
             return invoice;
         } catch (InvoiceNotFound invoiceNotFound) {
-            throw new NotFoundException(String.format("Invoice not found invoiceId=%s, sequenceId=%s", invoiceId, sequenceId), invoiceNotFound);
+            throw new NotFoundException(
+                    String.format("Invoice not found invoiceId=%s, sequenceId=%s", invoiceId, sequenceId),
+                    invoiceNotFound);
         } catch (TException e) {
-            throw new InvoicingClientException(String.format("Error receiving the invoice invoiceId=%s, sequenceId=%s", invoiceId, sequenceId), e);
+            throw new InvoicingClientException(
+                    String.format("Error receiving the invoice invoiceId=%s, sequenceId=%s", invoiceId, sequenceId), e);
         }
     }
 
