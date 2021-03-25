@@ -45,7 +45,8 @@ public class MessageMailHandler implements MessageHandler {
         if (mail.getToEmails().isEmpty()) {
             throw new InvalidRequest(Collections.singletonList("Mailing list shouldn't be empty"));
         }
-        mailSenderService.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]), mail.getSubject(), mail.getMailBody().getText(), listAttach);
+        mailSenderService.send(mail.getFromEmail(), mail.getToEmails().toArray(new String[mail.getToEmails().size()]),
+                mail.getSubject(), mail.getMailBody().getText(), listAttach);
         log.info("Mail has been sent to {}", mail.getToEmails());
     }
 }

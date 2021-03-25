@@ -10,6 +10,7 @@ import no.api.freemarker.java8.Java8ObjectWrapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;

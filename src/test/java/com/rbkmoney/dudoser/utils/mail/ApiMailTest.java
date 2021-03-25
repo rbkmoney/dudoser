@@ -22,10 +22,12 @@ import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
 import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class APIMailTest extends AbstractIntegrationTest {
+public class ApiMailTest extends AbstractIntegrationTest {
 
     @Value("${mail.port}")
     private int mailPort;
@@ -46,7 +48,8 @@ public class APIMailTest extends AbstractIntegrationTest {
     @Value("${test.mail.to}")
     private String to;
 
-    protected static <T> T createThriftRPCClient(Class<T> iface, IdGenerator idGenerator, ClientEventListener eventListener, String url) {
+    protected static <T> T createThriftRpcClient(Class<T> iface, IdGenerator idGenerator,
+                                                 ClientEventListener eventListener, String url) {
         try {
             THClientBuilder clientBuilder = new THClientBuilder();
             clientBuilder.withAddress(new URI(url));
@@ -69,30 +72,35 @@ public class APIMailTest extends AbstractIntegrationTest {
 
     @Test
     @Ignore
-    public void testAPI() throws TException, IOException, URISyntaxException, MessagingException {
+    public void testApi() throws TException, IOException, URISyntaxException, MessagingException {
         sendMail();
     }
 
     private void sendMail() throws TException, URISyntaxException, IOException, MessagingException {
+
+        List<String> listTo = new ArrayList<String>();
+        listTo.add(to);
+        String mailBodyText = "Тело письма";
+        MessageMail messageMail = new MessageMail(new MailBody(mailBodyText), from, listTo);
+        messageMail.setSubject("Тема письма");
+        Path filePath = Paths.get(getClass().getClassLoader().getResource("sadpepe.jpeg").toURI());
+        byte[] messageBuf = Files.readAllBytes(
+                filePath);
+        List<MessageAttachment> attachments = new ArrayList<>();
+        MessageAttachment e = new MessageAttachment();
+        e.setName("sadpepe.png");
+        e.setData(messageBuf);
+        attachments.add(e);
+        messageMail.setAttachments(attachments);
+        Message m = new Message();
+        m.setMessageMail(messageMail);
         ClientEventListener clientEventLogListener = new CompositeClientEventListener(
                 new ClientEventLogListener(),
                 new HttpClientEventLogListener()
         );
-        MessageSenderSrv.Iface c = createThriftRPCClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener, "http://localhost:" + serverPort + "/dudos");
-        List<String> listTo = new ArrayList<String>();
-        listTo.add(to);
-        Message m = new Message();
-        String mailBodyText = "Тело письма";
-        MessageMail messageMail = new MessageMail(new MailBody(mailBodyText), from, listTo);
-        messageMail.setSubject("Тема письма");
-        byte[] mBuf = Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("sadpepe.jpeg").toURI()));
-        List<MessageAttachment> attachments = new ArrayList<>();
-        MessageAttachment e = new MessageAttachment();
-        e.setName("sadpepe.png");
-        e.setData(mBuf);
-        attachments.add(e);
-        messageMail.setAttachments(attachments);
-        m.setMessageMail(messageMail);
+        MessageSenderSrv.Iface c =
+                createThriftRpcClient(MessageSenderSrv.Iface.class, new TimestampIdGenerator(), clientEventLogListener,
+                        "http://localhost:" + serverPort + "/dudos");
         c.send(m);
 
         for (WiserMessage message : wiser.getMessages()) {

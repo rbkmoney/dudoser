@@ -21,7 +21,8 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
     @Override
     public void send(Message message) throws TException {
         try {
-            log.info("Start mail sending from {} to {}", message.getMessageMail().getFromEmail(), message.getMessageMail().getToEmails());
+            log.info("Start mail sending from {} to {}", message.getMessageMail().getFromEmail(),
+                    message.getMessageMail().getToEmails());
             messageSendHandler.handleEvent(message);
             log.info("Mail sending completed.");
         } catch (InvalidRequest e) {

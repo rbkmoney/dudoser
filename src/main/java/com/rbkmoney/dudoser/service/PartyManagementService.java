@@ -33,7 +33,9 @@ public class PartyManagementService {
                 return StringUtils.isEmpty(url) ? null : url;
             }
         } catch (TException e) {
-            throw new RuntimeException(String.format("Unable to checkout Party by partyId: %s shopId: %s revision: %d", partyId, shopId, revision), e);
+            throw new RuntimeException(
+                    String.format("Unable to checkout Party by partyId: %s shopId: %s revision: %d", partyId, shopId,
+                            revision), e);
         }
         return null;
     }
@@ -55,7 +57,9 @@ public class PartyManagementService {
                 return StringUtils.isEmpty(url) ? null : url;
             }
         } catch (TException e) {
-            throw new RuntimeException(String.format("Unable to checkout Party by partyId: %s shopId: %s timestamp: %s", partyId, shopId, timeStamp), e);
+            throw new RuntimeException(
+                    String.format("Unable to checkout Party by partyId: %s shopId: %s timestamp: %s", partyId, shopId,
+                            timeStamp), e);
         }
         return null;
     }

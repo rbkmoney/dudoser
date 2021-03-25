@@ -12,7 +12,8 @@ import java.io.IOException;
 public class InvoicingConfig {
 
     @Bean
-    public InvoicingSrv.Iface invoicingClient(InvoicingServiceProperties invoicingServiceProperties) throws IOException {
+    public InvoicingSrv.Iface invoicingClient(InvoicingServiceProperties invoicingServiceProperties)
+            throws IOException {
         return new THSpawnClientBuilder()
                 .withAddress(invoicingServiceProperties.getUrl().getURI())
                 .withNetworkTimeout(invoicingServiceProperties.getNetworkTimeout())

@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,7 +19,8 @@ public class MailSenderService {
 
     private final List<JavaMailSender> mailSenders;
 
-    public void send(String from, String[] to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach) throws MailNotSendException {
+    public void send(String from, String[] to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach)
+            throws MailNotSendException {
         try {
             JavaMailSender mailSender = getRandomMailSender();
             MimeMessage message = mailSender.createMimeMessage();

@@ -5,8 +5,6 @@ info:
   damsel:
     version: '@damsel.version@'
 
-server:
-  port: '@server.port@'
 management:
   security:
     flag: false

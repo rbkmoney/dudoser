@@ -20,6 +20,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.mail.SendFailedException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -93,9 +94,12 @@ public class ScheduledMailHandlerServiceTest {
         List<MessageToSend> value = List.of(msg1, msg2, msg3, msg4);
         when(messageDao.getUnsentMessages()).thenReturn(value);
 
+        SendFailedException exception =
+                new SendFailedException("kek", new SMTPAddressFailedException(null, null, 0, "err"));
         Mockito.doThrow(new MailNotSendException(
-                        "test", new MailSendException(
-                        "test", null, Map.of("no comments...", new SendFailedException("kek", new SMTPAddressFailedException(null, null, 0, "err"))))))
+                "test", new MailSendException(
+                "test", null, Map.of("no comments...",
+                exception))))
                 .doThrow(RuntimeException.class)
                 .doThrow(MailNotSendException.class)
                 .doNothing()
@@ -104,7 +108,8 @@ public class ScheduledMailHandlerServiceTest {
         service.send();
 
         verify(messageDao, atLeastOnce()).getUnsentMessages();
-        verify(messageDao, atLeastOnce()).markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(msg1, msg4)));
+        verify(messageDao, atLeastOnce())
+                .markAsSent((List<MessageToSend>) MockitoHamcrest.argThat(containsInAnyOrder(msg1, msg4)));
     }
 
     static class Config {
@@ -120,8 +125,10 @@ public class ScheduledMailHandlerServiceTest {
         }
 
         @Bean
-        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService, TransactionTemplate transactionTemplate) {
-            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor(), transactionTemplate);
+        public ScheduledMailHandlerService service(MessageDao messageDao, MailSenderService mailSenderService,
+                                                   TransactionTemplate transactionTemplate) {
+            return new ScheduledMailHandlerService(messageDao, mailSenderService, Executors.newSingleThreadExecutor(),
+                    transactionTemplate);
         }
 
         @Bean

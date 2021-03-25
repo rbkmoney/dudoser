@@ -31,26 +31,23 @@ public class RefundStatusChangedHandlerTest {
     @InjectMocks
     private RefundStatusChangedHandler handler;
 
-    @Mock private InvoicingService invoicingService;
-    @Mock private PaymentPayerService paymentPayerService;
-    @Mock private TemplateDao templateDao;
-    @Mock private TemplateService templateService;
-    @Mock private ScheduledMailHandlerService mailHandlerService;
+    @Mock
+    private InvoicingService invoicingService;
+    @Mock
+    private PaymentPayerService paymentPayerService;
+    @Mock
+    private TemplateDao templateDao;
+    @Mock
+    private TemplateService templateService;
+    @Mock
+    private ScheduledMailHandlerService mailHandlerService;
 
-    @Captor private ArgumentCaptor<String> subject;
+    @Captor
+    private ArgumentCaptor<String> subject;
 
     @Test
     public void shouldFormatDateInSubject() {
         // Given
-        String sourceId = "source-id";
-        Long sequenceId = 0L;
-        InvoiceChange invoiceChange = InvoiceChange.invoice_payment_change(
-                new InvoicePaymentChange(
-                        new InvoicePaymentChange(
-                                "id",
-                                InvoicePaymentChangePayload.invoice_payment_refund_change(
-                                        new InvoicePaymentRefundChange()))));
-
         PaymentPayer payment = PaymentPayer.builder()
                 .invoiceId("invoice-id")
                 .partyId("party-id")
@@ -69,6 +66,14 @@ public class RefundStatusChangedHandlerTest {
                 .thenReturn(new Template("body", null, true));
         when(templateService.getFilledContent(any(), any()))
                 .thenReturn("content");
+        String sourceId = "source-id";
+        Long sequenceId = 0L;
+        InvoiceChange invoiceChange = InvoiceChange.invoice_payment_change(
+                new InvoicePaymentChange(
+                        new InvoicePaymentChange(
+                                "id",
+                                InvoicePaymentChangePayload.invoice_payment_refund_change(
+                                        new InvoicePaymentRefundChange()))));
 
         // When
         handler.handle(invoiceChange, sourceId, sequenceId);

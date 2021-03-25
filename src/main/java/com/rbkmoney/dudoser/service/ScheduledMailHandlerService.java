@@ -77,7 +77,8 @@ public class ScheduledMailHandlerService {
                 .map(
                         messageToSend -> Map.entry(
                                 messageToSend,
-                                CompletableFuture.supplyAsync(() -> sendSucceeded(messageToSend), mailSendingExecutorService)
+                                CompletableFuture
+                                        .supplyAsync(() -> sendSucceeded(messageToSend), mailSendingExecutorService)
                         )
                 )
                 .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().join()));
@@ -96,7 +97,7 @@ public class ScheduledMailHandlerService {
         try {
             mailSenderService.send(
                     from,
-                    new String[]{messageToSend.getReceiver()},
+                    new String[] {messageToSend.getReceiver()},
                     messageToSend.getSubject(),
                     messageToSend.getBody(),
                     null
@@ -110,10 +111,12 @@ public class ScheduledMailHandlerService {
                 log.info("Can't find email address, receiver: {}", messageToSend.getReceiver());
                 return true; //we don't need to retry it
             }
-            log.error("Mail wasn't send, subject: {}, receiver: {}", messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            log.error("Mail wasn't send, subject: {}, receiver: {}", messageToSend.getSubject(),
+                    messageToSend.getReceiver(), e);
             return false;
         } catch (Exception e) {
-            log.error("Unexpected exception while sending message, subject: {}, receiver: {}", messageToSend.getSubject(), messageToSend.getReceiver(), e);
+            log.error("Unexpected exception while sending message, subject: {}, receiver: {}",
+                    messageToSend.getSubject(), messageToSend.getReceiver(), e);
             return false;
         }
     }

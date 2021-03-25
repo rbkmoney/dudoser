@@ -5,7 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.xbill.DNS.*;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.MXRecord;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.TextParseException;
+import org.xbill.DNS.Type;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +46,7 @@ public class MailSenderConfiguration {
                                                @Value("${mail.password}") String password,
                                                Properties mailProperties) {
         try {
-            Record[]  records = new Lookup(host, Type.MX).run();
+            Record[] records = new Lookup(host, Type.MX).run();
             if (records == null) {
                 throw new RuntimeException("Not found MX-records for host " + host);
             }
