@@ -100,8 +100,11 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
     protected abstract String getFormattedAmount(PaymentPayer payment);
 
-    protected abstract Optional<PaymentPayer> getPaymentPayer(InvoiceChange invoiceChange, String invoiceId,
-                                                              Long sequenceId);
+    protected abstract Optional<PaymentPayer> getPaymentPayer(
+            InvoiceChange invoiceChange,
+            String invoiceId,
+            Long sequenceId
+    );
 
     protected abstract String getMailSubject();
 

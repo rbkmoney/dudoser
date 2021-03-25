@@ -103,8 +103,11 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
         return paymentPayer;
     }
 
-    private com.rbkmoney.damsel.domain.InvoicePayment getInvoicePayment(Invoice invoice, String invoiceId,
-                                                                        String paymentId) {
+    private com.rbkmoney.damsel.domain.InvoicePayment getInvoicePayment(
+            Invoice invoice,
+            String invoiceId,
+            String paymentId
+    ) {
         return invoice.getPayments().stream()
                 .filter(invoicePayment -> paymentId.equals(invoicePayment.getPayment().getId()))
                 .findFirst()
@@ -116,8 +119,12 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
                 );
     }
 
-    private InvoicePaymentRefund getInvoicePaymentRefund(Invoice invoice, String invoiceId, String paymentId,
-                                                         String refundId) {
+    private InvoicePaymentRefund getInvoicePaymentRefund(
+            Invoice invoice,
+            String invoiceId,
+            String paymentId,
+            String refundId
+    ) {
         return invoice.getPayments().stream()
                 .filter(invoicePayment -> paymentId.equals(invoicePayment.getPayment().getId()))
                 .findFirst()

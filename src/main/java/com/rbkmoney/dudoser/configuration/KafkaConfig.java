@@ -117,7 +117,8 @@ public class KafkaConfig {
 
     @Bean
     public MachineEventParser<EventPayload> paymentEventPayloadMachineEventParser(
-            BinaryDeserializer<EventPayload> paymentEventPayloadDeserializer) {
+            BinaryDeserializer<EventPayload> paymentEventPayloadDeserializer
+    ) {
         return new PaymentEventPayloadMachineEventParser(paymentEventPayloadDeserializer);
     }
 }
