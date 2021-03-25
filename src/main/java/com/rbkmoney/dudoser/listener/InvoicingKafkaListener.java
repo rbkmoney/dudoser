@@ -17,7 +17,7 @@ public class InvoicingKafkaListener {
     private final HandlerManager handlerManager;
     private final MachineEventParser<EventPayload> parser;
 
-    @KafkaListener(topics = "${kafka.topics.invoice.id}", containerFactory = "kafkaFactory")
+    @KafkaListener(topics = "${kafka.topics.invoice.id}", containerFactory = "kafkaListenerContainerFactory")
     public void handle(SinkEvent sinkEvent, Acknowledgment ack) {
         log.debug("Reading sinkEvent, sourceId:{}, eventId:{}", sinkEvent.getEvent().getSourceId(),
                 sinkEvent.getEvent().getEventId());

@@ -29,7 +29,7 @@
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
         <db.schema>dud</db.schema>
-        <testcontainers.version>1.15.0</testcontainers.version>
+        <checkstyle.config.suppressions.path>./src/main/resources/checkstyle/checkstyle-suppressions.xml</checkstyle.config.suppressions.path>
     </properties>
 
     <dependencies>
@@ -193,13 +193,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>1.10.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>kafka</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>1.10.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
