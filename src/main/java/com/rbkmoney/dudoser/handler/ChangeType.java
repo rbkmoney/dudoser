@@ -19,8 +19,7 @@ public enum ChangeType {
             "invoice_payment_change.payload.invoice_payment_refund_change.payload.invoice_payment_refund_created",
             new IsNullCondition().not()),
     INVOICE_PAYMENT_REFUND_STATUS_CHANGED_SUCCEEDED(
-            "invoice_payment_change.payload.invoice_payment_refund_change." +
-                    "payload.invoice_payment_refund_status_changed.status.succeeded",
+            "invoice_payment_change.payload.invoice_payment_refund_change.payload.invoice_payment_refund_status_changed.status.succeeded",
             new IsNullCondition().not());
 
     Filter filter;
