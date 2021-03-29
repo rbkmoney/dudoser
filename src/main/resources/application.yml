@@ -1,3 +1,6 @@
+server:
+  port: '@server.port@'
+
 info:
   version: '@version@'
   stage: dev
@@ -32,7 +35,7 @@ management:
 spring:
   application:
     name: '@name@'
-    description: @description@
+    description: '@description@'
   freemarker:
     template-loader-path: classpath:templates/
     prefer-file-system-access: true
