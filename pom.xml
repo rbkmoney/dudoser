@@ -154,6 +154,10 @@
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
+            <artifactId>mamsel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
             <artifactId>shared-resources</artifactId>
         </dependency>
         <dependency>
