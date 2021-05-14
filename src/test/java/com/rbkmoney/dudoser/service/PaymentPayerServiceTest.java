@@ -43,8 +43,10 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
         invoicePaymentRefund.setCreatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
 
         CustomerPayer customerPayer = random(CustomerPayer.class, "payment_tool");
+        PaymentTerminal paymentTerminal = new PaymentTerminal();
+        paymentTerminal.setPaymentService(new PaymentServiceRef("euroset"));
         customerPayer
-                .setPaymentTool(PaymentTool.payment_terminal(new PaymentTerminal(TerminalPaymentProvider.euroset)));
+                .setPaymentTool(PaymentTool.payment_terminal(paymentTerminal));
 
         var invoicePayment =
                 random(com.rbkmoney.damsel.domain.InvoicePayment.class, "status", "context", "flow", "payer",

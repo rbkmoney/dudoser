@@ -9,6 +9,7 @@ import com.rbkmoney.dudoser.exception.NotFoundException;
 import com.rbkmoney.dudoser.service.PartyManagementService;
 import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.utils.Converter;
+import com.rbkmoney.mamsel.PaymentSystemUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,7 +58,7 @@ public class PaymentPayerServiceImpl implements PaymentPayerService {
         String cardType = null;
         if (paymentTool.isSetBankCard()) {
             maskedPan = paymentTool.getBankCard().getLastDigits();
-            cardType = paymentTool.getBankCard().getPaymentSystem().name();
+            cardType = PaymentSystemUtil.getPaymentSystemName(paymentTool.getBankCard());
         }
 
         return PaymentPayer.builder()
