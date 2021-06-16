@@ -42,7 +42,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
             return;
         }
 
-        PaymentPayer payment = paymentPayer.get();
+        PaymentPayer payment = paymentPayer.get(); //NOSONAR
         if (payment.getToReceiver() == null) {
             log.info("Email not found for payment change {}.{}", sourceId, paymentId);
             return;
