@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.rbkmoney</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
     </parent>
 
     <artifactId>dudoser</artifactId>
@@ -151,12 +151,10 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.499-04dfc99</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>mamsel</artifactId>
-            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
