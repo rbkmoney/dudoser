@@ -4,8 +4,8 @@ import com.rbkmoney.damsel.message_sender.MessageExclusionRule;
 import com.rbkmoney.damsel.message_sender.ShopExclusionRule;
 import com.rbkmoney.dudoser.dao.MailingExclusionRule;
 import com.rbkmoney.dudoser.dao.MailingExclusionRuleType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ class MailingExclusionRuleConverterTest {
     private MessageExclusionRule testDamselExclusionRule;
     private MailingExclusionRule testDtoExclusionRule;
 
-    @BeforeEach
+    @Before
     void setup() {
         testDamselExclusionRule = new MessageExclusionRule();
         testDtoExclusionRule = new MailingExclusionRule();
