@@ -8,7 +8,9 @@ public interface MailingExclusionRuleDao {
 
     MailingExclusionRule getExclusionRule(Long id);
 
-    List<MailingExclusionRule> getExclusionRules(MailingExclusionRuleType type);
+    List<MailingExclusionRule> getExclusionRulesByType(MailingExclusionRuleType type);
+
+    List<MailingExclusionRule> getExclusionRulesByShopId(String shopId);
 
     void removeExclusionRule(Long id);
 }

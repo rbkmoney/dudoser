@@ -15,7 +15,7 @@ public class MailingExclusionRuleService {
     private final MailingExclusionRuleDao dao;
 
     public void createExclusionRule(MailingExclusionRule messageExclusionRule) {
-        if (dao.getExclusionRules(messageExclusionRule.getType()).isEmpty()) {
+        if (dao.getExclusionRulesByType(messageExclusionRule.getType()).isEmpty()) {
             dao.createExclusionRule(messageExclusionRule);
         } else {
             throw new IllegalStateException(
@@ -29,7 +29,11 @@ public class MailingExclusionRuleService {
     }
 
     public List<MailingExclusionRule> getExclusionRules(MailingExclusionRuleType type) {
-        return dao.getExclusionRules(type);
+        return dao.getExclusionRulesByType(type);
+    }
+
+    public List<MailingExclusionRule> getExclusionRulesByShopId(String shopId) {
+        return dao.getExclusionRulesByShopId(shopId);
     }
 
     public void removeExclusionRule(Long id) {

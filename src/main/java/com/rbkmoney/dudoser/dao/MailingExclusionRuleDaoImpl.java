@@ -69,7 +69,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
-    public List<MailingExclusionRule> getExclusionRules(MailingExclusionRuleType type) {
+    public List<MailingExclusionRule> getExclusionRulesByType(MailingExclusionRuleType type) {
         log.debug("Getting exclusion rules by type = {}", type);
         final String sql = """
                     SELECT id, name, type, value
@@ -82,6 +82,26 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
             exclusionRules = getNamedParameterJdbcTemplate().query(sql, params, mapper);
         } catch (Exception e) {
             throw new DaoException("Error occurred during getting exclusion rules by type = " + type, e);
+        }
+        log.debug("Got exclusion rules {}", exclusionRules);
+        return exclusionRules;
+    }
+
+    @Override
+    public List<MailingExclusionRule> getExclusionRulesByShopId(String shopId) {
+        log.debug("Getting exclusion rules by shop id = {}", shopId);
+        final String sql = """
+                    SELECT id, name, type, value
+                    FROM dudos.mailing_exclusion_rules
+                    WHERE type = 'shop'
+                    AND value LIKE :value;
+                """;
+        final MapSqlParameterSource params = new MapSqlParameterSource("value", "%" + shopId + "%");
+        List<MailingExclusionRule> exclusionRules;
+        try {
+            exclusionRules = getNamedParameterJdbcTemplate().query(sql, params, mapper);
+        } catch (Exception e) {
+            throw new DaoException("Error occurred during getting exclusion rules by shop id = " + shopId, e);
         }
         log.debug("Got exclusion rules {}", exclusionRules);
         return exclusionRules;

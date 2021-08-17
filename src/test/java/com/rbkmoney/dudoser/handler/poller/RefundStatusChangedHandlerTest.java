@@ -5,6 +5,7 @@ import com.rbkmoney.dudoser.dao.Template;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.InvoicingService;
+import com.rbkmoney.dudoser.service.MailingExclusionRuleService;
 import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +41,8 @@ public class RefundStatusChangedHandlerTest {
     private TemplateDao templateDao;
     @Mock
     private TemplateService templateService;
+    @Mock
+    private MailingExclusionRuleService mailingExclusionRuleService;
     @Mock
     private ScheduledMailHandlerService mailHandlerService;
 
@@ -62,6 +66,7 @@ public class RefundStatusChangedHandlerTest {
                 .thenReturn(new Invoice());
         when(paymentPayerService.convert(any(), any(), any(), any()))
                 .thenReturn(payment);
+        when(mailingExclusionRuleService.getExclusionRulesByShopId(payment.getShopId())).thenReturn(new ArrayList<>());
         when(templateDao.getTemplateBodyByMerchShopParams(any(), any(), any()))
                 .thenReturn(new Template("body", null, true));
         when(templateService.getFilledContent(any(), any()))

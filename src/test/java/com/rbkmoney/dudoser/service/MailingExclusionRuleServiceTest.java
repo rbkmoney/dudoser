@@ -31,12 +31,12 @@ class MailingExclusionRuleServiceTest {
         MailingExclusionRule executionRule = new MailingExclusionRule();
         executionRule.setType(MailingExclusionRuleType.SHOP);
 
-        Mockito.when(dao.getExclusionRules(executionRule.getType())).thenReturn(new ArrayList<>());
+        Mockito.when(dao.getExclusionRulesByType(executionRule.getType())).thenReturn(new ArrayList<>());
         Mockito.when(dao.createExclusionRule(executionRule)).thenReturn(1L);
 
         service.createExclusionRule(executionRule);
 
-        Mockito.verify(dao).getExclusionRules(executionRule.getType());
+        Mockito.verify(dao).getExclusionRulesByType(executionRule.getType());
         Mockito.verify(dao).createExclusionRule(executionRule);
     }
 
@@ -45,13 +45,14 @@ class MailingExclusionRuleServiceTest {
         MailingExclusionRule executionRule = new MailingExclusionRule();
         executionRule.setType(MailingExclusionRuleType.SHOP);
 
-        Mockito.when(dao.getExclusionRules(executionRule.getType())).thenReturn(List.of(new MailingExclusionRule()));
+        Mockito.when(dao.getExclusionRulesByType(executionRule.getType()))
+                .thenReturn(List.of(new MailingExclusionRule()));
 
         assertThrows(IllegalStateException.class, () -> {
             service.createExclusionRule(executionRule);
         });
 
-        Mockito.verify(dao).getExclusionRules(executionRule.getType());
+        Mockito.verify(dao).getExclusionRulesByType(executionRule.getType());
         Mockito.verifyNoMoreInteractions(dao);
     }
 }
