@@ -1,21 +1,17 @@
 package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.damsel.message_sender.ExclusionType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+@Getter
+@RequiredArgsConstructor
 public enum MailingExclusionRuleType {
     SHOP("shop");
 
     private final String code;
-
-    MailingExclusionRuleType(String s) {
-        this.code = s;
-    }
-
-    public String getCode() {
-        return code;
-    }
 
     public static MailingExclusionRuleType fromCode(String code) {
         return Arrays.stream(values())

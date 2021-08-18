@@ -4,13 +4,13 @@ import java.util.List;
 
 public interface MailingExclusionRuleDao {
 
-    Long createExclusionRule(MailingExclusionRule messageExclusionRule);
+    Long create(MailingExclusionRule messageExclusionRule);
 
-    MailingExclusionRule getExclusionRule(Long id);
+    MailingExclusionRule get(Long id);
 
-    List<MailingExclusionRule> getExclusionRulesByType(MailingExclusionRuleType type);
+    List<MailingExclusionRule> getByType(MailingExclusionRuleType type);
 
-    List<MailingExclusionRule> getExclusionRulesByShopId(String shopId);
+    List<MailingExclusionRule> getByShopId(String shopId);
 
-    void removeExclusionRule(Long id);
+    void remove(Long id);
 }

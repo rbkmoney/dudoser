@@ -38,9 +38,9 @@ class MailingExclusionRuleDaoImplTest extends AbstractIntegrationTest {
 
     @Test
     void createExclusionRule() {
-        Long id = dao.createExclusionRule(testDtoExclusionRule);
+        Long id = dao.create(testDtoExclusionRule);
 
-        MailingExclusionRule actual = dao.getExclusionRule(id);
+        MailingExclusionRule actual = dao.get(id);
         assertEquals(id, actual.getId());
         assertEquals(testDtoExclusionRule.getName(), actual.getName());
         assertEquals(testDtoExclusionRule.getType(), actual.getType());
@@ -49,9 +49,9 @@ class MailingExclusionRuleDaoImplTest extends AbstractIntegrationTest {
 
     @Test
     void getExclusionRule() {
-        Long id = dao.createExclusionRule(testDtoExclusionRule);
+        Long id = dao.create(testDtoExclusionRule);
 
-        MailingExclusionRule actual = dao.getExclusionRule(id);
+        MailingExclusionRule actual = dao.get(id);
         assertEquals(id, actual.getId());
         assertEquals(testDtoExclusionRule.getName(), actual.getName());
         assertEquals(testDtoExclusionRule.getType(), actual.getType());
@@ -60,9 +60,9 @@ class MailingExclusionRuleDaoImplTest extends AbstractIntegrationTest {
 
     @Test
     void getExclusionRulesByType() {
-        Long id = dao.createExclusionRule(testDtoExclusionRule);
+        Long id = dao.create(testDtoExclusionRule);
 
-        List<MailingExclusionRule> actual = dao.getExclusionRulesByType(testDtoExclusionRule.getType());
+        List<MailingExclusionRule> actual = dao.getByType(testDtoExclusionRule.getType());
         assertEquals(1, actual.size());
         assertEquals(id, actual.get(0).getId());
         assertEquals(testDtoExclusionRule.getName(), actual.get(0).getName());
@@ -72,9 +72,9 @@ class MailingExclusionRuleDaoImplTest extends AbstractIntegrationTest {
 
     @Test
     void getExclusionRulesByShopId() {
-        Long id = dao.createExclusionRule(testDtoExclusionRule);
+        Long id = dao.create(testDtoExclusionRule);
 
-        List<MailingExclusionRule> actual = dao.getExclusionRulesByShopId("1");
+        List<MailingExclusionRule> actual = dao.getByShopId("1");
         assertEquals(1, actual.size());
         assertEquals(id, actual.get(0).getId());
         assertEquals(testDtoExclusionRule.getName(), actual.get(0).getName());
@@ -84,11 +84,11 @@ class MailingExclusionRuleDaoImplTest extends AbstractIntegrationTest {
 
     @Test
     void removeExclusionRule() {
-        Long id = dao.createExclusionRule(testDtoExclusionRule);
+        Long id = dao.create(testDtoExclusionRule);
 
-        dao.removeExclusionRule(id);
+        dao.remove(id);
 
-        MailingExclusionRule actual = dao.getExclusionRule(id);
+        MailingExclusionRule actual = dao.get(id);
         assertNull(actual);
     }
 }

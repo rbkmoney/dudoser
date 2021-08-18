@@ -15,8 +15,8 @@ public class MailingExclusionRuleService {
     private final MailingExclusionRuleDao dao;
 
     public void createExclusionRule(MailingExclusionRule messageExclusionRule) {
-        if (dao.getExclusionRulesByType(messageExclusionRule.getType()).isEmpty()) {
-            dao.createExclusionRule(messageExclusionRule);
+        if (dao.getByType(messageExclusionRule.getType()).isEmpty()) {
+            dao.create(messageExclusionRule);
         } else {
             throw new IllegalStateException(
                     "Exclusion rule with type " + messageExclusionRule.getType() + "already exists"
@@ -25,18 +25,18 @@ public class MailingExclusionRuleService {
     }
 
     public MailingExclusionRule getExclusionRule(Long id) {
-        return dao.getExclusionRule(id);
+        return dao.get(id);
     }
 
     public List<MailingExclusionRule> getExclusionRules(MailingExclusionRuleType type) {
-        return dao.getExclusionRulesByType(type);
+        return dao.getByType(type);
     }
 
     public List<MailingExclusionRule> getExclusionRulesByShopId(String shopId) {
-        return dao.getExclusionRulesByShopId(shopId);
+        return dao.getByShopId(shopId);
     }
 
     public void removeExclusionRule(Long id) {
-        dao.removeExclusionRule(id);
+        dao.remove(id);
     }
 }

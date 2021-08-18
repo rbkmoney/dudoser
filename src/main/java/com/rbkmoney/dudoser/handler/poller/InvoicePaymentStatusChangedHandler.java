@@ -58,6 +58,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
         List<MailingExclusionRule> exclusionRules = mailingExclusionRuleService.getExclusionRulesByShopId(shopId);
         if (!exclusionRules.isEmpty()) {
             log.info("Mailing has been disabled for shopId={}", shopId);
+            log.debug("Full exclusion rules for shopId={} {}", shopId, exclusionRules);
             return;
         }
 

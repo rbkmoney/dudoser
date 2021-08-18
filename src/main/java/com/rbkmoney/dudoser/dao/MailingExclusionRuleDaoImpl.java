@@ -27,7 +27,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     };
 
     @Override
-    public Long createExclusionRule(MailingExclusionRule messageExclusionRule) {
+    public Long create(MailingExclusionRule messageExclusionRule) {
         log.debug("Saving exclusion rule: {}", messageExclusionRule);
         final String sql = """
                     INSERT INTO dudos.mailing_exclusion_rules(name, type, value)
@@ -49,7 +49,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
-    public MailingExclusionRule getExclusionRule(Long id) {
+    public MailingExclusionRule get(Long id) {
         log.debug("Getting exclusion rule by id = {}", id);
         final String sql = """
                     SELECT id, name, type, value
@@ -68,7 +68,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
-    public List<MailingExclusionRule> getExclusionRulesByType(MailingExclusionRuleType type) {
+    public List<MailingExclusionRule> getByType(MailingExclusionRuleType type) {
         log.debug("Getting exclusion rules by type = {}", type);
         final String sql = """
                     SELECT id, name, type, value
@@ -87,7 +87,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
-    public List<MailingExclusionRule> getExclusionRulesByShopId(String shopId) {
+    public List<MailingExclusionRule> getByShopId(String shopId) {
         log.debug("Getting exclusion rules by shop id = {}", shopId);
         final String sql = """
                     SELECT id, name, type, value
@@ -107,7 +107,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
-    public void removeExclusionRule(Long id) {
+    public void remove(Long id) {
         log.debug("Deleting exclusion rules by id = {}", id);
         final String sql = "DELETE FROM dudos.mailing_exclusion_rules WHERE id = :id;";
         final MapSqlParameterSource params = new MapSqlParameterSource("id", id);

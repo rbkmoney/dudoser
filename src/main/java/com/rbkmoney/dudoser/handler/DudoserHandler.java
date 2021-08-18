@@ -55,7 +55,7 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
         try {
             MailingExclusionRule exclusionRule = new MailingExclusionRule();
             exclusionRule.setName(messageExclusion.name);
-            mailingExclusionRuleConverter.convert(messageExclusion.rule, exclusionRule);
+            mailingExclusionRuleConverter.fromThrift(messageExclusion.rule, exclusionRule);
             mailingExclusionRuleService.createExclusionRule(exclusionRule);
         } catch (Exception e) {
             throw new TException(e);
@@ -83,7 +83,7 @@ public class DudoserHandler implements MessageSenderSrv.Iface {
         MessageExclusion messageExclusion = new MessageExclusion();
         messageExclusion.setName(rule.getName());
         MessageExclusionRule messageExclusionRule = new MessageExclusionRule();
-        mailingExclusionRuleConverter.convert(rule, messageExclusionRule);
+        mailingExclusionRuleConverter.toThrift(rule, messageExclusionRule);
         messageExclusion.setRule(messageExclusionRule);
 
         messageExclusionObject.setExclusion(messageExclusion);

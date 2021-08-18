@@ -31,28 +31,28 @@ class MailingExclusionRuleConverterTest {
     @Test
     void shouldSuccessfullyConvertDamselToDto() {
         MailingExclusionRule actual = new MailingExclusionRule();
-        converter.convert(testDamselExclusionRule, actual);
+        converter.fromThrift(testDamselExclusionRule, actual);
         assertEquals(testDtoExclusionRule, actual);
     }
 
     @Test
     void shouldSuccessfullyConvertDtoToDamsel() {
         MessageExclusionRule actual = new MessageExclusionRule();
-        converter.convert(testDtoExclusionRule, actual);
+        converter.toThrift(testDtoExclusionRule, actual);
         assertEquals(testDamselExclusionRule, actual);
     }
 
     @Test
     void shouldFailBecauseOfUnsupportedDamselRuleType() {
         assertThrows(IllegalArgumentException.class, () -> {
-            converter.convert(new MessageExclusionRule(), new MailingExclusionRule());
+            converter.fromThrift(new MessageExclusionRule(), new MailingExclusionRule());
         });
     }
 
     @Test
     void shouldFailBecauseOfUnsupportedDtoRuleType() {
         assertThrows(IllegalArgumentException.class, () -> {
-            converter.convert(new MailingExclusionRule(), new MessageExclusionRule());
+            converter.toThrift(new MailingExclusionRule(), new MessageExclusionRule());
         });
     }
 }

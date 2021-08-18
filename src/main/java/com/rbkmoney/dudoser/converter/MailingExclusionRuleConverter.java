@@ -13,7 +13,7 @@ public class MailingExclusionRuleConverter {
 
     private static final String separator = ",";
 
-    public void convert(MessageExclusionRule from, MailingExclusionRule to) {
+    public void fromThrift(MessageExclusionRule from, MailingExclusionRule to) {
         if (from.isSetShopRule()) {
             to.setType(MailingExclusionRuleType.SHOP);
             String value = String.join(separator, from.getShopRule().shop_ids);
@@ -23,7 +23,7 @@ public class MailingExclusionRuleConverter {
         }
     }
 
-    public void convert(MailingExclusionRule from, MessageExclusionRule to) {
+    public void toThrift(MailingExclusionRule from, MessageExclusionRule to) {
         if (MailingExclusionRuleType.SHOP.equals(from.getType())) {
             to.setShopRule(new ShopExclusionRule(Arrays.asList(from.getValue().split(separator))));
         } else {
