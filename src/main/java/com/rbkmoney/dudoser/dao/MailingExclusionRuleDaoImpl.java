@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import javax.sql.DataSource;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport implements MailingExclusionRuleDao {
@@ -39,7 +40,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
                 .addValue("value", messageExclusionRule.getValue());
         Long id;
         try {
-            id = getNamedParameterJdbcTemplate().queryForObject(sql, params, Long.class);
+            id = Objects.requireNonNull(getNamedParameterJdbcTemplate()).queryForObject(sql, params, Long.class);
         } catch (Exception e) {
             throw new DaoException("Error occurred during saving exclusion rule " + messageExclusionRule, e);
         }
@@ -58,7 +59,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
         final MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         MailingExclusionRule exclusionRule;
         try {
-            exclusionRule = getNamedParameterJdbcTemplate().query(sql, params, mapper).get(0);
+            exclusionRule = Objects.requireNonNull(getNamedParameterJdbcTemplate()).query(sql, params, mapper).get(0);
         } catch (Exception e) {
             throw new DaoException("Error occurred during getting exclusion rule id = " + id, e);
         }
@@ -77,7 +78,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
         final MapSqlParameterSource params = new MapSqlParameterSource("type", type.getCode());
         List<MailingExclusionRule> exclusionRules;
         try {
-            exclusionRules = getNamedParameterJdbcTemplate().query(sql, params, mapper);
+            exclusionRules = Objects.requireNonNull(getNamedParameterJdbcTemplate()).query(sql, params, mapper);
         } catch (Exception e) {
             throw new DaoException("Error occurred during getting exclusion rules by type = " + type, e);
         }
@@ -97,7 +98,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
         final MapSqlParameterSource params = new MapSqlParameterSource("value", "%" + shopId + "%");
         List<MailingExclusionRule> exclusionRules;
         try {
-            exclusionRules = getNamedParameterJdbcTemplate().query(sql, params, mapper);
+            exclusionRules = Objects.requireNonNull(getNamedParameterJdbcTemplate()).query(sql, params, mapper);
         } catch (Exception e) {
             throw new DaoException("Error occurred during getting exclusion rules by shop id = " + shopId, e);
         }
@@ -111,7 +112,7 @@ public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport im
         final String sql = "DELETE FROM dudos.mailing_exclusion_rules WHERE id = :id;";
         final MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
-            getNamedParameterJdbcTemplate().update(sql, params);
+            Objects.requireNonNull(getNamedParameterJdbcTemplate()).update(sql, params);
         } catch (Exception e) {
             throw new DaoException("Error occurred during deleting exclusion rules by id = " + id, e);
         }
