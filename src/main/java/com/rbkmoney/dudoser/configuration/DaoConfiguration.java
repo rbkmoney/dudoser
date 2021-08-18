@@ -1,5 +1,7 @@
 package com.rbkmoney.dudoser.configuration;
 
+import com.rbkmoney.dudoser.dao.MailingExclusionRuleDao;
+import com.rbkmoney.dudoser.dao.MailingExclusionRuleDaoImpl;
 import com.rbkmoney.dudoser.dao.MessageDao;
 import com.rbkmoney.dudoser.dao.MessageDaoImpl;
 import com.rbkmoney.dudoser.dao.TemplateDao;
@@ -25,6 +27,11 @@ public class DaoConfiguration {
     @Bean
     public MessageDao messageDao(DataSource dataSource) {
         return new MessageDaoImpl(dataSource);
+    }
+
+    @Bean
+    public MailingExclusionRuleDao mailingExclusionRuleDao(DataSource dataSource) {
+        return new MailingExclusionRuleDaoImpl(dataSource);
     }
 
     @Bean

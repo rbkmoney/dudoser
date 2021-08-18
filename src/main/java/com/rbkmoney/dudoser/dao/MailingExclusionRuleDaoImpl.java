@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
 import java.util.List;
 
 @Slf4j
-@Repository
 public class MailingExclusionRuleDaoImpl extends NamedParameterJdbcDaoSupport implements MailingExclusionRuleDao {
 
     public MailingExclusionRuleDaoImpl(DataSource dataSource) {
