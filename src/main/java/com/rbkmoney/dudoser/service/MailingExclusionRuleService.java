@@ -14,9 +14,11 @@ public class MailingExclusionRuleService {
 
     private final MailingExclusionRuleDao dao;
 
-    public void createExclusionRule(MailingExclusionRule messageExclusionRule) {
+    public MailingExclusionRule createExclusionRule(MailingExclusionRule messageExclusionRule) {
         if (dao.getByType(messageExclusionRule.getType()).isEmpty()) {
-            dao.create(messageExclusionRule);
+            Long id = dao.create(messageExclusionRule);
+            messageExclusionRule.setId(id);
+            return messageExclusionRule;
         } else {
             throw new IllegalStateException(
                     "Exclusion rule with type " + messageExclusionRule.getType() + "already exists"

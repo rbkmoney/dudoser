@@ -3,6 +3,7 @@ package com.rbkmoney.dudoser.service;
 import com.rbkmoney.dudoser.dao.MailingExclusionRule;
 import com.rbkmoney.dudoser.dao.MailingExclusionRuleDao;
 import com.rbkmoney.dudoser.dao.MailingExclusionRuleType;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,11 +31,14 @@ class MailingExclusionRuleServiceTest {
     void shouldCreateExclusionRule() {
         MailingExclusionRule executionRule = new MailingExclusionRule();
         executionRule.setType(MailingExclusionRuleType.SHOP);
+        executionRule.setId(1L);
 
         Mockito.when(dao.getByType(executionRule.getType())).thenReturn(new ArrayList<>());
         Mockito.when(dao.create(executionRule)).thenReturn(1L);
 
-        service.createExclusionRule(executionRule);
+        MailingExclusionRule actual = service.createExclusionRule(executionRule);
+
+        Assert.assertEquals(executionRule, actual);
 
         Mockito.verify(dao).getByType(executionRule.getType());
         Mockito.verify(dao).create(executionRule);
