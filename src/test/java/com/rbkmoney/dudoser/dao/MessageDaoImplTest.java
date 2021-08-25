@@ -1,15 +1,14 @@
 package com.rbkmoney.dudoser.dao;
 
-import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.dao.model.MessageToSend;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.rbkmoney.testcontainers.annotations.postgresql.PostgresqlTestcontainerSingleton;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -19,15 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestPropertySource(properties = {
         //schedulers in context ):
         "message.schedule.send=20000",
         "message.schedule.clear.sent=20000",
         "message.schedule.clear.failed=20000",
 })
-public class MessageDaoImplTest extends AbstractIntegrationTest {
+@PostgresqlTestcontainerSingleton
+public class MessageDaoImplTest {
 
     @Autowired
     MessageDao messageDao;
@@ -46,16 +49,16 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
         messageDao.store("jenya@toxic.ru", "Today is a toxic day", "text!".repeat(255));
 
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
-        Assert.assertEquals(2, unsentMessages.size()); // subject primary key test
-        unsentMessages.forEach(message -> Assert.assertFalse(message.getSent()));
+        assertEquals(2, unsentMessages.size()); // subject primary key test
+        unsentMessages.forEach(message -> assertFalse(message.getSent()));
 
         messageDao.markAsSent(unsentMessages);
         unsentMessages = messageDao.getUnsentMessages();
-        Assert.assertEquals(0, unsentMessages.size()); // test mark as sent
+        assertEquals(0, unsentMessages.size()); // test mark as sent
 
         messageDao.deleteMessages(Instant.now().plus(10, ChronoUnit.DAYS), true);
         List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.mailing_list");
-        Assert.assertEquals(0, list.size()); //delete works
+        assertEquals(0, list.size()); //delete works
     }
 
     @Test
@@ -63,15 +66,15 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
     public void messageClearingTest() {
         messageDao.store("jenya@toxic.ru", "Today is a toxic day", "text!".repeat(255));
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
-        Assert.assertEquals(1, unsentMessages.size()); // subject primary key test
+        assertEquals(1, unsentMessages.size()); // subject primary key test
 
         messageDao.deleteMessages(Instant.now().plus(1, ChronoUnit.MINUTES), false);
 
         unsentMessages = messageDao.getUnsentMessages();
-        Assert.assertEquals(0, unsentMessages.size()); // deleted unsent messages
+        assertEquals(0, unsentMessages.size()); // deleted unsent messages
 
         List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM dudos.mailing_list");
-        Assert.assertEquals(0, list.size()); //delete works
+        assertEquals(0, list.size()); //delete works
     }
 
     @Test
@@ -81,7 +84,7 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
             messageDao.store("jenya@toxic.ru", UUID.randomUUID().toString(), "text!".repeat(255));
         }
         List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
-        Assert.assertEquals(100L, unsentMessages.size());
+        assertEquals(100L, unsentMessages.size());
     }
 
     @Test
@@ -91,7 +94,7 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
         }
         new Thread(() -> transactionTemplate.execute(status -> {
             List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
-            Assert.assertEquals(50L, unsentMessages.size());
+            assertEquals(50L, unsentMessages.size());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -110,7 +113,7 @@ public class MessageDaoImplTest extends AbstractIntegrationTest {
         //checking locked rows
         transactionTemplate.execute(status -> {
             List<MessageToSend> unsentMessages = messageDao.getUnsentMessages();
-            Assert.assertEquals(0L, unsentMessages.size());
+            assertEquals(0L, unsentMessages.size());
             return null;
         });
     }

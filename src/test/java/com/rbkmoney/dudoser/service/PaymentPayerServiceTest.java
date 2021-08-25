@@ -1,31 +1,47 @@
 package com.rbkmoney.dudoser.service;
 
-import com.rbkmoney.damsel.domain.*;
+import com.rbkmoney.damsel.domain.CustomerPayer;
+import com.rbkmoney.damsel.domain.InvoiceBankAccount;
+import com.rbkmoney.damsel.domain.InvoiceDetails;
+import com.rbkmoney.damsel.domain.InvoicePaid;
+import com.rbkmoney.damsel.domain.InvoicePaymentFlow;
+import com.rbkmoney.damsel.domain.InvoicePaymentFlowInstant;
+import com.rbkmoney.damsel.domain.InvoicePaymentProcessed;
+import com.rbkmoney.damsel.domain.InvoicePaymentRefund;
+import com.rbkmoney.damsel.domain.InvoicePaymentRefundStatus;
+import com.rbkmoney.damsel.domain.InvoicePaymentRefundSucceeded;
+import com.rbkmoney.damsel.domain.InvoicePaymentStatus;
+import com.rbkmoney.damsel.domain.InvoiceStatus;
+import com.rbkmoney.damsel.domain.Payer;
+import com.rbkmoney.damsel.domain.PaymentServiceRef;
+import com.rbkmoney.damsel.domain.PaymentTerminal;
+import com.rbkmoney.damsel.domain.PaymentTool;
 import com.rbkmoney.damsel.payment_processing.Invoice;
 import com.rbkmoney.damsel.payment_processing.InvoicePayment;
-import com.rbkmoney.dudoser.AbstractIntegrationTest;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.rbkmoney.testcontainers.annotations.postgresql.PostgresqlTestcontainerSingleton;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PaymentPayerServiceTest extends AbstractIntegrationTest {
+@PostgresqlTestcontainerSingleton
+public class PaymentPayerServiceTest {
 
     @MockBean
     private PartyManagementService partyManagementService;

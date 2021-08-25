@@ -5,19 +5,22 @@ import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.service.TemplateService;
 import com.rbkmoney.dudoser.utils.Converter;
 import com.rbkmoney.geck.common.util.TypeUtil;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.rbkmoney.testcontainers.annotations.postgresql.PostgresqlTestcontainerSingleton;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TemplateTest extends AbstractIntegrationTest {
+@PostgresqlTestcontainerSingleton
+public class TemplateTest {
 
     @Autowired
     private TemplateService templateService;
@@ -33,10 +36,10 @@ public class TemplateTest extends AbstractIntegrationTest {
         model.put("formattedAmount",
                 Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
         String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
-        Assert.assertTrue(filledContent.contains("https://keb.test"));
-        Assert.assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
-        Assert.assertTrue(filledContent.contains("10.00 RUB") || filledContent.contains("10,00 RUB"));
-        Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
+        assertTrue(filledContent.contains("https://keb.test"));
+        assertTrue(filledContent.contains("10000.00 RUB") || filledContent.contains("10000,00 RUB"));
+        assertTrue(filledContent.contains("10.00 RUB") || filledContent.contains("10,00 RUB"));
+        assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
     }
 
     @Test
@@ -50,8 +53,8 @@ public class TemplateTest extends AbstractIntegrationTest {
         model.put("formattedAmount",
                 Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));
         String filledContent = templateService.getFilledContent(TestData.kebTemplate(), model);
-        Assert.assertTrue(filledContent.contains("https://keb.test"));
-        Assert.assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
+        assertTrue(filledContent.contains("https://keb.test"));
+        assertTrue(filledContent.contains("1.11 RUB") || filledContent.contains("1,11 RUB"));
     }
 
     private PaymentPayer buildPaymentPayer() {

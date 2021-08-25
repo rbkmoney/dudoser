@@ -179,11 +179,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -195,20 +190,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.15.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
-            <version>1.15.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-streams-test-utils</artifactId>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>testcontainers-annotations</artifactId>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -9,13 +9,13 @@ import com.rbkmoney.dudoser.service.MailingExclusionRuleService;
 import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RefundStatusChangedHandlerTest {
 
     @InjectMocks

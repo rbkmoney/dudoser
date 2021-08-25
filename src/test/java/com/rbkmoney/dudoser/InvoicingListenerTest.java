@@ -11,8 +11,9 @@ import com.rbkmoney.machinegun.eventsink.MachineEvent;
 import com.rbkmoney.machinegun.eventsink.SinkEvent;
 import com.rbkmoney.machinegun.msgpack.Value;
 import com.rbkmoney.sink.common.parser.impl.MachineEventParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -24,8 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class InvoicingListenerTest {
 
     @Mock
@@ -39,7 +42,7 @@ public class InvoicingListenerTest {
 
     private InvoicingKafkaListener listener;
 
-    @Before
+    @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
         listener = new InvoicingKafkaListener(handlerManager, eventParser);
@@ -64,7 +67,7 @@ public class InvoicingListenerTest {
         Mockito.verify(ack, Mockito.times(1)).acknowledge();
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void listenEmptyException() {
         MachineEvent message = new MachineEvent();
 
@@ -73,7 +76,10 @@ public class InvoicingListenerTest {
 
         Mockito.when(eventParser.parse(message)).thenThrow(new ParseException());
 
-        listener.handle(sinkEvent, ack);
+        assertThrows(
+                ParseException.class,
+                () -> listener.handle(sinkEvent, ack)
+        );
 
         Mockito.verify(ack, Mockito.times(0)).acknowledge();
     }
