@@ -2,22 +2,24 @@ package com.rbkmoney.dudoser.dao;
 
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.utils.Converter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.Assert.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PaymentPayerTest {
 
     PaymentPayer paymentPayer;
 
-    @Before
+    @BeforeAll
     public void setUp() {
         paymentPayer = PaymentPayer.builder().build();
     }
 
     @Test
-    public void testGetAmountWithCurrency() throws Exception {
+    public void testGetAmountWithCurrency() {
         paymentPayer.setAmount(Converter.longToBigDecimal(12345L));
         paymentPayer.setCurrency("RUB");
         assertEquals("123.45 RUB", Converter.getFormattedAmount(paymentPayer.getAmount(), paymentPayer.getCurrency()));

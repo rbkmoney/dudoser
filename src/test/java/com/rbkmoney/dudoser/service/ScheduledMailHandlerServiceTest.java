@@ -5,8 +5,9 @@ import com.rbkmoney.dudoser.dao.model.MessageToSend;
 import com.rbkmoney.dudoser.exception.MailNotSendException;
 import com.rbkmoney.dudoser.exception.MessageStoreException;
 import com.sun.mail.smtp.SMTPAddressFailedException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.hamcrest.MockitoHamcrest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailSendException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -27,9 +28,13 @@ import java.util.concurrent.Executors;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ScheduledMailHandlerServiceTest.Config.class)
 @TestPropertySource(properties = {
         "message.store.days=1",
@@ -58,10 +63,13 @@ public class ScheduledMailHandlerServiceTest {
         verify(messageDao, times(1)).store(any(), any(), any());
     }
 
-    @Test(expected = MessageStoreException.class)
+    @Test
     public void storeFailed() {
         when(messageDao.store(any(), any(), any())).thenReturn(false);
-        service.storeMessage("test", "test", "test");
+        Assertions.assertThrows(
+                MessageStoreException.class,
+                () -> service.storeMessage("test", "test", "test")
+        );
 
         verify(messageDao, times(1)).store(any(), any(), any());
     }

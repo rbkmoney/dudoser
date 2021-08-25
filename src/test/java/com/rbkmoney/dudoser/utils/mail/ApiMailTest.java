@@ -1,7 +1,11 @@
 package com.rbkmoney.dudoser.utils.mail;
 
-import com.rbkmoney.damsel.message_sender.*;
-import com.rbkmoney.dudoser.AbstractIntegrationTest;
+import com.rbkmoney.damsel.message_sender.MailBody;
+import com.rbkmoney.damsel.message_sender.Message;
+import com.rbkmoney.damsel.message_sender.MessageAttachment;
+import com.rbkmoney.damsel.message_sender.MessageMail;
+import com.rbkmoney.damsel.message_sender.MessageSenderSrv;
+import com.rbkmoney.testcontainers.annotations.postgresql.PostgresqlTestcontainerSingleton;
 import com.rbkmoney.woody.api.event.ClientEventListener;
 import com.rbkmoney.woody.api.event.CompositeClientEventListener;
 import com.rbkmoney.woody.api.generator.IdGenerator;
@@ -10,14 +14,15 @@ import com.rbkmoney.woody.thrift.impl.http.THClientBuilder;
 import com.rbkmoney.woody.thrift.impl.http.event.ClientEventLogListener;
 import com.rbkmoney.woody.thrift.impl.http.event.HttpClientEventLogListener;
 import org.apache.thrift.TException;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
@@ -32,12 +37,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class ApiMailTest extends AbstractIntegrationTest {
+@PostgresqlTestcontainerSingleton
+public class ApiMailTest {
 
     @Value("${mail.port}")
     private int mailPort;
@@ -63,7 +70,7 @@ public class ApiMailTest extends AbstractIntegrationTest {
 
     Wiser wiser;
 
-    @Before
+    @BeforeAll
     public void init() {
         wiser = new Wiser();
         wiser.setPort(mailPort);
@@ -71,7 +78,7 @@ public class ApiMailTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testApi() throws TException, IOException, URISyntaxException, MessagingException {
         sendMail();
     }
