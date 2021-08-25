@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.rbkmoney</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.7</version>
     </parent>
 
     <artifactId>dudoser</artifactId>
@@ -24,7 +24,7 @@
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <dockerfile.base.service.tag>c0612d6052ac049496b72a23a04acb142035f249</dockerfile.base.service.tag>
-        <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
+        <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
         <db.schema>dud</db.schema>
@@ -84,6 +84,11 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.benas</groupId>
+            <artifactId>random-beans</artifactId>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -175,7 +180,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>easyway</artifactId>
-            <version>0.1.0</version>
+            <version>0.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -197,13 +202,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.15.1</version>
+            <version>1.16.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>kafka</artifactId>
-            <version>1.15.1</version>
+            <version>1.16.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
