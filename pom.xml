@@ -24,7 +24,7 @@
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <dockerfile.base.service.tag>c0612d6052ac049496b72a23a04acb142035f249</dockerfile.base.service.tag>
-        <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+        <db.url>jdbc:postgresql://localhost:5432/dudoser</db.url>
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
         <db.schema>dud</db.schema>
