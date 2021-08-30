@@ -2,10 +2,12 @@ package com.rbkmoney.dudoser.handler.poller;
 
 import com.rbkmoney.damsel.payment_processing.InvoiceChange;
 import com.rbkmoney.dudoser.dao.EventTypeCode;
+import com.rbkmoney.dudoser.dao.MailingExclusionRule;
 import com.rbkmoney.dudoser.dao.Template;
 import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.exception.FillTemplateException;
+import com.rbkmoney.dudoser.service.MailingExclusionRuleService;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.jooq.tools.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
     private final TemplateDao templateDao;
     private final TemplateService templateService;
+    private final MailingExclusionRuleService mailingExclusionRuleService;
     private final ScheduledMailHandlerService mailHandlerService;
 
     @Override
@@ -50,6 +54,13 @@ public abstract class InvoicePaymentStatusChangedHandler implements PollingEvent
 
         String partyId = payment.getPartyId();
         String shopId = payment.getShopId();
+
+        List<MailingExclusionRule> exclusionRules = mailingExclusionRuleService.getExclusionRulesByShopId(shopId);
+        if (!exclusionRules.isEmpty()) {
+            log.info("Mailing has been disabled for shopId={}", shopId);
+            log.debug("Full exclusion rules for shopId={} {}", shopId, exclusionRules);
+            return;
+        }
 
         Template template = templateDao.getTemplateBodyByMerchShopParams(getEventTypeCode(), partyId, shopId);
         if (!template.isActive()) {

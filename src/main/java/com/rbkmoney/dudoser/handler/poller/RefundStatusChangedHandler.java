@@ -7,6 +7,7 @@ import com.rbkmoney.dudoser.dao.TemplateDao;
 import com.rbkmoney.dudoser.dao.model.PaymentPayer;
 import com.rbkmoney.dudoser.handler.ChangeType;
 import com.rbkmoney.dudoser.service.InvoicingService;
+import com.rbkmoney.dudoser.service.MailingExclusionRuleService;
 import com.rbkmoney.dudoser.service.PaymentPayerService;
 import com.rbkmoney.dudoser.service.ScheduledMailHandlerService;
 import com.rbkmoney.dudoser.service.TemplateService;
@@ -25,10 +26,11 @@ public class RefundStatusChangedHandler extends InvoicePaymentStatusChangedHandl
     public RefundStatusChangedHandler(
             TemplateDao templateDao,
             TemplateService templateService,
+            MailingExclusionRuleService mailingExclusionRuleService,
             ScheduledMailHandlerService mailHandlerService,
             InvoicingService invoicingService,
             PaymentPayerService paymentPayerService) {
-        super(templateDao, templateService, mailHandlerService);
+        super(templateDao, templateService, mailingExclusionRuleService, mailHandlerService);
         this.invoicingService = invoicingService;
         this.paymentPayerService = paymentPayerService;
     }
