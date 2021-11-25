@@ -1,22 +1,13 @@
 package com.rbkmoney.dudoser.configuration;
 
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.MXRecord;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.TextParseException;
-import org.xbill.DNS.Type;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 @Configuration
 public class MailSenderConfiguration {
@@ -40,28 +31,17 @@ public class MailSenderConfiguration {
     }
 
     @Bean
-    public List<JavaMailSender> javaMailSender(@Value("${mail.host}") String host,
-                                               @Value("${mail.port}") int port,
-                                               @Value("${mail.username}") String username,
-                                               @Value("${mail.password}") String password,
-                                               Properties mailProperties) {
-        try {
-            Record[] records = new Lookup(host, Type.MX).run();
-            if (records == null) {
-                throw new RuntimeException("Not found MX-records for host " + host);
-            }
-            return Arrays.stream(records).map(r -> {
-                JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-                String mxHost = ((MXRecord) r).getTarget().toString(true);
-                mailSender.setHost(mxHost);
-                mailSender.setPort(port);
-                mailSender.setUsername(username);
-                mailSender.setPassword(password);
-                mailSender.setJavaMailProperties(mailProperties);
-                return mailSender;
-            }).collect(Collectors.toList());
-        } catch (TextParseException e) {
-            throw new RuntimeException(e);
-        }
+    public JavaMailSender javaMailSender(@Value("${mail.host}") String host,
+                                         @Value("${mail.port}") int port,
+                                         @Value("${mail.username}") String username,
+                                         @Value("${mail.password}") String password,
+                                         Properties mailProperties) {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(host);
+        mailSender.setPort(port);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
+        mailSender.setJavaMailProperties(mailProperties);
+        return mailSender;
     }
 }

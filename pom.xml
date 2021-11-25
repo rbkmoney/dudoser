@@ -131,7 +131,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>sink-common-lib</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.8</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.509-b7f092e</version>
+            <version>1.531-8818b8e</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -173,14 +173,14 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>machinegun-proto</artifactId>
-            <version>1.12-ebae56f</version>
+            <version>1.19-f77367a</version>
         </dependency>
 
         <!--Test libs-->
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>easyway</artifactId>
-            <version>0.7.0</version>
+            <version>0.8.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
