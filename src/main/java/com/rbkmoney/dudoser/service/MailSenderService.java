@@ -17,12 +17,11 @@ import java.util.Random;
 @Service
 public class MailSenderService {
 
-    private final List<JavaMailSender> mailSenders;
+    private final JavaMailSender mailSender;
 
     public void send(String from, String[] to, String subject, String text, List<Map.Entry<String, byte[]>> listAttach)
             throws MailNotSendException {
         try {
-            JavaMailSender mailSender = getRandomMailSender();
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(from);
@@ -40,8 +39,5 @@ public class MailSenderService {
         }
     }
 
-    private JavaMailSender getRandomMailSender() {
-        return mailSenders.get(new Random().nextInt(mailSenders.size()));
-    }
 }
 
