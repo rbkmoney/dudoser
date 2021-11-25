@@ -38,7 +38,7 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
         Mockito.when(partyManagementService.getShopUrl(any(), any(), anyString())).thenReturn("8kun.net");
 
         InvoicePaymentRefund invoicePaymentRefund =
-                random(InvoicePaymentRefund.class, "status", "party_revision", "cart", "cash_flow");
+                random(InvoicePaymentRefund.class, "status", "party_revision", "cart", "cash_flow", "allocation");
         invoicePaymentRefund.setStatus(InvoicePaymentRefundStatus.succeeded(new InvoicePaymentRefundSucceeded()));
         invoicePaymentRefund.setCreatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
 
@@ -58,13 +58,13 @@ public class PaymentPayerServiceTest extends AbstractIntegrationTest {
 
         InvoicePayment invoicePaymentWrapper =
                 random(InvoicePayment.class, "cash_flow", "target_status", "legacy_refunds",
-                        "payment", "refunds", "adjustments", "sessions", "chargebacks");
+                        "payment", "refunds", "adjustments", "sessions", "chargebacks", "allocation");
         invoicePaymentWrapper.setPayment(invoicePayment);
         invoicePaymentWrapper.setRefunds(List.of(new com.rbkmoney.damsel.payment_processing.InvoicePaymentRefund()
                 .setRefund(invoicePaymentRefund)));
         invoicePaymentWrapper.setAdjustments(List.of());
 
-        var invoice = random(com.rbkmoney.damsel.domain.Invoice.class, "status", "details", "context");
+        var invoice = random(com.rbkmoney.damsel.domain.Invoice.class, "status", "details", "context", "allocation");
         invoice.setStatus(InvoiceStatus.paid(new InvoicePaid()));
         InvoiceDetails invoiceDetails = new InvoiceDetails();
         invoiceDetails.setProduct("product");
